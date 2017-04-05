@@ -1,5 +1,9 @@
-# Project (TODO: Catchy name)
-Exercise classification using Numenta's Hierarchical Temporal Memory (HTM) on an Intel Curie
+# WALRUS
+Exercise classification using Numenta's Hierarchical Temporal Memory (HTM) on an Intel Curie, for my BEng Individual Project.
+
+## Why walrus?
+
+[This is why](https://imgur.com/gallery/GUnt3yw)
 
 ## Dependencies
 
