@@ -15,4 +15,4 @@ Exercise classification using Numenta's Hierarchical Temporal Memory (HTM) on an
 
 To install version-controlled git hooks, run the following script:
 
-`./.init-hooks`
+    ./.init-hooks
