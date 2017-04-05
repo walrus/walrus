@@ -1,0 +1,37 @@
+#!/bin/bash
+
+master_branch='master'
+development_branch='development' 
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+
+# For now, do nothing. Later, run tests
+
+echo "Running pre-commit checks"
+
+# Query when committing directly to development. 
+if [ $development_branch = $current_branch ] 
+then  
+    echo "You're trying to commit directly to development."
+    exec < /dev/tty
+
+    while true; do
+      read -p "Is this really what you want to do? (Y/n) " yn
+      if [ "$yn" = "" ]; then
+        yn='Y'
+      fi
+      case $yn in
+          [Yy] ) exit 0;;
+          [Nn] ) exit 1;;
+          * ) echo "Please answer y or n for yes or no.";;
+      esac
+    done
+fi
+
+# Disallow committing directly to master (still possible using --no-verify)
+if [ $master_branch = $current_branch ] 
+then  
+    echo "You're trying to commit directly to master."
+    echo "Stop."
+    exit 1
+fi
