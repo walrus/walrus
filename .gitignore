@@ -87,3 +87,11 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+###################################
+
+# LaTeX files (include *.pdf for convenience)
+
+*.log
+*.out
+*.aux

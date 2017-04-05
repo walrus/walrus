@@ -1,0 +1,31 @@
+Individual project 'diary'
+
+19/12/16
+    Picked up Curie board + USB cable
+    downloaded IDE (CLion) - NEED TO GET LICENCE
+    Downloaded A,M and Z trees
+
+28/1/17
+    Downloaded Arduino IDE
+    Licenced CLion
+    Connected arduino to computer and checked that I could push code to it.
+        Followed this tutorial: https://software.intel.com/en-us/articles/fun-with-the-arduino-101-genuino-101
+        And this one: http://www.arduino.org/learning/getting-started/arduino-ide-on-linux-based-os
+
+10/2/17
+    Submitted Interim Report
+
+28/2/17
+    Met with Dr Heinis
+    Decided to switch to Numenta (see email)
+
+6/3/17
+    Met with Dr Deisenroth
+    He seemed happy with everything; we discussed potential issues
+
+4/4/17
+    Began work in earnest
+    Downloaded Numenta NuPic (https://github.com/numenta/nupic)
+        Dependencies etc
+    (Accidentally CHOWNed /usr/ and removed wlan driver?)
+    Started research into HTM

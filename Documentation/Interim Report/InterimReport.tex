@@ -1,0 +1,393 @@
+\documentclass[a4paper]{article}
+
+% Table of contents depth (currently unused)
+\setcounter{tocdepth}{3}
+
+% Section numbering depth (zero for no numbering)
+\setcounter{secnumdepth}{0}
+
+% latex package inclusions here
+\usepackage{fullpage}
+\usepackage{hyperref}
+\usepackage{tabulary}
+\usepackage{amsthm}
+
+% set up BNF generator
+\usepackage{syntax}
+\setlength{\grammarparsep}{10pt plus 1pt minus 1pt}
+\setlength{\grammarindent}{10em} 
+
+% set up source code inclusion
+\usepackage{listings}
+\lstset{
+  tabsize=2,
+  basicstyle = \ttfamily\small,
+  columns=fullflexible
+}
+% Usage for the above like so:
+% \begin{lstlisting}
+%   CODE CODE CODE
+% \end{lstlisting}
+
+% in-line code styling (same style as listing)
+\newcommand{\shell}[1]{\lstinline{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\title{Individual Project Interim Report}
+\date{10th February 2017}
+\author{
+Daniel Clay \\
+Supervised by Dr Thomas Heinis
+}
+\maketitle
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Project Brief: Movement Classification with Novel Hardware (Intel Curie)}
+
+With the Curie, Intel has produced a novel chip to track movement for the purpose of healthcare and fitness applications. What is novel about the chip is it's on-board classifier. The classifier essentially implements a neural network with 128 neurons and can classify the movements very energy-efficient[sic].
+
+The goal of this project is to develop a first application to track different fitness exercises with the Curie. The starting point will be to use the on-board sensors to record the movement a then to classify it using the on-board classifier. Three Curie chips will be used to classify the movement of different parts of the body and the resulting classification will be sent via Bluetooth to a mobile phone where the overall classification will be performed. \textit{- description from project proposal.}
+
+\subsection{The Problem}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In the West, obesity is a growing problem - as of 2015, \textbf{62.9\%} of adults in the UK were either overweight or obese, a number which is still increasing.\footnote{https://www.noo.org.uk/NOO_about_obesity/adult_obesity/UK_prevalence_and_trends}
+
+While many people express a desire to exercise more this does not always translate into action, and one of the reasons for this is that
+people often don't know how to exercise, and even if they do exercise this lack of knowledge stops or hampers them from exercising as effectively as they might be able to.
+
+Traditionally the solution to this dilemma has been provided by people like coaches, instructors and personal trainers. They generally bring a lot of expertise and experience, and are highly effective, but the cost of hiring them can be unaffordable for many people.
+
+With advances in technology, more and more of the tasks which personal trainers and their ilk were relied upon to do can instead be performed by machines. Companies are starting to release gadgets which can classify different exercises, normally into large groups such as 'walking' or 'cycling', but as yet they do not tell the user how well they are performing said exercise.
+
+\subsection{Project Aims \& Objectives}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In order for a gadget to provide useful information to the user about how well they are exercising, it needs to be able to accurately classify not only what the user is doing, but exactly how, and then compare this to an 'ideal' version of the same exercise and inform the user of what they are doing right or wrong.
+
+While a general tool able to accurately classify and grade arbitrary forms of exercise is not feasible with my resources, a tool with a more restricted scope is possible.
+
+To that end, for my project I intend to build a system that can classify a few simple bodyweight exercises - press-ups, sit-ups and lunges for example and then (circumstances permitting) develop the system such that it can provide feedback to the user to improve their technique.
+
+This system will use a trio of Intel Curie chips placed on different parts of the body to generate data and perform initial classification, before sending the results on to a mobile phone over Bluetooth for further analysis.
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Background}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Neural Networks}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Overview}
+
+Neural networks are currently the focus of a lot of research in academia, and also the focus of a lot of commercial work to realise their potential - virtually all of the major tech companies make use of the technology, or are experimenting with it.
+
+Because my project is centred around a novel usage of existing neural network techniques, rather than any new techniques, my research into the theory of neural networks has been relatively limited, and I have focussed on their application to my project.
+
+\subsubsection{Sources}
+
+Most of my general knowledge of Neural Networks comes from the third year DoC course \textbf{395 Machine Learning}.
+
+The course home page can be found at (in particular, see the notes for the Artifical Neural Networks lectures):
+
+\url{https://ibug.doc.ic.ac.uk/courses}
+
+As well as the course notes, the lecturers have recommended several other resources (a list of which can be found on the previously linked page), of which the following is the most relevant:
+
+\url{http://people.sabanciuniv.edu/berrin/cs512/reading/mao-NN-tutorial.pdf}
+
+Another useful reference has been:
+
+\url{http://www.glyn.dk/download/Synopsis.pdf}
+
+\subsection{Fitness Tracking \& Wearables}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Overview}
+
+There are a wide variety of fitness trackers available on the market - most utilise a combination of gyroscopes, accelerometers and GPS, and more sometimes heart rate monitors, altimeters and other sensors to track the user's movements and provide feedback.
+
+Tracking via sensors other than those available on the Intel Curie (I.E. gyroscope and accelerometer) is outside the scope of this project, so I will be ignoring this functionality in other fitness trackers.
+
+Of these, the majority simply measure the input data and do simple analysis to provide basic data, E.G. heart rate or calories burned, but a growing number use various forms of machine learning to do more in depth analysis. 
+
+\subsubsection{Sources}
+
+\textbf{Fitbit} is one of the leading brands in wearables and fitness tracking. In particular, their SmartTrack technology aims to automatically recognise which activity the wearer is currently doing, and currently supports seven different activities.
+
+\url{https://www.fitbit.com/uk/home}
+
+\url{https://www.fitbit.com/uk/smarttrack}
+
+\textbf{Google} has a line of wearables called Android Wear, which make use of their Google Fit software (also compatible with other wearables).
+Google Fit automatically detects walking, running and cycling.
+
+\url{https://www.android.com/intl/en_uk/wear/}
+
+\url{https://www.google.com/fit/}
+
+\textbf{Optimize Fitness} is an iOS application that claims to use 'Powerful machine learning algorithms' to 'analyze your preferences, workout history, and goals to deliver efficient workouts that keep you improving wherever and whenever you exercise.'
+
+\url{http://optimize.fitness}
+
+\textbf{Boltt} is a startup that aims to use multiple sensors (embedded in shoes and on a wristband) along with AI to give guidance. Currently it is in the pre-order stage.
+
+\url{https://boltt.com/}
+
+\url{https://www.wareable.com/fitness-trackers/boltt-ai-wearable-3048}
+
+\textbf{Actofit} is another startup that recently funded via Indiegogo. They claim to 'identify 75+ exercises, count reps, evaluate form, measure heart rate, calories burned and more' using a wristband.
+
+\url{http://www.actofit.com/}
+
+\url{https://www.indiegogo.com/projects/actofit-redefining-fitness-tracking--3#/}
+
+\textbf{FocusMotion} provides an SDK that works on many different devices, and uses their sensors as input to their machine learning algorithms, which aim to classify and analyse user's movements.
+
+\url{http://focusmotion.io/}
+
+\subsection{Bodyweight Exercises}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Overview}
+
+While there is no objective standard for how most exercises should be performed, for the most common exercises there exists a broad consensus on the proper technique.
+
+I will use these as a baseline to compare a user's movements to. I have used the following guides as my references.
+
+\subsubsection{Press Ups}
+
+The generally agreed proper technique for a press up is as follows:
+
+\begin{itemize}
+    \item Place your hands on the ground slightly more than shoulder width apart, and your feet behind you. Your body should be straight, with no sagging at the hips. You should be looking slightly ahead, not vertically downwards, and your arms should be locked out.
+    \item Keeping your body straight, lower yourself down until your elbows are at a 90° angle to the floor, and upper arms are horizontal. Your elbows should remain close in to the side of your body, not splayed out to the sides.
+    \item In the same manner, raise yourself back up with your arms until they lock out again.
+\end{itemize}
+
+
+I have used the following two articles as my reference for good technique when doing a press up:
+
+\url{https://www.nerdfitness.com/blog/proper-push-up/} 
+
+is a good overall guide to technique, while:
+
+\url{https://breakingmuscle.com/learn/pimp-your-push-up-3-common-mistakes-and-5-challenging-variations}
+
+addresses a few common issues with people's technique.
+
+A video illustrating these points can be found at:
+
+\url{https://www.youtube.com/watch?v=Eh00_rniF8E}
+
+\subsubsection{Sit Ups}
+
+Opinions on proper sit up technique vary, primarily over the placement of the arms - some guides recommend crossing them over your chest, while others recommend placing your hands on the back of your head. 
+
+This site:
+
+\url{http://www.livestrong.com/article/487008-how-to-do-a-correct-sit-up/} 
+
+recommends placing hands behind the head, while this site:
+
+\url{http://www.military.com/military-fitness/fitness-test-prep/proper-technique-for-curl-ups}
+
+recommends crossing your arms over your chest. 
+
+The general opinion seems to be that either is acceptable, with the hands-behind-the-head technique considered slightly harder:
+
+\url{http://www.mensfitness.com/weight-loss/burn-fat-fast/situp} 
+
+Keeping your hands loose is generally considered a bad thing as it allows you to use them to lift your torso, rather than your abdominal muscles. 
+
+For my reference, I will use the crossed arms technique because placing your arms behind your head encourages you to pull yourself up from the neck, rather than the waist, which the crossed arms technique avoids.
+
+There is also not a consensus on whether it is better to anchor your feet during a sit up. For the purposes of my reference, I will be recommending unanchored feet. 
+
+For more specific information on unanchored sit ups, see:
+
+\url{http://www.livestrong.com/article/539595-how-to-do-sit-ups-without-anchoring-your-feet/}
+
+The proper technique for a sit up, with the caveats above, is as follows:
+
+\begin{itemize}
+    \item Lie flat on your back, with your knees bent at a 90° angle and feet on the floor. Cross your arms over your chest and straighten your neck and spine.
+    \item Keeping your legs immobile, lift your back off the floor by flexing at the waist, and continue until your back is vertical. This should be a smooth, controlled movement not a jerk, and should not be assisted by the arms. Your neck should remain straight, but the spine can flex a little. You may find it helpful to exhale as you do this.
+    \item Having reached the upright position, rest if necessary and lower yourself back down in the same manner. You may find it helpful to inhale as you do this.
+\end{itemize}
+
+This video gives a demonstration of good sit up technique, although it uses the hands behind the head technique:
+
+\url{https://www.youtube.com/watch?v=jDwoBqPH0jk}
+
+\subsubsection{Lunges}
+
+Opinions on proper lunge technique are fairly settled, with a strong consensus. While there are many possible varieties of lunges, including those with weights, I will concentrate on lunges using bodyweight alone.
+
+\url{http://30dayfitnesschallenges.com/how-to-do-lunges/} 
+
+and
+
+\url{http://www.shape.com/fitness/workouts/know-your-basics-how-do-lunge}
+
+both agree on the correct form for lunges. 
+
+My baseline reference for good lunge technique is as follows:
+
+\begin{itemize}
+    \item Stand up straight, with shoulders relaxed and core engaged
+    \item Step forwards with one leg, and lower your body until the forward knees is bent at 90° to the floor. The back knee should not touch the floor, and your upper body should remain upright.
+    \item In the same manner, smoothly push back up to your starting position.
+\end{itemize}
+
+This video illustrates good lunge technique:
+
+\url{https://www.youtube.com/watch?time_continue=40&v=jzbXc2OmRMk}
+
+\newpage
+\subsection{Intel Curie}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Overview}
+
+The Intel Curie is a System-On-a-Chip (SOC) with an integrated six-axis accelerometer/gyroscope and 128-neuron neural network that operates on the data from the sensors.
+
+The module is currently available on an Arduino 101 board (known as the Genuino 101 outside the US), or an Intel Quark microcontroller - I will be developing using the Arduino board.
+
+The Arduino/Genuino 101 provides a set of I/O pins, power supply, and Bluetooth connectivity for the on-board Curie module.
+
+\subsubsection{Sources}
+
+Intel's homepage for the Curie can be found here:
+
+\url{https://www-ssl.intel.com/content/www/us/en/wearables/wearable-soc.html}
+
+The Curie Open Developer Kit (ODK) is available from:
+
+\url{https://software.intel.com/en-us/node/674972}
+
+I will be developing using the A-tree.
+
+The API reference for the Curie's pattern-matching software can be found here:
+
+\url{https://software.intel.com/en-us/node/708003}
+
+Intel provides a tutorial on using the Pattern Matching Engine on the Curie here:
+
+\url{https://software.intel.com/en-us/node/707561}
+
+The Arduino IDE can be downloaded from:
+
+\url{https://www.arduino.cc/en/Main/Software}
+
+I am developing on Linux, so I am using the 1.8.1 64-bit Linux build.
+
+For the linked phone application, I will be working on Android (currently version 7.1.1).
+
+The Android SDK can be downloaded from:
+
+\url{https://developer.android.com/studio/index.html}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Project Plan}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Project Deliverables}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Research}
+
+In order to complete my project, I will need to know four main things:
+
+\begin{itemize}
+\item General knowledge about fitness trackers and their use
+\item Information on bodyweight exercises; specifically proper technique to compare user's data to
+\item Information on how to use Neural Networks to classify data
+\item Specific information on how to program and use the Intel Curie chip and it's on board network
+\end{itemize}
+
+\subsubsection{Initial Implementation}
+
+The first 'real' deliverable for the project will be my initial implementation of the tracker. This will take data from one Curie and attempt to classify the user's movements as a single exercise (a press up).
+
+\subsubsection{Full Implementation}
+
+The full implementation will build on the initial implementation by expanding from one Curie doing onboard classification, to multiple Curies doing onboard classification then sending their results to a phone where further analysis will be performed. 
+
+As part of this implementation, I will increase the number of exercises recognised by the system, although this is a lower priority than getting the multiple Curies to work together.
+
+\subsubsection{Extensions}
+
+If I have time at the end of the project, I can extend it firstly by simply adding support for more different exercises, and more interestingly by extending the system to analyse the user's technique and suggest improvements.
+
+Likewise, if I am short of time I can simply not implement the additional exercises planned for the full implementation and instead focus on making the multiple Curies work together.
+
+\newpage
+\subsection{Project Timetable}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Autumn Term \& Christmas Holiday (11th November- 8th January)}
+
+During the Autumn term, I started research for the project, and near the end of the term took possession of an Arduino Genuino 101 board with an Intel Curie chip on it to start experimenting with the technology.
+
+\subsubsection{Spring Term (9th January - 26th March)}
+
+Over the start of the spring term I continued my research and started experimenting with the Arduino. During the rest of the term, I will work to complete the initial implementation and hopefully start on the full implementation. A key milestone for this term, apart from the interim report is to complete the initial implementation by the end of the term.
+
+\subsubsection{Easter Holiday (27th March - 30th April)}
+
+Over the Easter holiday I will work on the main implementation. My main milestone is to make the switch from one Curie to three working together, if only for one exercise. 
+
+\subsubsection{Summer Term (1st May - 30th June)}
+
+Over the summer term I will complete the main implementation, ideally by the end of May. At the beginning of June I will switch to writing the report, which needs to be finished for Monday the 19th. After that I will spend the next week tidying up my code in preparation for the initial project archive submission on Monday the 26th, and preparing for my presentation. 
+
+In the final week I will make any changes necessary to the report and codebase before submission of the final archive. 
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evaluation Plan}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Initial Implementation}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The criteria for this implementation are fairly simple. The system needs to, using a single Curie, reliably recognise when the user is performing a press up and increment a counter on a linked phone application via Bluetooth. This overall goal requires the following sub goals:
+
+\begin{itemize}
+    \item The ability to download and run code on the Curie
+    \item Code that allows the Curie to recognise when the user is moving 
+    \item A baseline 'good form' press up to compare the user's movements to
+    \item Code that can analyse the user's movements and reliably decide whether the user is performing a press up, by comparing it to the baseline
+    \item A basic phone application that can connect to the Curie via Bluetooth, and increment a counter when a press up is recognised
+\end{itemize}
+
+\subsection{Main Implementation}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The functionality for this implementation builds on the initial implementation. 
+
+The complete system needs to, using multiple (probably 3) Curies, reliably recognise when the user is doing one of several exercises and increment a counter on the linked phone application via Bluetooth. Each Curie will need to do some classification based on it's own sensor data, before sending data to the phone application which will perform further analysis to decide which exercise is being performed. 
+
+This implementation will require the functionality from the initial implementation, plus the following sub goals:
+
+\begin{itemize}
+    \item Multiple Curies, each performing on board classification
+    \item A phone application which receives data from each Curie and performs further analysis to decide which exercise is being performed
+    \item Baseline 'good form' exercises for each exercise the system supports
+    \item The ability to differentiate between multiple exercises without user input
+    \item The system must be easy enough for new people to use under supervision (for example at the Undergraduate project fair)
+\end{itemize}
+
+\subsection{Extensions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Once again, the functionality for the extension will build on the full implementation.
+
+The system will not only recognise what exercise the user is performing, but give useful feedback on technique where appropriate.
+
+This will require the following sub goals:
+
+\begin{itemize}
+    \item The ability to analyse the user's movements and note the differences between them and the baseline technique
+    \item The ability to, based on the analysis, give useful feedback to the user
+\end{itemize}
+
+\end{document}
