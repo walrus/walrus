@@ -27,5 +27,14 @@ Individual project 'diary'
     Began work in earnest
     Downloaded Numenta NuPic (https://github.com/numenta/nupic)
         Dependencies etc
-    (Accidentally CHOWNed /usr/ and removed wlan driver?)
+    (Accidentally CHOWNed /usr/ and spent the rest of the day fixing stuff)
+
+5/4/17
+    Set up git repo at https://github.com/speedyfrenchy/project
+        Added Interim Report
+        Added skeleton Final Report
+        Added .gitignore and version controlled hooks
+        Created basic branches
+        Added README        
     Started research into HTM
+        Numenta's HTM School and other resources
