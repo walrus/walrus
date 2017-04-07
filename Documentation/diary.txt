@@ -38,3 +38,17 @@ Individual project 'diary'
         Added README        
     Started research into HTM
         Numenta's HTM School and other resources
+
+6/4/17
+    Realised that NuPIC will not run on embedded hardware
+    Abandoned NuPIC
+    Spent afternoon looking for alternatives
+
+7/4/17
+    Agreed on using Arduino ANN (http://robotics.hobbizine.com/arduinoann.html)
+    Successfully tested the Arduino/Curie
+        Basic connection
+        Running the example ANN
+        IMU test
+        BLE test
+    Removed Numenta misc from the README
