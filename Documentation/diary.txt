@@ -52,3 +52,7 @@ Individual project 'diary'
         IMU test
         BLE test
     Removed Numenta misc from the README
+
+10/4/17
+    Removed more references to Numenta...
+    Filled in skeleton with subsections
