@@ -1,5 +1,5 @@
 # WALRUS
-Exercise classification using Numenta's Hierarchical Temporal Memory (HTM) on an Intel Curie, for my BEng Individual Project.
+Exercise classification using an Artificial Neural Network running on an Intel Curie/Genuino 101, for my BEng Individual Project.
 
 ## Why walrus?
 
@@ -7,7 +7,8 @@ Exercise classification using Numenta's Hierarchical Temporal Memory (HTM) on an
 
 ## Dependencies
 
-An Intel Curie (obviously)
+An Intel Curie.
+Bluetooth Low Energy (BLE) capable Android phone
 
 - [Arduino IDE](https://www.arduino.cc/en/Main/Software)
 - [ArduinoANN](http://robotics.hobbizine.com/arduinoann.zip)
