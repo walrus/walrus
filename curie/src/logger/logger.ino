@@ -12,6 +12,10 @@
 bool moving = false;                
 bool calibrateOffsets = true;
 
+unsigned long cooldownTime = 750;      //Cooldown period before another switch can happen, in milliseconds
+unsigned long lastSwitchTime = 0;   // Time of the last switch in 'moving' state
+unsigned long interruptTime = 0;    // Time of the last interrupt
+
 int ax, ay, az;         // accelerometer values
 int gx, gy, gz;         // gyrometer values
 
@@ -35,27 +39,41 @@ void setup() {
   CurieIMU.interrupts(CURIE_IMU_MOTION);
 
   /* Enable Zero Motion Detection */
-  CurieIMU.setDetectionThreshold(CURIE_IMU_ZERO_MOTION, 35);  // mg
-  CurieIMU.setDetectionDuration(CURIE_IMU_ZERO_MOTION, 1);    // seconds
+  CurieIMU.setDetectionThreshold(CURIE_IMU_ZERO_MOTION, 35 );  // mg
+  CurieIMU.setDetectionDuration(CURIE_IMU_ZERO_MOTION, 0.5);   // seconds
   CurieIMU.interrupts(CURIE_IMU_ZERO_MOTION);
 
   Serial.println("IMU initialisation complete, waiting for events...");
 }
 
 void loop() {
-
+  if (moving) {
+    // Log
+  } else {
+    // Do nothing
+  }
 }
 
 
 static void eventCallback(void){
-  if (CurieIMU.getInterruptStatus(CURIE_IMU_MOTION) && !moving) {
-    Serial.println("Motion detected; logging...");
+  interruptTime = millis();
+  
+  if (CurieIMU.getInterruptStatus(CURIE_IMU_MOTION) && !moving && (interruptTime - lastSwitchTime > cooldownTime)) {
+    Serial.print("Motion detected after  ");
+    Serial.print(interruptTime - lastSwitchTime);
+    Serial.println("  milliseconds. Logging...");
     moving = true;
+    lastSwitchTime = interruptTime;
   } 
-  if (CurieIMU.getInterruptStatus(CURIE_IMU_ZERO_MOTION) && moving) {
-    Serial.println("Motion ended;");
+  
+  if (CurieIMU.getInterruptStatus(CURIE_IMU_ZERO_MOTION) && moving && (interruptTime - lastSwitchTime > cooldownTime)) {
+    Serial.print("Motion ended after  ");
+    Serial.print(interruptTime - lastSwitchTime);
+    Serial.println("  milliseconds. Logging...");    
     moving = false;
+    lastSwitchTime = interruptTime;
   } 
+
 }
 
 /*
