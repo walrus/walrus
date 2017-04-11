@@ -27,5 +27,28 @@ Individual project 'diary'
     Began work in earnest
     Downloaded Numenta NuPic (https://github.com/numenta/nupic)
         Dependencies etc
-    (Accidentally CHOWNed /usr/ and removed wlan driver?)
+    (Accidentally CHOWNed /usr/ and spent the rest of the day fixing stuff)
+
+5/4/17
+    Set up git repo at https://github.com/speedyfrenchy/project
+        Added Interim Report
+        Added skeleton Final Report
+        Added .gitignore and version controlled hooks
+        Created basic branches
+        Added README        
     Started research into HTM
+        Numenta's HTM School and other resources
+
+6/4/17
+    Realised that NuPIC will not run on embedded hardware
+    Abandoned NuPIC
+    Spent afternoon looking for alternatives
+
+7/4/17
+    Agreed on using Arduino ANN (http://robotics.hobbizine.com/arduinoann.html)
+    Successfully tested the Arduino/Curie
+        Basic connection
+        Running the example ANN
+        IMU test
+        BLE test
+    Removed Numenta misc from the README
