@@ -30,13 +30,13 @@ void setup() {
   CurieIMU.autoCalibrateAccelerometerOffset(Z_AXIS, 1);
   
   /* Enable Motion Detection */
-  CurieIMU.setDetectionThreshold(CURIE_IMU_MOTION, 25); // mg
-  CurieIMU.setDetectionDuration(CURIE_IMU_MOTION, 6);  // number of consecutive positive samples required to detect motion
+  CurieIMU.setDetectionThreshold(CURIE_IMU_MOTION, 20); // mg
+  CurieIMU.setDetectionDuration(CURIE_IMU_MOTION, 10);  // number of consecutive positive samples required to detect motion
   CurieIMU.interrupts(CURIE_IMU_MOTION);
 
   /* Enable Zero Motion Detection */
   CurieIMU.setDetectionThreshold(CURIE_IMU_ZERO_MOTION, 35);  // mg
-  CurieIMU.setDetectionDuration(CURIE_IMU_ZERO_MOTION, 0.75);    // seconds
+  CurieIMU.setDetectionDuration(CURIE_IMU_ZERO_MOTION, 1);    // seconds
   CurieIMU.interrupts(CURIE_IMU_ZERO_MOTION);
 
   Serial.println("IMU initialisation complete, waiting for events...");
@@ -49,11 +49,11 @@ void loop() {
 
 static void eventCallback(void){
   if (CurieIMU.getInterruptStatus(CURIE_IMU_MOTION) && !moving) {
-    Serial.println("Motion detected; logging movement");
+    Serial.println("Motion detected; logging...");
     moving = true;
   } 
   if (CurieIMU.getInterruptStatus(CURIE_IMU_ZERO_MOTION) && moving) {
-    Serial.println("Motion ended; logging movement");
+    Serial.println("Motion ended;");
     moving = false;
   } 
 }
