@@ -12,15 +12,16 @@
 bool moving = false;                
 bool calibrateOffsets = true;
 
-unsigned long cooldownTime = 750;      //Cooldown period before another switch can happen, in milliseconds
-unsigned long lastSwitchTime = 0;   // Time of the last switch in 'moving' state
-unsigned long interruptTime = 0;    // Time of the last interrupt
+unsigned long cooldownTime = 750;     //Cooldown period before another switch can happen, in milliseconds
+unsigned long lastSwitchTime = 0;     // Time of the last switch in 'moving' state
+unsigned long interruptTime = 0;      // Time of the last interrupt
+unsigned long readingInterval = 100;  // Time between readings when logging
 
 int ax, ay, az;         // accelerometer values
 int gx, gy, gz;         // gyrometer values
 
 void setup() {
-  Serial.begin(9600); // initialize Serial communication
+  Serial.begin(38400); // initialize Serial communication
   while(!Serial) ;    // wait for serial port to connect.
 
   /* Initialise the IMU */
@@ -42,14 +43,20 @@ void setup() {
   CurieIMU.setDetectionThreshold(CURIE_IMU_ZERO_MOTION, 35 );  // mg
   CurieIMU.setDetectionDuration(CURIE_IMU_ZERO_MOTION, 0.5);   // seconds
   CurieIMU.interrupts(CURIE_IMU_ZERO_MOTION);
-
-  Serial.println("IMU initialisation complete, waiting for events...");
 }
 
 void loop() {
   if (moving) {
-    // Log
-  } else {
+    CurieIMU.readMotionSensor(ax, ay, az, gx, gy, gz);
+    Serial.print(ax); Serial.print("\t");
+    Serial.print(ay); Serial.print("\t");
+    Serial.print(az); Serial.print("\t");
+    Serial.print(gx); Serial.print("\t"); 
+    Serial.print(gy); Serial.print("\t");
+    Serial.println(gz);
+    delay(readingInterval);
+  } 
+  else {
     // Do nothing
   }
 }
