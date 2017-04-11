@@ -56,3 +56,7 @@ Individual project 'diary'
 10/4/17
     Removed more references to Numenta...
     Filled in skeleton with subsections
+
+11/4/17
+    Added base directories
+    Added logger (curie/src/logger/logger.ino) to segment exercises and send the IMU data to Serial.
