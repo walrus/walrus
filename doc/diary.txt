@@ -60,3 +60,7 @@ Individual project 'diary'
 11/4/17
     Added base directories
     Added logger (curie/src/logger/logger.ino) to segment exercises and send the IMU data to Serial.
+
+12/4/17
+    Added 'Data' folder
+    Completely failed to make reading data from Serial work...
