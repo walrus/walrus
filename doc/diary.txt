@@ -64,3 +64,6 @@ Individual project 'diary'
 12/4/17
     Added 'Data' folder
     Completely failed to make reading data from Serial work...
+
+13/4/17
+    Finally managed to make reading data from Serial work and piped it to a text file
