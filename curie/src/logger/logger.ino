@@ -21,7 +21,7 @@ int ax, ay, az;         // accelerometer values
 int gx, gy, gz;         // gyrometer values
 
 void setup() {
-  Serial.begin(38400); // initialize Serial communication
+  Serial.begin(9600); // initialize Serial communication
   while(!Serial) ;    // wait for serial port to connect.
 
   /* Initialise the IMU */
