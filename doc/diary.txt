@@ -67,3 +67,6 @@ Individual project 'diary'
 
 13/4/17
     Finally managed to make reading data from Serial work and piped it to a text file
+
+14/4/17
+    Wrote a Python script (.log-data) to create/append a given text file and log data from Serial to it
