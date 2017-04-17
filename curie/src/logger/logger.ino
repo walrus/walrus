@@ -18,7 +18,6 @@ unsigned long interruptTime = 0;      // Time of the last interrupt
 unsigned long readingInterval = 100;  // Time between readings when logging
 
 int ax, ay, az;         // accelerometer values
-int gx, gy, gz;         // gyrometer values
 
 void setup() {
   Serial.begin(9600); // initialize Serial communication
@@ -28,8 +27,7 @@ void setup() {
   CurieIMU.begin();
   CurieIMU.attachInterrupt(eventCallback);
 
-  /* Calibrate the IMU's gyrometer and accelerometer */
-  CurieIMU.autoCalibrateGyroOffset();
+  /* Calibrate the IMU's gyrometer */
   CurieIMU.autoCalibrateAccelerometerOffset(X_AXIS, 0);
   CurieIMU.autoCalibrateAccelerometerOffset(Y_AXIS, 0);
   CurieIMU.autoCalibrateAccelerometerOffset(Z_AXIS, 1);
@@ -47,13 +45,10 @@ void setup() {
 
 void loop() {
   if (moving) {
-    CurieIMU.readMotionSensor(ax, ay, az, gx, gy, gz);
+    CurieIMU.readAccelerometer(ax, ay, az);
     Serial.print(ax); Serial.print("\t");
     Serial.print(ay); Serial.print("\t");
-    Serial.print(az); Serial.print("\t");
-    Serial.print(gx); Serial.print("\t"); 
-    Serial.print(gy); Serial.print("\t");
-    Serial.println(gz);
+    Serial.println(az);
     delay(readingInterval);
   } 
   else {
