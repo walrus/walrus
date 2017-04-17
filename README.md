@@ -11,6 +11,7 @@ An Intel Curie.
 Bluetooth Low Energy (BLE) capable Android phone
 
 - [Arduino IDE](https://www.arduino.cc/en/Main/Software)
+- [Curie IMU (library)](https://www.arduino.cc/en/Reference/CurieIMU)
 - [ArduinoANN](http://robotics.hobbizine.com/arduinoann.zip)
 
 Plus more to come, undoubtedly.
@@ -20,3 +21,13 @@ Plus more to come, undoubtedly.
 To install version-controlled git hooks, run the following script:
 
     ./.init-hooks
+
+## Training the Classifier
+
+# Logging data from the Curie
+
+To log data from the curie, upload the sketch `logger.ino`, then run `./.log-data` 
+
+# Normalising data for training
+
+The normalisation script has multiple options. Once you've logged enough data, either run `./.normalise-data file` for each file, or run `./.normalise-data -r directory` to normalise all the files in the given directory.
