@@ -17,7 +17,8 @@ unsigned long lastSwitchTime = 0;     // Time of the last switch in 'moving' sta
 unsigned long interruptTime = 0;      // Time of the last interrupt
 unsigned long readingInterval = 100;  // Time between readings when logging
 
-int ax, ay, az;         // accelerometer values
+int ax, ay, az;         // Accelerometer values
+int acceleration;       // Overall acceleration magnitude
 
 void setup() {
   Serial.begin(9600); // initialize Serial communication
@@ -46,9 +47,8 @@ void setup() {
 void loop() {
   if (moving) {
     CurieIMU.readAccelerometer(ax, ay, az);
-    Serial.print(ax); Serial.print("\t");
-    Serial.print(ay); Serial.print("\t");
-    Serial.println(az);
+    acceleration = abs(ax) + abs(ay) + abs(az);
+    Serial.println(acceleration);
     delay(readingInterval);
   } 
   else {

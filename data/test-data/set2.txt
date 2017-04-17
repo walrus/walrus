@@ -61,3 +61,22 @@ Motion detected after  13312  milliseconds. Logging...
 109	-142	16256
 118	-135	16272
 Motion ended after  1937  milliseconds. Logging...
+Motion detected after  235921  milliseconds. Logging...
+-1116	1695	18932
+-141	-349	16109
+-121	-377	16725
+41	-219	16287
+19	-249	16260
+21	-138	16270
+95	-254	16255
+74	-203	16218
+46	-170	16293
+50	-233	16204
+69	-154	16267
+75	-160	16206
+81	-207	16252
+70	-169	16259
+26	-190	16301
+69	-195	16274
+65	-175	16250
+Motion ended after  1708  milliseconds. Logging...
