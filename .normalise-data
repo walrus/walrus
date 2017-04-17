@@ -1,0 +1,54 @@
+#!/usr/bin/python
+
+import sys
+
+# Flags:
+#
+# -d means normalise all files in a given directory
+# -r means recursively walk given directory and normalise all files
+#
+# Flag must precede file or directory name
+
+
+normalised_length = 20  # Number of neurons to normalise to
+d_flag = False          # Wether or not the -d 'directory' flag is set
+r_flag = False          # Wether or not the -r 'recursive' flag is set
+
+filename = None         # Will be set if 
+directory_name = None
+
+def normalise_directory(directory_name, r_flag):
+    print "Normalising directory %s. Recursive flag is %r" % (directory_name, r_flag)
+
+def normalise_file(filename):
+    print "Normalising file %s" % filename
+
+#
+# Main Program
+#
+
+
+# Parse arguments
+if len(sys.argv) < 2:
+    print "No arguments given; try again."
+    sys.exit(1)
+if len(sys.argv) == 2:
+    filename = sys.argv[1]
+if len(sys.argv) == 3:
+    if (sys.argv[1] == "-d"):
+        d_flag = True
+    elif (sys.argv[1] == "-r"):
+        r_flag = True
+    else:
+        print "%s is not a valid argument; try again." % sys.argv[1]
+        sys.exit(1)
+    directory_name = sys.argv[2]
+
+if d_flag:
+    normalise_directory(directory_name, False)
+elif r_flag:
+    normalise_directory(directory_name, True)
+else:
+    normalise_file(filename)
+
+sys.exit(0)
