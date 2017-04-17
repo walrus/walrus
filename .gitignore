@@ -1,3 +1,6 @@
+##############
+# Misc from the 'Python' default .gitignore
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -96,3 +99,9 @@ ENV/
 *.out
 *.aux
 *.toc
+
+###################################
+
+# Ignore the contents of /test-data/
+
+data/test-data/
