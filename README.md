@@ -21,3 +21,13 @@ Plus more to come, undoubtedly.
 To install version-controlled git hooks, run the following script:
 
     ./.init-hooks
+
+## Training the Classifier
+
+# Logging data from the Curie
+
+To log data from the curie, upload the sketch `logger.ino`, then run `./.log-data` 
+
+# Normalising data for training
+
+The normalisation script has multiple options. Once you've logged enough data, either run `./.normalise-data file` for each file, or run `./.normalise-data -r directory` to normalise all the files in the given directory.
