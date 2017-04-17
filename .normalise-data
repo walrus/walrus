@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, random
+import os, sys, random
 
 # Flags:
 #
@@ -23,13 +23,26 @@ directory_name = None   # Will be True if a directory name was given1
 def normalise_directory(directory_name, r_flag):
     print "Normalising directory %s. Recursive flag is %r" % (directory_name, r_flag)
 
+    if not r_flag:
+        for item in os.listdir(directory_name):
+            if os.path.isfile(os.path.join(directory_name, item)) and "_normalised.txt" not in item:
+                normalise_file(directory_name + item)
+    else:
+        for path, dirs, files in os.walk(directory_name):
+            for item in files:
+                if "_normalised.txt" not in item:
+                    normalise_file(os.path.join(path, item)) 
+
+
 def normalise_file(filename):
     print "Normalising file %s..." % filename
     
     original_file = open(filename,"r")
     
     normalised_filename = filename[:-4] + "_normalised.txt"
-    normalised_file = open(normalised_filename, "a+")
+    normalised_file = open(normalised_filename, "w+")
+
+    original_readings = []
 
     # Break the file into reps and normalise each rep separately
     for line in original_file:
