@@ -70,3 +70,6 @@ Individual project 'diary'
 
 14/4/17
     Wrote a Python script (.log-data) to create/append a given text file and log data from Serial to it
+
+17/4/17
+    Wrote a Python script (.normalise-data) to normalise the data from the text files created by .log-data
