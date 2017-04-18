@@ -3,21 +3,14 @@
  * See robotics.hobbizine.com/arduinoann.html for more information about ArduinoANN.
  */
 
-
-
-#include <string>
-
-#include "header.h"
+#include "network.hpp"
 
 Network::Network(int InputNodes,
                  int HiddenNodes,
                  int OutputNodes,
                  float LearningRate,
                  float Momentum,
-                 float InitialWeightMax,
-                 float Success) {
-
-}
+                 float InitialWeightMax) {}
 
 
 void Network::initialiseHiddenWeights() {}
@@ -26,7 +19,7 @@ void Network::initialiseHiddenWeights() {}
 void Network::initialiseOutputWeights() {}
 
 
-void Network::trainNetwork(float[InputNodes] inputs) {}
+void Network::trainNetwork(float inputs[]) {}
 
 
 void Network::computeHiddenLayerActivations() {}
@@ -45,8 +38,8 @@ void Network::updateHiddentoOutputWeights() {}
 
 
 char* Network::writeReport() {
-    return std::string();
+    return 0;
 }
 
 
-void Network::classify(float[InputNodes] inputs) {}
+void Network::classify(float inputs[]) {}

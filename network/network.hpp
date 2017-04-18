@@ -3,12 +3,12 @@
 
 class Network {
     private:
-        const int InputNodes = 20;
-        const int HiddenNodes = 20;
-        const int OutputNodes = 1;
-        const float LearningRate = 0.3;
-        const float Momentum = 0.9;
-        const float InitialWeightMax 0.5;
+        const static int InputNodes = 20;
+        const static int HiddenNodes = 20;
+        const static int OutputNodes = 1;
+        const static float LearningRate = 0.3;
+        const static float Momentum = 0.9;
+        const static float InitialWeightMax = 0.5;
 
         int ReportEvery1000;
         long TrainingCycle;
@@ -31,18 +31,17 @@ class Network {
                 int OutputNodes,
                 float LearningRate,
                 float Momentum,
-                float InitialWeightMax,
-                float Success);
+                float InitialWeightMax);
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
-        void trainNetwork(float[InputNodes] inputs);
+        void trainNetwork(float inputs[]);
         void computeHiddenLayerActivations();
         void computeOutputLayerActivations();
         void backpropogateErrors();
         void updateInnerToHiddenWeights();
         void updateHiddentoOutputWeights();
         char* writeReport();
-        void classify(float[InputNodes] inputs);
-}
+        void classify(float inputs[]);
+};
 
 #endif
