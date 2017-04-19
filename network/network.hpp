@@ -27,17 +27,18 @@ class Network {
         std::mt19937 m_mt;                                              // Mersenne twister for random number generation
         std::uniform_real_distribution<float> dist;                     // Distribution for random number generation
 
-    public:
-        Network(std::mt19937 m_mt);
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
-        float trainNetwork(float inputs[numInputNodes], float targets[numOutputNodes]);
         void computeHiddenLayerActivations(float inputs[numInputNodes]);
         void computeOutputLayerActivations();
         void computeErrors(float targets[numOutputNodes]);
         void backpropagateErrors();
         void updateHiddenWeights(float inputs[numInputNodes]);
         void updateOutputWeights();
+
+    public:
+        Network(std::mt19937 m_mt);
+        float trainNetwork(float inputs[numInputNodes], float targets[numOutputNodes]);
         std::string writeReport();
         float * classify(float inputs[numInputNodes], float outputsDestination[numOutputNodes]);
 };
