@@ -15,6 +15,9 @@ Network::Network(std::mt19937 m_mt): m_mt(std::random_device()()) {
     randomFloat = 0.0f;
     errorRate = 1.0f;
     accumulatedInput = 0.0f;
+
+    initialiseHiddenWeights();
+    initialiseOutputWeights();
 }
 
 
