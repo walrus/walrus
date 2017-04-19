@@ -138,3 +138,11 @@ data/test-data/
 *.exe
 *.out
 *.app
+
+###################################
+
+# CLion etc stuff
+
+.idea/
+CMakeLists.txt
+cmake-build-debug/
