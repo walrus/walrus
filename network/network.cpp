@@ -4,7 +4,6 @@
  */
 
 #include <random>
-#include <math.h>
 
 #include "network.hpp"
 
@@ -13,7 +12,7 @@ Network::Network(std::mt19937 m_mt): m_mt(std::random_device()()) {
     dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
 
     TrainingCycle = 0;
-    Rando = 0.0f;
+    RandomFloat = 0.0f;
     ErrorRate = 1.0f;
     AccumulatedInput = 0.0f;
 }
@@ -23,8 +22,8 @@ void Network::initialiseHiddenWeights() {
     for (int i = 0; i < HiddenNodes; i++) {
         for (int j = 0; j <= InputNodes; j++) {
             ChangeHiddenWeights[j][i] = 0.0;
-            Rando = dist(m_mt);
-            HiddenWeights[j][i] = Rando * InitialWeightMax;
+            RandomFloat = dist(m_mt);
+            HiddenWeights[j][i] = RandomFloat * InitialWeightMax;
         }
     }
 }
@@ -34,8 +33,8 @@ void Network::initialiseOutputWeights() {
     for(int i = 0 ; i < OutputNodes ; i ++ ) {
         for(int j = 0 ; j <= HiddenNodes ; j++ ) {
             ChangeOutputWeights[j][i] = 0.0 ;
-            Rando = dist(m_mt);
-            OutputWeights[j][i] = Rando * InitialWeightMax ;
+            RandomFloat = dist(m_mt);
+            OutputWeights[j][i] = RandomFloat * InitialWeightMax ;
         }
     }
 }
@@ -46,7 +45,7 @@ void Network::trainNetwork(float inputs[], float targets[]) {
     computeOutputLayerActivations(targets);
     backpropogateErrors();
     updateInputToHiddenWeights(inputs);
-    updateHiddentoOutputWeights();
+    updateHiddenToOutputWeights();
 }
 
 
@@ -97,7 +96,7 @@ void Network::updateInputToHiddenWeights(float *inputs) {
 }
 
 
-void Network::updateHiddentoOutputWeights() {
+void Network::updateHiddenToOutputWeights() {
     for(int i = 0 ; i < OutputNodes ; i ++ ) {
         ChangeOutputWeights[HiddenNodes][i] = LearningRate * OutputDelta[i] + Momentum * ChangeOutputWeights[HiddenNodes][i] ;
         OutputWeights[HiddenNodes][i] += ChangeOutputWeights[HiddenNodes][i] ;

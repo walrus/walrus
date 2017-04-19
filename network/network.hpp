@@ -10,9 +10,8 @@ class Network {
         constexpr static float Momentum = 0.9;
         constexpr static float InitialWeightMax = 0.5;
 
-        int ReportEvery1000;
         long TrainingCycle;
-        float Rando;
+        float RandomFloat;      // AKA 'Rando' in the original code
         float ErrorRate;        // AKA 'Error' in the original code
         float AccumulatedInput; // AKA 'Accum' in the original code
 
@@ -37,7 +36,7 @@ class Network {
         void computeOutputLayerActivations(float targets[]);
         void backpropogateErrors();
         void updateInputToHiddenWeights(float *inputs);
-        void updateHiddentoOutputWeights();
+        void updateHiddenToOutputWeights();
         std::string writeReport();
         void classify(float inputs[]);
 };
