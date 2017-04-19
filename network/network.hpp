@@ -38,7 +38,7 @@ class Network {
         void updateHiddenWeights(float *inputs);
         void updateOutputWeights();
         std::string writeReport();
-        void classify(float inputs[InputNodes]);
+        float * classify(float *inputs);
 };
 
 #endif

@@ -144,5 +144,10 @@ std::string Network::writeReport() {
     return "Training cycle: " + std::to_string(TrainingCycle) + ". Error rate: " + std::to_string(ErrorRate);
 }
 
-
-void Network::classify(float inputs[InputNodes]) {}
+/*
+ * Using the current state of the network, attempt to classify the given input pattern,
+ * and return a pointer to an array containing the predicted output
+ */
+float * Network::classify(float inputs[InputNodes]) {
+    return new float[OutputNodes];
+}
