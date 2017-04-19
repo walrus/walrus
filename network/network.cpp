@@ -55,8 +55,11 @@ void Network::initialiseOutputWeights() {
  */
 float Network::trainNetwork(float inputs[InputNodes], float targets[OutputNodes]) {
     computeHiddenLayerActivations(inputs);
-    computeOutputLayerActivations(targets);
+    computeOutputLayerActivations();
+
+    computeErrors(targets);
     backpropagateErrors();
+
     updateHiddenWeights(inputs);
     updateOutputWeights();
 
@@ -81,15 +84,21 @@ void Network::computeHiddenLayerActivations(float inputs[InputNodes]) {
  * Compute the activations of the hidden layer nodes from the current state of the hidden nodes,
  * then compute the output errors and overall error rate
  */
-void Network::computeOutputLayerActivations(float targets[OutputNodes]) {
+void Network::computeOutputLayerActivations() {
     for(int i = 0 ; i < OutputNodes ; i++ ) {
         AccumulatedInput = OutputWeights[HiddenNodes][i] ;
         for(int j = 0 ; j < HiddenNodes ; j++ ) {
             AccumulatedInput += Hidden[j] * OutputWeights[j][i] ;
         }
         Output[i] = float(1.0/(1.0 + exp(-AccumulatedInput))) ;
-        OutputDelta[i] = (targets[i] - Output[i]) * Output[i] * (1.0f - Output[i]) ;
-        ErrorRate += 0.5 * (targets[i] - Output[i]) * (targets[i] - Output[i]) ;
+    }
+}
+
+
+void Network::computeErrors(float targets[OutputNodes]) {
+    for(int i = 0 ; i < OutputNodes ; i++ ) {
+        OutputDelta[i] = (targets[i] - Output[i]) * Output[i] * (1.0f - Output[i]);
+        ErrorRate += 0.5 * (targets[i] - Output[i]) * (targets[i] - Output[i]);
     }
 }
 
@@ -149,5 +158,11 @@ std::string Network::writeReport() {
  * and return a pointer to an array containing the predicted output
  */
 float * Network::classify(float inputs[InputNodes]) {
-    return new float[OutputNodes];
+    computeHiddenLayerActivations(inputs);
+    computeOutputLayerActivations();
+
+    float outputCopy[OutputNodes];
+    std::copy(std::begin(Output), std::end(Output), std::begin(outputCopy));
+
+    return outputCopy;
 }
