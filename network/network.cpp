@@ -162,14 +162,14 @@ std::string Network::writeReport() {
 
 /*
  * Using the current state of the network, attempt to classify the given input pattern,
- * and return a pointer to an array containing the predicted output
+ * and return a pointer to an array containing the predicted output.
+ * The desired output for the function must be passed in.
  */
-float * Network::classify(float inputs[numInputNodes]) {
+float * Network::classify(float inputs[numInputNodes], float outputsDestination[numOutputNodes]) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations();
 
-    float outputNodesCopy[numOutputNodes];
-    std::copy(std::begin(outputNodes), std::end(outputNodes), std::begin(outputNodesCopy));
+    std::copy(std::begin(outputNodes), std::end(outputNodes), outputsDestination);
 
-    return outputNodesCopy;
+    return outputsDestination;
 }
