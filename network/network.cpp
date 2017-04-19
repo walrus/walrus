@@ -70,7 +70,15 @@ void Network::computeOutputLayerActivations(float targets[]) {
 }
 
 
-void Network::backpropogateErrors() {}
+void Network::backpropogateErrors() {
+    for(int i = 0 ; i < HiddenNodes ; i++ ) {
+        AccumulatedInput = 0.0 ;
+        for(int j = 0 ; j < OutputNodes ; j++ ) {
+            AccumulatedInput += OutputWeights[i][j] * OutputDelta[j] ;
+        }
+        HiddenDelta[i] = AccumulatedInput * Hidden[i] * (1.0 - Hidden[i]) ;
+    }
+}
 
 
 void Network::updateInnerToHiddenWeights() {}
