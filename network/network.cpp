@@ -93,7 +93,16 @@ void Network::updateInnerToHiddenWeights(float inputs[]) {
 }
 
 
-void Network::updateHiddentoOutputWeights() {}
+void Network::updateHiddentoOutputWeights() {
+    for(int i = 0 ; i < OutputNodes ; i ++ ) {
+        ChangeOutputWeights[HiddenNodes][i] = LearningRate * OutputDelta[i] + Momentum * ChangeOutputWeights[HiddenNodes][i] ;
+        OutputWeights[HiddenNodes][i] += ChangeOutputWeights[HiddenNodes][i] ;
+        for(int j = 0 ; j < HiddenNodes ; j++ ) {
+            ChangeOutputWeights[j][i] = LearningRate * Hidden[j] * OutputDelta[i] + Momentum * ChangeOutputWeights[j][i] ;
+            OutputWeights[j][i] += ChangeOutputWeights[j][i] ;
+        }
+    }
+}
 
 
 char* Network::writeReport() {
