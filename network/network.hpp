@@ -35,10 +35,10 @@ class Network {
         void computeHiddenLayerActivations(float inputs[InputNodes]);
         void computeOutputLayerActivations(float targets[OutputNodes]);
         void backpropagateErrors();
-        void updateHiddenWeights(float *inputs);
+        void updateHiddenWeights(float inputs[InputNodes]);
         void updateOutputWeights();
         std::string writeReport();
-        float * classify(float *inputs);
+        float * classify(float inputs[InputNodes]);
 };
 
 #endif
