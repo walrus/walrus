@@ -44,8 +44,8 @@ float Network::trainNetwork(float inputs[InputNodes], float targets[OutputNodes]
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations(targets);
     backpropogateErrors();
-    updateInputToHiddenWeights(inputs);
-    updateHiddenToOutputWeights();
+    updateHiddenWeights(inputs);
+    updateOutputWeights();
 
     TrainingCycle++;
     return ErrorRate;
@@ -87,7 +87,7 @@ void Network::backpropogateErrors() {
 }
 
 
-void Network::updateInputToHiddenWeights(float inputs[InputNodes]) {
+void Network::updateHiddenWeights(float *inputs) {
     for(int i = 0 ; i < HiddenNodes ; i++ ) {
         ChangeHiddenWeights[InputNodes][i] = LearningRate * HiddenDelta[i] + Momentum * ChangeHiddenWeights[InputNodes][i] ;
         HiddenWeights[InputNodes][i] += ChangeHiddenWeights[InputNodes][i] ;
@@ -99,7 +99,7 @@ void Network::updateInputToHiddenWeights(float inputs[InputNodes]) {
 }
 
 
-void Network::updateHiddenToOutputWeights() {
+void Network::updateOutputWeights() {
     for(int i = 0 ; i < OutputNodes ; i ++ ) {
         ChangeOutputWeights[HiddenNodes][i] = LearningRate * OutputDelta[i] + Momentum * ChangeOutputWeights[HiddenNodes][i] ;
         OutputWeights[HiddenNodes][i] += ChangeOutputWeights[HiddenNodes][i] ;
