@@ -63,8 +63,8 @@ void Network::computeOutputLayerActivations(float targets[]) {
         for(int j = 0 ; j < HiddenNodes ; j++ ) {
             AccumulatedInput += Hidden[j] * OutputWeights[j][i] ;
         }
-        Output[i] = 1.0/(1.0 + exp(-AccumulatedInput)) ;
-        OutputDelta[i] = (targets[i] - Output[i]) * Output[i] * (1.0 - Output[i]) ;
+        Output[i] = float(1.0/(1.0 + exp(-AccumulatedInput))) ;
+        OutputDelta[i] = (targets[i] - Output[i]) * Output[i] * (1.0f - Output[i]) ;
         ErrorRate += 0.5 * (targets[i] - Output[i]) * (targets[i] - Output[i]) ;
     }
 }
@@ -76,7 +76,7 @@ void Network::backpropogateErrors() {
         for(int j = 0 ; j < OutputNodes ; j++ ) {
             AccumulatedInput += OutputWeights[i][j] * OutputDelta[j] ;
         }
-        HiddenDelta[i] = AccumulatedInput * Hidden[i] * (1.0 - Hidden[i]) ;
+        HiddenDelta[i] = float(AccumulatedInput * Hidden[i] * (1.0 - Hidden[i])) ;
     }
 }
 
