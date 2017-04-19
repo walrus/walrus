@@ -41,7 +41,7 @@ void Network::initialiseOutputWeights() {
 }
 
 
-void Network::trainNetwork(float inputs[]) {
+void Network::trainNetwork(float inputs[], float targets[]) {
 
 }
 
@@ -57,7 +57,17 @@ void Network::computeHiddenLayerActivations(float inputs[]) {
 }
 
 
-void Network::computeOutputLayerActivations() {}
+void Network::computeOutputLayerActivations(float targets[]) {
+    for(int i = 0 ; i < OutputNodes ; i++ ) {
+        AccumulatedInput = OutputWeights[HiddenNodes][i] ;
+        for(int j = 0 ; j < HiddenNodes ; j++ ) {
+            AccumulatedInput += Hidden[j] * OutputWeights[j][i] ;
+        }
+        Output[i] = 1.0/(1.0 + exp(-AccumulatedInput)) ;
+        OutputDelta[i] = (targets[i] - Output[i]) * Output[i] * (1.0 - Output[i]) ;
+        ErrorRate += 0.5 * (targets[i] - Output[i]) * (targets[i] - Output[i]) ;
+    }
+}
 
 
 void Network::backpropogateErrors() {}

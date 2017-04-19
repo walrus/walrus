@@ -38,9 +38,9 @@ class Network {
                 std::mt19937 m_mt);
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
-        void trainNetwork(float inputs[]);
+        void trainNetwork(float inputs[], float targets[]);
         void computeHiddenLayerActivations(float inputs[]);
-        void computeOutputLayerActivations();
+        void computeOutputLayerActivations(float targets[]);
         void backpropogateErrors();
         void updateInnerToHiddenWeights();
         void updateHiddentoOutputWeights();
