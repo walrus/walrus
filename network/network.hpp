@@ -42,7 +42,7 @@ class Network {
         void computeHiddenLayerActivations(float inputs[]);
         void computeOutputLayerActivations(float targets[]);
         void backpropogateErrors();
-        void updateInnerToHiddenWeights();
+        void updateInnerToHiddenWeights(float inputs[]);
         void updateHiddentoOutputWeights();
         char* writeReport();
         void classify(float inputs[]);

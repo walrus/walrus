@@ -81,7 +81,16 @@ void Network::backpropogateErrors() {
 }
 
 
-void Network::updateInnerToHiddenWeights() {}
+void Network::updateInnerToHiddenWeights(float inputs[]) {
+    for(int i = 0 ; i < HiddenNodes ; i++ ) {
+        ChangeHiddenWeights[InputNodes][i] = LearningRate * HiddenDelta[i] + Momentum * ChangeHiddenWeights[InputNodes][i] ;
+        HiddenWeights[InputNodes][i] += ChangeHiddenWeights[InputNodes][i] ;
+        for(int j = 0 ; j < InputNodes ; j++ ) {
+            ChangeHiddenWeights[j][i] = LearningRate * inputs[j] * HiddenDelta[i] + Momentum * ChangeHiddenWeights[j][i];
+            HiddenWeights[j][i] += ChangeHiddenWeights[j][i] ;
+        }
+    }
+}
 
 
 void Network::updateHiddentoOutputWeights() {}
