@@ -173,3 +173,63 @@ float * Network::classify(float inputs[numInputNodes], float outputsDestination[
 
     return outputsDestination;
 }
+
+
+const int Network::getNumInputNodes() {
+    return numInputNodes;
+}
+
+
+const int Network::getNumHiddenNodes() {
+    return numHiddenNodes;
+}
+
+
+const int Network::getNumOutputNodes() {
+    return numOutputNodes;
+}
+
+
+const float Network::getLearningRate() {
+    return learningRate;
+}
+
+
+const float Network::getMomentum() {
+    return momentum;
+}
+
+
+const float Network::getInitialWeightMax() {
+    return initialWeightMax;
+}
+
+
+long Network::getTrainingCycle() const {
+    return trainingCycle;
+}
+
+
+float Network::getErrorRate() const {
+    return errorRate;
+}
+
+
+const float *Network::getHiddenNodes() const {
+    return hiddenNodes;
+}
+
+
+const float *Network::getOutputNodes() const {
+    return outputNodes;
+}
+
+
+const float *Network::getHiddenNodesDeltas() const {
+    return hiddenNodesDeltas;
+}
+
+
+const float *Network::getOutputNodesDeltas() const {
+    return outputNodesDeltas;
+}

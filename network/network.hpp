@@ -41,6 +41,18 @@ class Network {
         float trainNetwork(float inputs[numInputNodes], float targets[numOutputNodes]);
         std::string writeReport();
         float * classify(float inputs[numInputNodes], float outputsDestination[numOutputNodes]);
+        static const int getNumInputNodes();
+        static const int getNumHiddenNodes();
+        static const int getNumOutputNodes();
+        static const float getLearningRate();
+        static const float getMomentum();
+        static const float getInitialWeightMax();
+        long getTrainingCycle() const;
+        float getErrorRate() const;
+        const float *getHiddenNodes() const;
+        const float *getOutputNodes() const;
+        const float *getHiddenNodesDeltas() const;
+        const float *getOutputNodesDeltas() const;
 };
 
 #endif
