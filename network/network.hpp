@@ -25,13 +25,17 @@ class Network {
         float ChangeHiddenWeights[InputNodes+1][HiddenNodes];
         float ChangeOutputWeights[HiddenNodes+1][OutputNodes];
 
+        std::mt19937 m_mt;
+        std::uniform_real_distribution<float> dist;
+
     public:
         Network(int InputNodes,
                 int HiddenNodes,
                 int OutputNodes,
                 float LearningRate,
                 float Momentum,
-                float InitialWeightMax);
+                float InitialWeightMax,
+                std::mt19937 m_mt);
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
         void trainNetwork(float inputs[]);
