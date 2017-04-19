@@ -39,7 +39,7 @@ class Network {
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
         void trainNetwork(float inputs[]);
-        void computeHiddenLayerActivations();
+        void computeHiddenLayerActivations(float inputs[]);
         void computeOutputLayerActivations();
         void backpropogateErrors();
         void updateInnerToHiddenWeights();

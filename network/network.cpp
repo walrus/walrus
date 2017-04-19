@@ -46,7 +46,15 @@ void Network::trainNetwork(float inputs[]) {
 }
 
 
-void Network::computeHiddenLayerActivations() {}
+void Network::computeHiddenLayerActivations(float inputs[]) {
+    for(int i = 0 ; i < HiddenNodes ; i++ ) {
+        AccumulatedInput = HiddenWeights[InputNodes][i] ;
+        for(int j = 0 ; j < InputNodes ; j++ ) {
+            AccumulatedInput += inputs[j] * HiddenWeights[j][i] ;
+        }
+        Hidden[i] = float(1.0/(1.0 + exp(-AccumulatedInput))) ;
+    }
+}
 
 
 void Network::computeOutputLayerActivations() {}
