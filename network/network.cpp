@@ -105,8 +105,8 @@ void Network::updateHiddentoOutputWeights() {
 }
 
 
-char* Network::writeReport() {
-    return 0;
+std::string Network::writeReport() {
+    return "Training cycle: " + std::to_string(TrainingCycle) + ". Error rate: " + std::to_string(ErrorRate);
 }
 
 

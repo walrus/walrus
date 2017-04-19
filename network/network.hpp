@@ -38,7 +38,7 @@ class Network {
         void backpropogateErrors();
         void updateInnerToHiddenWeights(float inputs[]);
         void updateHiddentoOutputWeights();
-        char* writeReport();
+        std::string writeReport();
         void classify(float inputs[]);
 };
 
