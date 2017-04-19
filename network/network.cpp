@@ -40,12 +40,15 @@ void Network::initialiseOutputWeights() {
 }
 
 
-void Network::trainNetwork(float inputs[], float targets[]) {
+float Network::trainNetwork(float inputs[], float targets[]) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations(targets);
     backpropogateErrors();
     updateInputToHiddenWeights(inputs);
     updateHiddenToOutputWeights();
+
+    TrainingCycle++;
+    return ErrorRate;
 }
 
 
