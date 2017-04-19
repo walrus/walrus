@@ -31,14 +31,14 @@ class Network {
         Network(std::mt19937 m_mt);
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
-        float trainNetwork(float inputs[], float targets[]);
-        void computeHiddenLayerActivations(float inputs[]);
-        void computeOutputLayerActivations(float targets[]);
+        float trainNetwork(float inputs[InputNodes], float targets[OutputNodes]);
+        void computeHiddenLayerActivations(float inputs[InputNodes]);
+        void computeOutputLayerActivations(float targets[OutputNodes]);
         void backpropogateErrors();
         void updateInputToHiddenWeights(float *inputs);
         void updateHiddenToOutputWeights();
         std::string writeReport();
-        void classify(float inputs[]);
+        void classify(float inputs[InputNodes]);
 };
 
 #endif

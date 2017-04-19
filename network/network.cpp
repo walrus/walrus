@@ -40,7 +40,7 @@ void Network::initialiseOutputWeights() {
 }
 
 
-float Network::trainNetwork(float inputs[], float targets[]) {
+float Network::trainNetwork(float inputs[InputNodes], float targets[OutputNodes]) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations(targets);
     backpropogateErrors();
@@ -52,7 +52,7 @@ float Network::trainNetwork(float inputs[], float targets[]) {
 }
 
 
-void Network::computeHiddenLayerActivations(float inputs[]) {
+void Network::computeHiddenLayerActivations(float inputs[InputNodes]) {
     for(int i = 0 ; i < HiddenNodes ; i++ ) {
         AccumulatedInput = HiddenWeights[InputNodes][i] ;
         for(int j = 0 ; j < InputNodes ; j++ ) {
@@ -63,7 +63,7 @@ void Network::computeHiddenLayerActivations(float inputs[]) {
 }
 
 
-void Network::computeOutputLayerActivations(float targets[]) {
+void Network::computeOutputLayerActivations(float targets[OutputNodes]) {
     for(int i = 0 ; i < OutputNodes ; i++ ) {
         AccumulatedInput = OutputWeights[HiddenNodes][i] ;
         for(int j = 0 ; j < HiddenNodes ; j++ ) {
@@ -87,7 +87,7 @@ void Network::backpropogateErrors() {
 }
 
 
-void Network::updateInputToHiddenWeights(float *inputs) {
+void Network::updateInputToHiddenWeights(float inputs[InputNodes]) {
     for(int i = 0 ; i < HiddenNodes ; i++ ) {
         ChangeHiddenWeights[InputNodes][i] = LearningRate * HiddenDelta[i] + Momentum * ChangeHiddenWeights[InputNodes][i] ;
         HiddenWeights[InputNodes][i] += ChangeHiddenWeights[InputNodes][i] ;
@@ -116,4 +116,4 @@ std::string Network::writeReport() {
 }
 
 
-void Network::classify(float inputs[]) {}
+void Network::classify(float inputs[InputNodes]) {}
