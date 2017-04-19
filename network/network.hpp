@@ -34,7 +34,7 @@ class Network {
         float trainNetwork(float inputs[InputNodes], float targets[OutputNodes]);
         void computeHiddenLayerActivations(float inputs[InputNodes]);
         void computeOutputLayerActivations(float targets[OutputNodes]);
-        void backpropogateErrors();
+        void backpropagateErrors();
         void updateHiddenWeights(float *inputs);
         void updateOutputWeights();
         std::string writeReport();

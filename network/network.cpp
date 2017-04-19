@@ -18,6 +18,11 @@ Network::Network(std::mt19937 m_mt): m_mt(std::random_device()()) {
 }
 
 
+/*
+ * Initialise HiddenWeights to random values
+ * Initialise ChangeHiddenWeights to zero
+ * Use when setting up a new, untrained network
+ */
 void Network::initialiseHiddenWeights() {
     for (int i = 0; i < HiddenNodes; i++) {
         for (int j = 0; j <= InputNodes; j++) {
@@ -29,6 +34,11 @@ void Network::initialiseHiddenWeights() {
 }
 
 
+/*
+ * Initialise OutputWeights to random values
+ * Initialise ChangeOutputWeights to zero
+ * Use when setting up a new, untrained network
+ */
 void Network::initialiseOutputWeights() {
     for(int i = 0 ; i < OutputNodes ; i ++ ) {
         for(int j = 0 ; j <= HiddenNodes ; j++ ) {
@@ -40,10 +50,13 @@ void Network::initialiseOutputWeights() {
 }
 
 
+/*
+ * Train the network on a single pattern and return the error rate post training
+ */
 float Network::trainNetwork(float inputs[InputNodes], float targets[OutputNodes]) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations(targets);
-    backpropogateErrors();
+    backpropagateErrors();
     updateHiddenWeights(inputs);
     updateOutputWeights();
 
@@ -51,7 +64,9 @@ float Network::trainNetwork(float inputs[InputNodes], float targets[OutputNodes]
     return ErrorRate;
 }
 
-
+/*
+ * Compute the activations of the hidden layer nodes from the given inputs
+ */
 void Network::computeHiddenLayerActivations(float inputs[InputNodes]) {
     for(int i = 0 ; i < HiddenNodes ; i++ ) {
         AccumulatedInput = HiddenWeights[InputNodes][i] ;
@@ -62,7 +77,10 @@ void Network::computeHiddenLayerActivations(float inputs[InputNodes]) {
     }
 }
 
-
+/*
+ * Compute the activations of the hidden layer nodes from the current state of the hidden nodes,
+ * then compute the output errors and overall error rate
+ */
 void Network::computeOutputLayerActivations(float targets[OutputNodes]) {
     for(int i = 0 ; i < OutputNodes ; i++ ) {
         AccumulatedInput = OutputWeights[HiddenNodes][i] ;
@@ -76,7 +94,10 @@ void Network::computeOutputLayerActivations(float targets[OutputNodes]) {
 }
 
 
-void Network::backpropogateErrors() {
+/*
+ *  Backpropagate the output layer errors to the hidden layer
+ */
+void Network::backpropagateErrors() {
     for(int i = 0 ; i < HiddenNodes ; i++ ) {
         AccumulatedInput = 0.0 ;
         for(int j = 0 ; j < OutputNodes ; j++ ) {
@@ -87,6 +108,9 @@ void Network::backpropogateErrors() {
 }
 
 
+/*
+ *  Using the backpropagated errors, update the weights of the hidden nodes
+ */
 void Network::updateHiddenWeights(float *inputs) {
     for(int i = 0 ; i < HiddenNodes ; i++ ) {
         ChangeHiddenWeights[InputNodes][i] = LearningRate * HiddenDelta[i] + Momentum * ChangeHiddenWeights[InputNodes][i] ;
@@ -99,6 +123,9 @@ void Network::updateHiddenWeights(float *inputs) {
 }
 
 
+/*
+ *  Using the backpropagated errors, update the weights of the hidden nodes
+ */
 void Network::updateOutputWeights() {
     for(int i = 0 ; i < OutputNodes ; i ++ ) {
         ChangeOutputWeights[HiddenNodes][i] = LearningRate * OutputDelta[i] + Momentum * ChangeOutputWeights[HiddenNodes][i] ;
@@ -110,7 +137,9 @@ void Network::updateOutputWeights() {
     }
 }
 
-
+/*
+ * Output the current training cycle and error rate as a string for display or logging
+ */
 std::string Network::writeReport() {
     return "Training cycle: " + std::to_string(TrainingCycle) + ". Error rate: " + std::to_string(ErrorRate);
 }
