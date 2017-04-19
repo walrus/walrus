@@ -233,3 +233,15 @@ const float *Network::getHiddenNodesDeltas() const {
 const float *Network::getOutputNodesDeltas() const {
     return outputNodesDeltas;
 }
+
+void Network::setLearningRate(float learningRate) {
+    Network::learningRate = learningRate;
+}
+
+void Network::setMomentum(float momentum) {
+    Network::momentum = momentum;
+}
+
+void Network::setInitialWeightMax(float initialWeightMax) {
+    Network::initialWeightMax = initialWeightMax;
+}
