@@ -6,9 +6,9 @@ class Network {
         constexpr static int numInputNodes = 20;                        // AKA 'InputNodes' in the original code
         constexpr static int numHiddenNodes = 20;                       // AKA 'HiddenNodes' in the original code
         constexpr static int numOutputNodes = 1;                        // AKA 'OutputNodes' in the original code
-        constexpr static float learningRate = 0.3;                      // AKA 'LearningRate' in the original code
-        constexpr static float momentum = 0.9;                          // AKA 'Momentum' in the original code
-        constexpr static float initialWeightMax = 0.5;                  // AKA 'InitialWeightMax' in the original code
+        float learningRate = 0.3;                                       // AKA 'LearningRate' in the original code
+        float momentum = 0.9;                                           // AKA 'Momentum' in the original code
+        float initialWeightMax = 0.5;                                   // AKA 'InitialWeightMax' in the original code
 
         long trainingCycle;                                             // AKA 'TrainingCycle' in the original code
         float randomFloat;                                              // AKA 'Rando' in the original code
@@ -44,9 +44,9 @@ class Network {
         static const int getNumInputNodes();
         static const int getNumHiddenNodes();
         static const int getNumOutputNodes();
-        static const float getLearningRate();
-        static const float getMomentum();
-        static const float getInitialWeightMax();
+        float getLearningRate() const;
+        float getMomentum() const;
+        float getInitialWeightMax() const;
         long getTrainingCycle() const;
         float getErrorRate() const;
         const float *getHiddenNodes() const;

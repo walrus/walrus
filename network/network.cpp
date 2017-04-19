@@ -190,17 +190,17 @@ const int Network::getNumOutputNodes() {
 }
 
 
-const float Network::getLearningRate() {
+float Network::getLearningRate() const {
     return learningRate;
 }
 
 
-const float Network::getMomentum() {
+float Network::getMomentum() const {
     return momentum;
 }
 
 
-const float Network::getInitialWeightMax() {
+float Network::getInitialWeightMax() const {
     return initialWeightMax;
 }
 
