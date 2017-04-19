@@ -11,10 +11,10 @@ class Network {
         const static float InitialWeightMax = 0.5;
 
         int ReportEvery1000;
-        long TrainingCycle;
-        float Rando;
-        float ErrorRate;        // AKA 'Error' in the original code
-        float AccumulatedInput; // AKA 'Accum' in the original code
+        long TrainingCycle = 0;
+        float Rando = 0.0f;
+        float ErrorRate = 1.0f;        // AKA 'Error' in the original code
+        float AccumulatedInput = 0.0f; // AKA 'Accum' in the original code
 
         float Hidden[HiddenNodes];
         float Output[OutputNodes];
@@ -29,13 +29,7 @@ class Network {
         std::uniform_real_distribution<float> dist;
 
     public:
-        Network(int InputNodes,
-                int HiddenNodes,
-                int OutputNodes,
-                float LearningRate,
-                float Momentum,
-                float InitialWeightMax,
-                std::mt19937 m_mt);
+        Network(std::mt19937 m_mt);
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
         void trainNetwork(float inputs[], float targets[]);

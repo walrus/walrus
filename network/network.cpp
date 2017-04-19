@@ -7,15 +7,9 @@
 
 #include "network.hpp"
 
-Network::Network(int InputNodes,
-                 int HiddenNodes,
-                 int OutputNodes,
-                 float LearningRate,
-                 float Momentum,
-                 float InitialWeightMax,
-                 std::mt19937 m_mt) {
+Network::Network(std::mt19937 m_mt): m_mt(std::random_device()()) {
 
-    std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+    dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
 }
 
 
