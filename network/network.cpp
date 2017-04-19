@@ -4,12 +4,18 @@
  */
 
 #include <random>
+#include <math.h>
 
 #include "network.hpp"
 
 Network::Network(std::mt19937 m_mt): m_mt(std::random_device()()) {
 
     dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
+
+    TrainingCycle = 0;
+    Rando = 0.0f;
+    ErrorRate = 1.0f;
+    AccumulatedInput = 0.0f;
 }
 
 
