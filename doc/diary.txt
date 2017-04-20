@@ -73,3 +73,10 @@ Individual project 'diary'
 
 17/4/17
     Wrote a Python script (.normalise-data) to normalise the data from the text files created by .log-data
+
+18/4/17
+    Began conversion of ArduinoANN into an actual C++ library
+
+19/4/17
+    Finished implementing ArduinoANN as a C++ library. 
+    Implementation as of today should have all the functionality of ArduinoANN (subject to testing).
