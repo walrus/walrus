@@ -83,3 +83,9 @@ Individual project 'diary'
 
 20/4/17
     No progress today.
+
+21/4/17
+    Choose Catch as C++ testing library
+    Install Catch and set up core tests
+    Write script (network/.run-tests) to compile and run tests
+    Add test runner to pre-commit hook
