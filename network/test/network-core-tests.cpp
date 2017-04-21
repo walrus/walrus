@@ -53,17 +53,18 @@ TEST_CASE("The core network functionality is all correct") {
             }
             THEN("It can (badly) attempt to classify without training") {
                 float input[nin];
-                float *output;
+                float output[non];
 
                 for (int i = 0; i++; i < nin) {
                     input[i] = test_dist(m_mt);
                 }
 
-                output = network.classify(input, output);
+                //This is a bit messy, but will work until I replace all the arrays with vectors
+                float *output2 = network.classify(input, output);
 
                 for (int i = 0; i++; i < non) {
-                    REQUIRE(output[i] > -1.0f);
-                    REQUIRE(output[i] < 1.0f);
+                    REQUIRE(output2[i] > -1.0f);
+                    REQUIRE(output2[i] < 1.0f);
                 }
             }
         }
