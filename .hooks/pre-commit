@@ -11,16 +11,18 @@ echo "Running pre-commit checks"
 
 # TODO: Test compilation of Arduino stuff once I figure out the CLI
 
-# Check compilation of the network code
-
-g++ -c -std=c++17 network/src/network.cpp
+# Run network tests
+cd network/
+./.run-tests -q
 
 if [ $? != 0 ]; then
-  echo "Tests failed, not committing"
+  echo "Network tests failed, not committing"
   exit 1
 else
-  echo "Tests passed"
+  echo "Network tests passed"
 fi
+
+cd ..
 
 # Query when committing directly to development. 
 if [ $development_branch = $current_branch ] 
