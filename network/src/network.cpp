@@ -210,8 +210,18 @@ long Network::getTrainingCycle() const {
 }
 
 
+float Network::getRandomFloat() const {
+    return randomFloat;
+}
+
+
 float Network::getErrorRate() const {
     return errorRate;
+}
+
+
+float Network::getAccumulatedInput() const {
+    return accumulatedInput;
 }
 
 

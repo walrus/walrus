@@ -57,7 +57,9 @@ class Network {
         float getMomentum() const;
         float getInitialWeightMax() const;
         long getTrainingCycle() const;
+        float getRandomFloat() const;
         float getErrorRate() const;
+        float getAccumulatedInput() const;
         const float *getHiddenNodes() const;
         const float *getOutputNodes() const;
         const float *getHiddenNodesDeltas() const;
