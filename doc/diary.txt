@@ -80,3 +80,6 @@ Individual project 'diary'
 19/4/17
     Finished implementing ArduinoANN as a C++ library. 
     Implementation as of today should have all the functionality of ArduinoANN (subject to testing).
+
+20/4/17
+    No progress today.
