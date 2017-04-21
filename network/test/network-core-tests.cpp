@@ -2,21 +2,21 @@
 #include "../src/network.hpp"
 /* Main unit test file for the network code. */
 
-SCENARIO("The network can be initialised and configured correctly") {
+TEST_CASE("The core network functionality is all correct") {
 
     WHEN("The network is instantiated using the constructor") {
         std::random_device rd;
-        std::mt19937 m_mt (rd());
+        std::mt19937 m_mt(rd());
 
         Network network = Network(m_mt);
 
         // This is necessary because Catch struggles to match against #defines for...reasons
-        int nin  = NUM_INPUT_NODES;
-        int nhn  = NUM_HIDDEN_NODES;
-        int non  = NUM_OUTPUT_NODES;
+        int nin = NUM_INPUT_NODES;
+        int nhn = NUM_HIDDEN_NODES;
+        int non = NUM_OUTPUT_NODES;
 
-        float dlr  = DEFAULT_LEARNING_RATE;
-        float dm   = DEFAULT_MOMENTUM;
+        float dlr = DEFAULT_LEARNING_RATE;
+        float dm = DEFAULT_MOMENTUM;
         float diwm = DEFAULT_INITIAL_WEIGHT_MAX;
 
         THEN("The default parameters are set properly") {
@@ -35,20 +35,22 @@ SCENARIO("The network can be initialised and configured correctly") {
             REQUIRE(network.getErrorRate() == 1.0f);
             REQUIRE(network.getAccumulatedInput() == 0.0f);
         }
-        THEN("The learning rate can be adjusted") {
-            REQUIRE(network.getLearningRate() == dlr);
-            network.setLearningRate(0.5f);
-            REQUIRE(network.getLearningRate() == 0.5f);
-        }
-        THEN("The momentum can be adjusted") {
-            REQUIRE(network.getMomentum() == dm);
-            network.setMomentum(0.5f);
-            REQUIRE(network.getMomentum() == 0.5f);
-        }
-        THEN("The initial weight maximum can be adjusted") {
-            REQUIRE(network.getInitialWeightMax() == diwm);
-            network.setInitialWeightMax(0.9f);
-            REQUIRE(network.getInitialWeightMax() == 0.9f);
+        GIVEN("An already instantiated network") {
+            THEN("The learning rate can be adjusted") {
+                REQUIRE(network.getLearningRate() == dlr);
+                network.setLearningRate(0.5f);
+                REQUIRE(network.getLearningRate() == 0.5f);
+            }
+            THEN("The momentum can be adjusted") {
+                REQUIRE(network.getMomentum() == dm);
+                network.setMomentum(0.5f);
+                REQUIRE(network.getMomentum() == 0.5f);
+            }
+            THEN("The initial weight maximum can be adjusted") {
+                REQUIRE(network.getInitialWeightMax() == diwm);
+                network.setInitialWeightMax(0.9f);
+                REQUIRE(network.getInitialWeightMax() == 0.9f);
+            }
         }
     }
 }
