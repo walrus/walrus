@@ -1,19 +1,22 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#define NUM_INPUT_NODES = 20;
-#define NUM_HIDDEN_NODES = 20;
-#define NUM_OUTPUT_NODES = 20;
+#define NUM_INPUT_NODES 20;
+#define NUM_HIDDEN_NODES 20;
+#define NUM_OUTPUT_NODES 20;
 
+#define DEFAULT_LEARNING_RATE 0.3;
+#define DEFAULT_MOMENTUM = 0.9;
+#define DEFAULT_INITIAL_WEIGHT_MAX = 0.5;
 
 class Network {
     private:
         constexpr static int numInputNodes = NUM_INPUT_NODES;           // AKA 'InputNodes' in the original code
         constexpr static int numHiddenNodes = NUM_HIDDEN_NODES;         // AKA 'HiddenNodes' in the original code
         constexpr static int numOutputNodes = NUM_OUTPUT_NODES;         // AKA 'OutputNodes' in the original code
-        float learningRate = 0.3;                                       // AKA 'LearningRate' in the original code
-        float momentum = 0.9;                                           // AKA 'Momentum' in the original code
-        float initialWeightMax = 0.5;                                   // AKA 'InitialWeightMax' in the original code
+        float learningRate = DEFAULT_LEARNING_RATE;                     // AKA 'LearningRate' in the original code
+        float momentum = DEFAULT_MOMENTUM;                              // AKA 'Momentum' in the original code
+        float initialWeightMax = DEFAULT_INITIAL_WEIGHT_MAX;            // AKA 'InitialWeightMax' in the original code
 
         long trainingCycle;                                             // AKA 'TrainingCycle' in the original code
         float randomFloat;                                              // AKA 'Rando' in the original code
