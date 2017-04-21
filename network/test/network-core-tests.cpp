@@ -7,7 +7,7 @@ TEST_CASE("The core network functionality is all correct") {
     WHEN("The network is instantiated using the constructor") {
         std::random_device rd;
         std::mt19937 m_mt(rd());
-
+        std::uniform_real_distribution<float> test_dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
         Network network = Network(m_mt);
 
         // This is necessary because Catch struggles to match against #defines for...reasons
@@ -50,6 +50,21 @@ TEST_CASE("The core network functionality is all correct") {
                 REQUIRE(network.getInitialWeightMax() == diwm);
                 network.setInitialWeightMax(0.9f);
                 REQUIRE(network.getInitialWeightMax() == 0.9f);
+            }
+            THEN("It can (badly) attempt to classify without training") {
+                float input[nin];
+                float *output;
+
+                for (int i = 0; i++; i < nin) {
+                    input[i] = test_dist(m_mt);
+                }
+
+                output = network.classify(input, output);
+
+                for (int i = 0; i++; i < non) {
+                    REQUIRE(output[i] > -1.0f);
+                    REQUIRE(output[i] < 1.0f);
+                }
             }
         }
     }
