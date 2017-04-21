@@ -64,7 +64,6 @@ class Network {
         const float *getOutputNodes() const;
         const float *getHiddenNodesDeltas() const;
         const float *getOutputNodesDeltas() const;
-
         void setLearningRate(float learningRate);
         void setMomentum(float momentum);
         void setInitialWeightMax(float initialWeightMax);
