@@ -13,7 +13,8 @@ echo "Running pre-commit checks"
 
 # Check compilation of the network code
 
-g++ -c -std=c++17 network/network.cpp
+g++ -c -std=c++17 network/src/network.cpp
+
 if [ $? != 0 ]; then
   echo "Tests failed, not committing"
   exit 1
