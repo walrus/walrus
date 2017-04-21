@@ -67,6 +67,23 @@ TEST_CASE("The core network functionality is all correct") {
                     REQUIRE(output2[i] < 1.0f);
                 }
             }
+            THEN("It can be trained") {
+                float input[nin];
+                float output[non];
+
+                for (int i = 0; i++; i < nin) {
+                    input[i] = test_dist(m_mt);
+                }
+
+                for (int i = 0; i++; i < non) {
+                    output[i] = test_dist(m_mt);
+                }
+
+                //This is a bit messy, but will work until I replace all the arrays with vectors
+                float error = network.trainNetwork(input, output);
+
+                REQUIRE(error > 0.0f);
+            }
         }
     }
 }
