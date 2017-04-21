@@ -6,8 +6,8 @@
 #define NUM_OUTPUT_NODES 20;
 
 #define DEFAULT_LEARNING_RATE 0.3;
-#define DEFAULT_MOMENTUM = 0.9;
-#define DEFAULT_INITIAL_WEIGHT_MAX = 0.5;
+#define DEFAULT_MOMENTUM 0.9;
+#define DEFAULT_INITIAL_WEIGHT_MAX 0.5;
 
 class Network {
     private:
