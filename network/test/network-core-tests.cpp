@@ -35,5 +35,20 @@ SCENARIO("The network can be initialised and configured correctly") {
             REQUIRE(network.getErrorRate() == 1.0f);
             REQUIRE(network.getAccumulatedInput() == 0.0f);
         }
+        THEN("The learning rate can be adjusted") {
+            REQUIRE(network.getLearningRate() == dlr);
+            network.setLearningRate(0.5f);
+            REQUIRE(network.getLearningRate() == 0.5f);
+        }
+        THEN("The momentum can be adjusted") {
+            REQUIRE(network.getMomentum() == dm);
+            network.setMomentum(0.5f);
+            REQUIRE(network.getMomentum() == 0.5f);
+        }
+        THEN("The initial weight maximum can be adjusted") {
+            REQUIRE(network.getInitialWeightMax() == diwm);
+            network.setInitialWeightMax(0.9f);
+            REQUIRE(network.getInitialWeightMax() == 0.9f);
+        }
     }
 }
