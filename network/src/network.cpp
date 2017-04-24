@@ -16,6 +16,18 @@ Network::Network(std::mt19937 m_mt): m_mt(std::random_device()()) {
     errorRate = 1.0f;
     accumulatedInput = 0.0f;
 
+    hiddenNodes.reserve(numHiddenNodes);
+    outputNodes.reserve(numOutputNodes);
+
+    hiddenWeights.resize(numInputNodes+1, vector<float>(numHiddenNodes, 0));
+    outputWeights.resize(numHiddenNodes+1, vector<float>(numOutputNodes, 0));
+
+    hiddenNodesDeltas.reserve(numHiddenNodes);
+    outputNodesDeltas.reserve(numOutputNodes);
+
+    hiddenWeightsChanges.resize(numInputNodes+1, vector<float>(numHiddenNodes, 0));
+    outputWeightsChanges.resize(numHiddenNodes+1, vector<float>(numOutputNodes, 0));
+
     initialiseHiddenWeights();
     initialiseOutputWeights();
 }
@@ -225,22 +237,22 @@ float Network::getAccumulatedInput() const {
 }
 
 
-const float *Network::getHiddenNodes() const {
+const vector<float> Network::getHiddenNodes() const {
     return hiddenNodes;
 }
 
 
-const float *Network::getOutputNodes() const {
+const vector<float> Network::getOutputNodes() const {
     return outputNodes;
 }
 
 
-const float *Network::getHiddenNodesDeltas() const {
+const vector<float> Network::getHiddenNodesDeltas() const {
     return hiddenNodesDeltas;
 }
 
 
-const float *Network::getOutputNodesDeltas() const {
+const vector<float> Network::getOutputNodesDeltas() const {
     return outputNodesDeltas;
 }
 

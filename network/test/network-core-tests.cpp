@@ -51,6 +51,7 @@ TEST_CASE("The core network functionality is all correct") {
                 network.setInitialWeightMax(0.9f);
                 REQUIRE(network.getInitialWeightMax() == 0.9f);
             }
+
             THEN("It can (badly) attempt to classify without training") {
                 float input[nin];
                 float output[non];
