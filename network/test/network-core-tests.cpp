@@ -9,16 +9,16 @@ TEST_CASE("The core network functionality is all correct") {
         std::random_device rd;
         std::mt19937 m_mt(rd());
         std::uniform_real_distribution<float> test_dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
-        Network network = Network(m_mt);
 
-        // This is necessary because Catch struggles to match against #defines for...reasons
-        int nin = NUM_INPUT_NODES;
-        int nhn = NUM_HIDDEN_NODES;
-        int non = NUM_OUTPUT_NODES;
+        int nin = 8;
+        int nhn = 7;
+        int non = 4;
 
-        float dlr = DEFAULT_LEARNING_RATE;
-        float dm = DEFAULT_MOMENTUM;
-        float diwm = DEFAULT_INITIAL_WEIGHT_MAX;
+        float dlr = 0.3;
+        float dm = 0.9;
+        float diwm = 0.5;
+
+        Network network = Network(nin, nhn, non, dlr, dm, diwm);
 
         THEN("The default parameters are set properly") {
             REQUIRE(network.getNumInputNodes() == nin);
