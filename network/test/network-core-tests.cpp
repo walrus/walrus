@@ -214,4 +214,76 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(trained_error > 0.0f);
         }
     }
+    GIVEN("A network with very few neurons and edge case parameters") {
+
+        nin = 2;
+        nhn = 2;
+        non = 1;
+        dlr = 0.1;
+        dm = 0.0;
+
+        Network network = Network(nin, nhn, non, dlr, dm, diwm);
+
+        THEN("It can attempt to classify without training") {
+            vector<float>  input;
+            input.resize(nin);
+
+            for (int i = 0; i++; i < nin) {
+                input[i] = test_dist(m_mt);
+            }
+
+            vector<float> output = network.classify(input);
+
+            for (int i = 0; i++; i < non) {
+                REQUIRE(output[i] > -1.0f);
+                REQUIRE(output[i] < 1.0f);
+            }
+        }
+        THEN("It can be trained") {
+            vector<float> input;
+            input.resize(nin);
+            vector<float> output;
+            output.resize(non);
+
+            for (int i = 0; i < nin; i++) {
+                input[i] = test_dist(m_mt);
+            }
+
+            for (int i = 0; i < non; i++) {
+                output[i] = test_dist(m_mt);
+            }
+
+            //This is a bit messy, but will work until I replace all the arrays with vectors
+            float error = network.trainNetwork(input, output);
+
+            REQUIRE(error > 0.0f);
+        }
+        THEN("Training reduces the error") {
+            vector<float> input;
+            input.resize(nin);
+            vector<float> output;
+            output.resize(non);
+
+            for (int i = 0; i < nin; i++) {
+                input[i] = test_dist(m_mt);
+            }
+
+            for (int i = 0;  i < non; i++) {
+                output[i] = test_dist(m_mt);
+            }
+
+            float untrained_error = network.trainNetwork(input, output);
+
+            REQUIRE(untrained_error > 0.0f);
+
+            for (int i =0; i < 9; i++) {
+                network.trainNetwork(input, output);
+            }
+
+            float trained_error = network.trainNetwork(input, output);
+
+            REQUIRE(trained_error < untrained_error);
+            REQUIRE(trained_error > 0.0f);
+        }
+    }
 }
