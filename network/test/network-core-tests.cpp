@@ -54,6 +54,7 @@ TEST_CASE("The core network functionality is all correct") {
 
             THEN("It can (badly) attempt to classify without training") {
                 vector<float>  input;
+                input.reserve(nin);
 
                 for (int i = 0; i++; i < nin) {
                     input[i] = test_dist(m_mt);
@@ -69,7 +70,9 @@ TEST_CASE("The core network functionality is all correct") {
             }
             THEN("It can be trained") {
                 vector<float> input;
+                input.reserve(nin);
                 vector<float> output;
+                output.reserve(non);
 
                 for (int i = 0; i++; i < nin) {
                     input[i] = test_dist(m_mt);
