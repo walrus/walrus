@@ -16,9 +16,9 @@ using std::vector;
 
 class Network {
     private:
-        constexpr static int numInputNodes = NUM_INPUT_NODES;           // AKA 'InputNodes' in the original code
-        constexpr static int numHiddenNodes = NUM_HIDDEN_NODES;         // AKA 'HiddenNodes' in the original code
-        constexpr static int numOutputNodes = NUM_OUTPUT_NODES;         // AKA 'OutputNodes' in the original code
+        const int numInputNodes = NUM_INPUT_NODES;                      // AKA 'InputNodes' in the original code
+        const int numHiddenNodes = NUM_HIDDEN_NODES;                    // AKA 'HiddenNodes' in the original code
+        const int numOutputNodes = NUM_OUTPUT_NODES;                    // AKA 'OutputNodes' in the original code
         float learningRate = DEFAULT_LEARNING_RATE;                     // AKA 'LearningRate' in the original code
         float momentum = DEFAULT_MOMENTUM;                              // AKA 'Momentum' in the original code
         float initialWeightMax = DEFAULT_INITIAL_WEIGHT_MAX;            // AKA 'InitialWeightMax' in the original code
@@ -55,9 +55,9 @@ class Network {
         std::string writeReport();
         vector<float> classify(vector<float> inputs);
 
-        static const int getNumInputNodes();
-        static const int getNumHiddenNodes();
-        static const int getNumOutputNodes();
+        int getNumInputNodes() const;
+        int getNumHiddenNodes() const;
+        int getNumOutputNodes() const;
         float getLearningRate() const;
         float getMomentum() const;
         float getInitialWeightMax() const;

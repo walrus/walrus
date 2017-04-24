@@ -189,17 +189,17 @@ vector<float> Network::classify(vector<float> inputs) {
 }
 
 
-const int Network::getNumInputNodes() {
+int Network::getNumInputNodes() const {
     return numInputNodes;
 }
 
 
-const int Network::getNumHiddenNodes() {
+int Network::getNumHiddenNodes() const {
     return numHiddenNodes;
 }
 
 
-const int Network::getNumOutputNodes() {
+int Network::getNumOutputNodes() const {
     return numOutputNodes;
 }
 
