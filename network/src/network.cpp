@@ -16,17 +16,17 @@ Network::Network(std::mt19937 m_mt): m_mt(std::random_device()()) {
     errorRate = 1.0f;
     accumulatedInput = 0.0f;
 
-    hiddenNodes.reserve(numHiddenNodes);
-    outputNodes.reserve(numOutputNodes);
+    hiddenNodes.resize(numHiddenNodes);
+    outputNodes.resize(numOutputNodes);
 
-    hiddenWeights.resize(numInputNodes+1, vector<float>(numHiddenNodes, 0));
-    outputWeights.resize(numHiddenNodes+1, vector<float>(numOutputNodes, 0));
+    hiddenWeights.resize(numInputNodes+1, vector<float>(numHiddenNodes));
+    outputWeights.resize(numHiddenNodes+1, vector<float>(numOutputNodes));
 
-    hiddenNodesDeltas.reserve(numHiddenNodes);
-    outputNodesDeltas.reserve(numOutputNodes);
+    hiddenNodesDeltas.resize(numHiddenNodes);
+    outputNodesDeltas.resize(numOutputNodes);
 
-    hiddenWeightsChanges.resize(numInputNodes+1, vector<float>(numHiddenNodes, 0));
-    outputWeightsChanges.resize(numHiddenNodes+1, vector<float>(numOutputNodes, 0));
+    hiddenWeightsChanges.resize(numInputNodes+1, vector<float>(numHiddenNodes));
+    outputWeightsChanges.resize(numHiddenNodes+1, vector<float>(numOutputNodes));
 
     initialiseHiddenWeights();
     initialiseOutputWeights();
@@ -87,9 +87,9 @@ float Network::trainNetwork(vector<float> inputs, vector<float> targets) {
  * Compute the activations of the hidden layer nodes from the given inputs
  */
 void Network::computeHiddenLayerActivations(vector<float> inputs) {
-    for(int i = 0 ; i < numHiddenNodes ; i++ ) {
+    for(int i = 0 ; i < numHiddenNodes; i++ ) {
         accumulatedInput = hiddenWeights[numInputNodes][i] ;
-        for(int j = 0 ; j < numInputNodes ; j++ ) {
+        for(int j = 0 ; j < numInputNodes; j++ ) {
             accumulatedInput += inputs[j] * hiddenWeights[j][i] ;
         }
         hiddenNodes[i] = float(1.0/(1.0 + exp(-accumulatedInput))) ;
@@ -165,7 +165,7 @@ void Network::updateOutputWeights() {
 
 
 /*
- * outputNodes the current training cycle and error rate as a string for display or logging
+ * outputs the current training cycle and error rate as a string for display or logging
  */
 std::string Network::writeReport() {
     return "Training cycle: " + std::to_string(trainingCycle) + ". Error rate: " + std::to_string(errorRate);
@@ -180,8 +180,8 @@ std::string Network::writeReport() {
 vector<float> Network::classify(vector<float> inputs) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations();
-
-    return outputNodes;
+    vector<float> classification= outputNodes;
+    return classification;
 }
 
 
