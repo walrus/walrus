@@ -2,6 +2,8 @@
 #define NETWORK_H
 
 #include <vector>
+#include <random>
+
 using std::vector;
 
 #define NUM_INPUT_NODES 20;
@@ -40,18 +42,18 @@ class Network {
 
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
-        void computeHiddenLayerActivations(float inputs[numInputNodes]);
+        void computeHiddenLayerActivations(vector<float> inputs);
         void computeOutputLayerActivations();
-        void computeErrors(float targets[numOutputNodes]);
+        void computeErrors(vector<float> targets);
         void backpropagateErrors();
-        void updateHiddenWeights(float inputs[numInputNodes]);
+        void updateHiddenWeights(vector<float> inputs);
         void updateOutputWeights();
 
     public:
         Network(std::mt19937 m_mt);
-        float trainNetwork(float inputs[numInputNodes], float targets[numOutputNodes]);
+        float trainNetwork(vector<float> inputs, vector<float> targets);
         std::string writeReport();
-        float * classify(float inputs[numInputNodes], float outputsDestination[numOutputNodes]);
+        vector<float> classify(vector<float> inputs);
 
         static const int getNumInputNodes();
         static const int getNumHiddenNodes();

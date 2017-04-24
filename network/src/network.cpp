@@ -68,7 +68,7 @@ void Network::initialiseOutputWeights() {
 /*
  * Train the network on a single pattern and return the error rate post training
  */
-float Network::trainNetwork(float inputs[numInputNodes], float targets[numOutputNodes]) {
+float Network::trainNetwork(vector<float> inputs, vector<float> targets) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations();
 
@@ -86,7 +86,7 @@ float Network::trainNetwork(float inputs[numInputNodes], float targets[numOutput
 /*
  * Compute the activations of the hidden layer nodes from the given inputs
  */
-void Network::computeHiddenLayerActivations(float inputs[numInputNodes]) {
+void Network::computeHiddenLayerActivations(vector<float> inputs) {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         accumulatedInput = hiddenWeights[numInputNodes][i] ;
         for(int j = 0 ; j < numInputNodes ; j++ ) {
@@ -112,7 +112,7 @@ void Network::computeOutputLayerActivations() {
 }
 
 
-void Network::computeErrors(float targets[numOutputNodes]) {
+void Network::computeErrors(vector<float> targets) {
     for(int i = 0 ; i < numOutputNodes ; i++ ) {
         outputNodesDeltas[i] = (targets[i] - outputNodes[i]) * outputNodes[i] * (1.0f - outputNodes[i]);
         errorRate += 0.5 * (targets[i] - outputNodes[i]) * (targets[i] - outputNodes[i]);
@@ -137,7 +137,7 @@ void Network::backpropagateErrors() {
 /*
  *  Using the backpropagated errors, update the weights of the hidden nodes
  */
-void Network::updateHiddenWeights(float *inputs) {
+void Network::updateHiddenWeights(vector<float> inputs) {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         hiddenWeightsChanges[numInputNodes][i] = learningRate * hiddenNodesDeltas[i] + momentum * hiddenWeightsChanges[numInputNodes][i] ;
         hiddenWeights[numInputNodes][i] += hiddenWeightsChanges[numInputNodes][i] ;
@@ -177,13 +177,11 @@ std::string Network::writeReport() {
  * and return a pointer to an array containing the predicted output.
  * The desired output for the function must be passed in.
  */
-float * Network::classify(float inputs[numInputNodes], float outputsDestination[numOutputNodes]) {
+vector<float> Network::classify(vector<float> inputs) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations();
 
-    std::copy(std::begin(outputNodes), std::end(outputNodes), outputsDestination);
-
-    return outputsDestination;
+    return outputNodes;
 }
 
 
