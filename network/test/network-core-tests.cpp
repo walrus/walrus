@@ -74,11 +74,11 @@ TEST_CASE("The core network functionality is all correct") {
                 vector<float> output;
                 output.resize(non);
 
-                for (int i = 0; i++; i < nin) {
+                for (int i = 0; i < nin; i++) {
                     input[i] = test_dist(m_mt);
                 }
 
-                for (int i = 0; i++; i < non) {
+                for (int i = 0; i < non; i++) {
                     output[i] = test_dist(m_mt);
                 }
 
@@ -86,6 +86,33 @@ TEST_CASE("The core network functionality is all correct") {
                 float error = network.trainNetwork(input, output);
 
                 REQUIRE(error > 0.0f);
+            }
+            THEN("Training reduces the error") {
+                vector<float> input;
+                input.resize(nin);
+                vector<float> output;
+                output.resize(non);
+
+                for (int i = 0; i < nin; i++) {
+                    input[i] = test_dist(m_mt);
+                }
+
+                for (int i = 0;  i < non; i++) {
+                    output[i] = test_dist(m_mt);
+                }
+
+                float untrained_error = network.trainNetwork(input, output);
+
+                REQUIRE(untrained_error > 0.0f);
+
+                for (int i =0; i < 9; i++) {
+                    network.trainNetwork(input, output);
+                }
+
+                float trained_error = network.trainNetwork(input, output);
+
+                REQUIRE(trained_error < untrained_error);
+                REQUIRE(trained_error > 0.0f);
             }
         }
     }
