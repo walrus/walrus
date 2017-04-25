@@ -2,12 +2,12 @@
 
 #include "../../network/src/network.hpp"
 
-Network loadNetwork(string filename) {
+Network loadNetwork(std::string filename) {
     // Assumes that the file is located in the folder '../../network/configurations'
-    return new Network;
+    return nullptr;
 }
 
-void saveNetwork(Network network, string filename) {
+void saveNetwork(Network network, std::string filename) {
     // Saves the file in the folder '../../network/configurations'
 }
 
