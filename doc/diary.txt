@@ -89,3 +89,12 @@ Individual project 'diary'
     Install Catch and set up core tests
     Write script (network/.run-tests) to compile and run tests
     Add test runner to pre-commit hook
+
+24/4/17
+    Refactor library to use vectors everywhere instead of arrays
+    Begin writing regression tests
+
+25/4/17
+    Finish writing regression tests
+    Update scripts
+    Begin writing training code
