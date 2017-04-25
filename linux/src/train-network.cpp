@@ -11,12 +11,14 @@ void saveNetwork(Network network, std::string filename) {
     // Saves the file in the folder '../../network/configurations'
 }
 
+
 /*
  * Arguments:
  *      0: filename of network config file
  *      1+: filenames or directory names to train on
+ *
+ *      Will load each file supplied and train the network on the data contained in each one.
  */
-
 int main(int argc, char* argv[]) {
     return 0;
 }
