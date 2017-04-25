@@ -30,6 +30,7 @@ def run_quick_tests():
     if o.returncode == 1:
         sys.exit(1)
 
+    print "Running tests..."
     # Run the tests
     c = subprocess.Popen(["./.catch.exe"]);  
     c.wait();
@@ -38,7 +39,26 @@ def run_quick_tests():
 
 
 def run_slow_tests():
-    print "No slow tests to run, yet"
+    # Compile core tests
+    print "Compiling legacy tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-legacy-tests.cpp"]);  
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1) 
+
+    # Link the various bits together into an executable
+    print "Linking..."
+    o = subprocess.Popen(["g++", "main.o", "network-legacy-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o.wait();
+    if o.returncode == 1:
+        sys.exit(1)
+
+    print "Running tests (this may take a while)..."
+    # Run the tests
+    c = subprocess.Popen(["./.catch.exe"]);  
+    c.wait();
+    if c.returncode == 1:
+        sys.exit(1)
 
 
 def run_all_tests():

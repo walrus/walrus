@@ -1,4 +1,3 @@
-#include <iostream>
 #include "../../lib/catch.hpp"
 #include "../src/network.hpp"
 /* Main unit test file for the network code. */
@@ -32,7 +31,7 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(network.getTrainingCycle() == 0);
             REQUIRE(network.getRandomFloat() <= 1.0f);
             REQUIRE(network.getRandomFloat() >= -1.0f);
-            REQUIRE(network.getErrorRate() == 1.0f);
+            REQUIRE(network.getErrorRate() == 0.0f);
             REQUIRE(network.getAccumulatedInput() == 0.0f);
         }
         THEN("The learning rate can be adjusted") {

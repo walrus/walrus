@@ -25,7 +25,7 @@ Network::Network(int numInputNodes,
 
     trainingCycle = 0;
     randomFloat = 0.0f;
-    errorRate = 1.0f;
+    errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
     hiddenNodes.resize(numHiddenNodes);
@@ -81,7 +81,7 @@ void Network::initialiseOutputWeights() {
  * Train the network on a single pattern and return the error rate post training
  */
 float Network::trainNetwork(vector<float> inputs, vector<float> targets) {
-    errorRate = 1.0f;
+    errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
     computeHiddenLayerActivations(inputs);
