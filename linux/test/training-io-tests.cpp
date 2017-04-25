@@ -1,5 +1,5 @@
 #include "../../lib/catch.hpp"
-#include "../src/train-network.cpp"
+#include "../src/network-io.cpp"
 
 /* Main unit test file for the training code */
 
