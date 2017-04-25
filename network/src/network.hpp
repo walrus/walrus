@@ -22,11 +22,7 @@ class Network {
 
         vector<float> hiddenNodes;                  // AKA 'Hidden' in the original code
         vector<float> outputNodes;                  // AKA 'Output' in the original code
-        vector<vector<float>> hiddenWeights;
-public:
-
-private:
-    // AKA 'HiddenWeights' in the original code
+        vector<vector<float>> hiddenWeights;        // AKA 'HiddenWeights' in the original code
         vector<vector<float>> outputWeights;        // AKA 'OutputWeights' in the original code
         vector<float> hiddenNodesDeltas;            // AKA 'HiddenDelta' in the original code
         vector<float> outputNodesDeltas;            // AKA 'OutputDelta' in the original code
@@ -54,10 +50,12 @@ private:
                 float learningRate,
                 float momentum,
                 float initialWeightMax);
-        float trainNetwork(vector<float> inputs, vector<float> targets);
+        float trainNetwork(vector<float> inputs,
+                           vector<float> targets);
         std::string writeReport();
         vector<float> classify(vector<float> inputs);
-        void loadWeights(vector<vector<float>> hiddenWeights, vector<vector<float>> outputWeights);
+        void loadWeights(vector<vector<float>> hiddenWeights,
+                         vector<vector<float>> outputWeights);
 
         int getNumInputNodes() const;
         int getNumHiddenNodes() const;
