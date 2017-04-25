@@ -4,8 +4,8 @@ import os, sys, subprocess
 
 # Flags:
 #
-# -q (or no arguments) means run only quick unit tests
-# -s means run only slow unit tests
+# -q (or no arguments) means run only quick unit tests (AKA core tests)
+# -s means run only slow unit tests (AKA legacy tests, for now)
 # -a means run all tests
 #
 # This script should be run from network/
@@ -62,8 +62,32 @@ def run_slow_tests():
 
 
 def run_all_tests():
-    print "Running core tests, for now"
-    run_quick_tests();
+        # Compile core tests
+    print "Compiling core tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-core-tests.cpp"]);  
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1) 
+
+    print "Compiling legacy tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-legacy-tests.cpp"]);  
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1) 
+
+    # Link the various bits together into an executable
+    print "Linking..."
+    o = subprocess.Popen(["g++", "main.o", "network-core-tests.o", "network-legacy-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o.wait();
+    if o.returncode == 1:
+        sys.exit(1)
+
+    print "Running *all* tests... (this may take a while)"
+    # Run the tests
+    c = subprocess.Popen(["./.catch.exe"]);  
+    c.wait();
+    if c.returncode == 1:
+        sys.exit(1)
 
 
 #
