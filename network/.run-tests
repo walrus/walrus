@@ -25,7 +25,7 @@ def run_quick_tests():
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "main.o", "network-core-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o = subprocess.Popen(["g++", "catch-main.o", "network-core-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -48,7 +48,7 @@ def run_slow_tests():
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "main.o", "network-legacy-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o = subprocess.Popen(["g++", "catch-main.o", "network-legacy-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -77,7 +77,7 @@ def run_all_tests():
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "main.o", "network-core-tests.o", "network-legacy-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o = subprocess.Popen(["g++", "catch-main.o", "network-core-tests.o", "network-legacy-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -116,9 +116,9 @@ if len(sys.argv) > 2:
     sys.exit(1)
 
 # If the main test object file doesn't exist, compile it
-if not (os.path.isfile("main.o")):
+if not (os.path.isfile("../catch-main.o")):
     print "Compiling main..."
-    m = subprocess.Popen(["g++", "-c", "-std=c++11", "test/main.cpp"]);  
+    m = subprocess.Popen(["g++", "-c", "-std=c++11", "../catch-main.cpp"]);  
     m.wait();
     if m.returncode == 1:
         sys.exit(1) 
