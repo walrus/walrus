@@ -34,6 +34,22 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(network.getErrorRate() == 0.0f);
             REQUIRE(network.getAccumulatedInput() == 0.0f);
         }
+        THEN("The hidden weights are all in the correct range") {
+            vector<vector<float>> hiddenWeights = network.getHiddenWeights();
+            for (int i = 0; i < nin+1; i++) {
+                for (int j = 0; j < nhn; j++) {
+                    REQUIRE(abs(hiddenWeights[i][j]) < diwm);
+                }
+            }
+        }
+        THEN("The output weights are all in the correct range") {
+            vector<vector<float>> outputWeights = network.getOutputWeights();
+            for (int i = 0; i < nhn+1; i++) {
+                for (int j = 0; j < non; j++) {
+                    REQUIRE(abs(outputWeights[i][j]) < diwm);
+                }
+            }
+        }
         THEN("The learning rate can be adjusted") {
             REQUIRE(network.getLearningRate() == dlr);
             network.setLearningRate(0.5f);
