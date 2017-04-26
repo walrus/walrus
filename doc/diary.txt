@@ -98,3 +98,8 @@ Individual project 'diary'
     Finish writing regression tests
     Update scripts
     Begin writing training code
+
+26/4/17
+    Write Curie code for supervised data logging
+    Write script for supervised data logging
+    Update normalising script to work for supervised data too
