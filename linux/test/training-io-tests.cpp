@@ -1,8 +1,8 @@
 #include "../../lib/catch.hpp"
-#include "../src/network-io.cpp"
+#include "../src/training-set.h"
 
 /* Main unit test file for the training code */
 
-TEST_CASE("Saving to and loading from files works correctly") {
+TEST_CASE("Loading training sets from files works correctly") {
 
 }
