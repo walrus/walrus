@@ -2,6 +2,8 @@
  *  Program to detect exercises, record the IMU data and send it to 
  *  the computer for processing & training of the neural nework
  * 
+ *  For use when someone to supervise the exerciser cannot be found.
+ * 
     Motion detection code taken from the 'MotionDetect' Curie example,
     Copyright (c) 2016 Intel Corporation.  All rights reserved.
     See the bottom of this file for license terms.
