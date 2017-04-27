@@ -2,6 +2,8 @@
 
 import os, sys, random
 
+# Script to normalise data collected using the '.log-data-unsupervised' and '.log-data-supervised' scripts
+#
 # Flags:
 #
 # -d means normalise all files in a given directory
@@ -46,9 +48,9 @@ def normalise_file(filename):
 
     # Break the file into reps and normalise each rep separately
     for line in original_file:
-        if "Motion detected" in line:
+        if ("Motion detected" in line or "Repetition Start" in line):
             original_readings = []
-        elif "Motion ended" in line:
+        elif ("Motion ended" in line or "Repetition End" in line):
             normalised_readings = normalise_readings(original_readings)
             #Write these readings to the normalised file
             normalised_file.write("Repetition start\n")
