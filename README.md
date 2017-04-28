@@ -14,8 +14,8 @@ Bluetooth Low Energy (BLE) capable Android phone
 - [Curie IMU (library)](https://www.arduino.cc/en/Reference/CurieIMU)
 - [ArduinoANN](http://robotics.hobbizine.com/arduinoann.zip)
 - [Python 2](https://www.python.org/downloads/) (Hoping to switch to Python 3 soon...)
-- [C++11 (or greater)](https://en.wikipedia.org/wiki/C%2B%2B11)
-= [Catch](https://github.com/philsquared/Catch)
+- [GCC 6](https://gcc.gnu.org/gcc-6/)
+- [Catch](https://github.com/philsquared/Catch)
 
 Plus more to come, undoubtedly.
 
