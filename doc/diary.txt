@@ -103,3 +103,11 @@ Individual project 'diary'
     Write Curie code for supervised data logging
     Write script for supervised data logging
     Update normalising script to work for supervised data too
+
+27/4/17
+    Begin writing file handling code for saving network config
+    Get stuck with compiler errors
+
+28/4/17
+    Update to GCC 6
+    Fix compiler errors
