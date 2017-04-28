@@ -38,7 +38,8 @@ TEST_CASE("The core network functionality is all correct") {
             vector<vector<float>> hiddenWeights = network.getHiddenWeights();
             for (int i = 0; i < nin+1; i++) {
                 for (int j = 0; j < nhn; j++) {
-                    REQUIRE(abs(hiddenWeights[i][j]) < diwm);
+                    REQUIRE(hiddenWeights[i][j] < diwm);
+                    REQUIRE(hiddenWeights[i][j] > -1 * diwm);
                 }
             }
         }
@@ -46,7 +47,8 @@ TEST_CASE("The core network functionality is all correct") {
             vector<vector<float>> outputWeights = network.getOutputWeights();
             for (int i = 0; i < nhn+1; i++) {
                 for (int j = 0; j < non; j++) {
-                    REQUIRE(abs(outputWeights[i][j]) < diwm);
+                    REQUIRE(outputWeights[i][j] < diwm);
+                    REQUIRE(outputWeights[i][j] > -1 * diwm);
                 }
             }
         }

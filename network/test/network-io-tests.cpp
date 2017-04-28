@@ -19,8 +19,10 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
          Network network = Network(nin, nhn, non, dlr, dm, diwm);
 
+         std::string filename = "filename.txt";
+
          THEN("It can be saved to file") {
-             int status_code = saveNetwork("network-test-config.txt", network);
+             int status_code = saveNetwork(filename, network);
 
              REQUIRE(status_code == 0);
          }
