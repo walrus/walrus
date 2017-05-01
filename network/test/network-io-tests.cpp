@@ -19,12 +19,50 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
          Network network = Network(nin, nhn, non, dlr, dm, diwm);
 
-         std::string filename = "filename.txt";
+         std::string filename = "test_config_file.txt";
+
+         int status_code = saveNetwork(filename, network);
 
          THEN("It can be saved to file") {
-             int status_code = saveNetwork(filename, network);
-
              REQUIRE(status_code == 0);
+         }
+
+         // Open the file and read it into a vector of lines
+         std::ifstream config_file(filename.c_str());
+         vector<std::string> lines;
+         std::string line;
+
+         while (std::getline(config_file, line))
+         {
+             lines.push_back(line);
+         }
+
+         THEN("The main configuration options are all recorded") {
+             REQUIRE(lines.size() >= 6);
+         }
+
+         THEN("The first line records the number of input nodes correctly") {
+             REQUIRE(std::stoi(lines[0]) == nin);
+         }
+
+         THEN("The second line records the number of hidden nodes correctly") {
+             REQUIRE(std::stoi(lines[1]) == nhn);
+         }
+
+         THEN("The third line records the number of output nodes correctly") {
+             REQUIRE(std::stoi(lines[2]) == non);
+         }
+
+         THEN("The fourth line records the learning rate correctly") {
+             REQUIRE(std::stof(lines[3]) == dlr);
+         }
+
+         THEN("The fifth line records the momentum correctly") {
+             REQUIRE(std::stof(lines[4]) == dm);
+         }
+
+         THEN("The sixth line records the initial weight max correctly") {
+             REQUIRE(std::stof(lines[5]) == diwm);
          }
      }
  }

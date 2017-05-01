@@ -2,6 +2,9 @@
  * Functions for saving and loading network configurations to and from files.
  */
 
+#include <iostream>
+#include <fstream>
+
 #include "network.hpp"
 
 #ifndef PROJECT_NETWORK_IO_H
