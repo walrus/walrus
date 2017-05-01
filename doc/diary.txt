@@ -111,3 +111,7 @@ Individual project 'diary'
 28/4/17
     Update to GCC 6
     Fix compiler errors
+
+1/5/17
+    Finish file handling code for saving network config
+    Finish file handling code for loading network config
