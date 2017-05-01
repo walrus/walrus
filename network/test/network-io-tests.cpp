@@ -136,6 +136,28 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
              THEN("The network is created with the correct initial weight max") {
                  REQUIRE(loaded_network.getInitialWeightMax() == Approx(diwm));
              }
+
+             THEN("The network is created with the correct hidden weights") {
+                 vector<vector<float>> savedHiddenWeights = network.getHiddenWeights();
+                 vector<vector<float>> loadedHiddenWeights = loaded_network.getHiddenWeights();
+
+                 for (int i = 0; i < nin+1; i++) {
+                     for (int j = 0; j < nhn; j++) {
+                         REQUIRE(loadedHiddenWeights[i][j] == Approx(savedHiddenWeights[i][j]));
+                     }
+                 }
+             }
+
+             THEN("The network is created with the correct output weights") {
+                 vector<vector<float>> savedOutputWeights = network.getOutputWeights();
+                 vector<vector<float>> loadedOutputWeights = loaded_network.getOutputWeights();
+
+                 for (int i = 0; i < nhn+1; i++) {
+                     for (int j = 0; j < non; j++) {
+                         REQUIRE(loadedOutputWeights[i][j] == Approx(savedOutputWeights[i][j]));
+                     }
+                 }
+             }
          }
      }
  }

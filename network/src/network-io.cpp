@@ -26,6 +26,32 @@ Network *loadNetwork(std::string filename) {
 
     Network *network = new Network(nin, nhn, non, lr, m, iwm);
 
+    // Parse the hidden weights
+    int line_num = 6;
+    vector<vector<float>> hiddenWeights;
+    hiddenWeights.resize(nin+1, vector<float>(nhn));
+
+    for (int i = 0; i < nin+1; i++) {
+        for (int j = 0; j < nhn; j++) {
+            hiddenWeights[i][j] = std::stof(lines[line_num]);
+            line_num++;
+        }
+    }
+
+    // Parse the output weights
+    line_num = 6 + ((nin + 1) * nhn);
+    vector<vector<float>> outputWeights;
+    outputWeights.resize(nhn+1, vector<float>(non));
+
+    for (int i = 0; i < nhn+1; i++) {
+        for (int j = 0; j < non; j++) {
+            outputWeights[i][j] = std::stof(lines[line_num]);
+            line_num++;
+        }
+    }
+
+    network->loadWeights(hiddenWeights, outputWeights);
+
     return network;
 }
 
