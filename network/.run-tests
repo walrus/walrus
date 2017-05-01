@@ -18,14 +18,21 @@ a_flag = False          # Whether or not the -a 'all' flag is set
 def run_quick_tests():
     # Compile core tests
     print "Compiling core tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-core-tests.cpp"]);  
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-core-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
-        sys.exit(1) 
+        sys.exit(1)
+
+    # Compile IO tests
+    print "Compiling IO tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-io-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "main.o", "network-core-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o = subprocess.Popen(["g++", "main.o", "network-core-tests.o", "network-io-tests.o", "network.o", "network-io.o", "-o", ".catch.exe", "-std=c++11"]);
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -41,14 +48,14 @@ def run_quick_tests():
 def run_slow_tests():
     # Compile core tests
     print "Compiling legacy tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-legacy-tests.cpp"]);  
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-legacy-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
         sys.exit(1) 
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "main.o", "network-legacy-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o = subprocess.Popen(["g++", "main.o", "network-legacy-tests.o", "network.o", "network-io.o", "-o", ".catch.exe", "-std=c++11"]);
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -62,22 +69,30 @@ def run_slow_tests():
 
 
 def run_all_tests():
-        # Compile core tests
+    # Compile core tests
     print "Compiling core tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-core-tests.cpp"]);  
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-core-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
-        sys.exit(1) 
+        sys.exit(1)
 
+    # Compile IO tests
+    print "Compiling IO tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-io-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Compile legacy/regression tests
     print "Compiling legacy tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-legacy-tests.cpp"]);  
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-legacy-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
         sys.exit(1) 
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "main.o", "network-core-tests.o", "network-legacy-tests.o", "network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o = subprocess.Popen(["g++", "main.o", "network-core-tests.o", "network-io-tests.o", "network-legacy-tests.o", "network.o", "network-io.o", "-o", ".catch.exe", "-std=c++11"]);
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -118,17 +133,21 @@ if len(sys.argv) > 2:
 # If the main test object file doesn't exist, compile it
 if not (os.path.isfile("main.o")):
     print "Compiling main..."
-    m = subprocess.Popen(["g++", "-c", "-std=c++11", "test/main.cpp"]);  
+    m = subprocess.Popen(["g++", "-c", "-std=c++11", "test/main.cpp"]);
     m.wait();
     if m.returncode == 1:
         sys.exit(1) 
 
 # Compile the network code
 print "Compiling network"
-n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network.cpp"]);  
+n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network.cpp"]);
 n.wait();
 if n.returncode == 1:
-        sys.exit(1)  
+        sys.exit(1)
+i = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-io.cpp"]);
+i.wait();
+if i.returncode == 1:
+    sys.exit(1)
 
 # Run appropriate tests
 if q_flag:
