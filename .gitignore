@@ -1,3 +1,6 @@
+##############
+# Misc from the 'Python' default .gitignore
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -96,3 +99,56 @@ ENV/
 *.out
 *.aux
 *.toc
+
+###################################
+
+# Ignore the contents of /test-data/
+
+data/test-data/
+
+###################################
+
+# C things to ignore, from the standard Github .gitignore 
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+###################################
+
+# CLion etc stuff
+
+.idea/
+CMakeLists.txt
+cmake-build-debug/
+
+###################################
+
+# Test files used during I/O unit tests
+
+network/test_config_file.txt
