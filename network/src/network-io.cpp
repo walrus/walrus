@@ -5,7 +5,28 @@
  */
 
 Network *loadNetwork(std::string filename) {
-    return nullptr;
+    // Open the file and read it into a vector of lines
+    std::ifstream config_file(filename.c_str());
+    vector<std::string> lines;
+    std::string line;
+
+    while (std::getline(config_file, line))
+    {
+        lines.push_back(line);
+    }
+
+    // Parse the config data in the first six lines and create the network with the specified configuration
+    int nin = std::stoi(lines[0]);
+    int nhn = std::stoi(lines[1]);
+    int non = std::stoi(lines[2]);
+
+    float lr = std::stof(lines[3]);
+    float m = std::stof(lines[4]);
+    float iwm = std::stof(lines[5]);
+
+    Network *network = new Network(nin, nhn, non, lr, m, iwm);
+
+    return network;
 }
 
 

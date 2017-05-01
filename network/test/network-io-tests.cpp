@@ -108,5 +108,34 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
          }
 
          config_file.close();
+
+         GIVEN("A saved network") {
+
+             Network loaded_network = *loadNetwork(filename);
+
+             THEN("The network is created with the correct number of input nodes") {
+                 REQUIRE(loaded_network.getNumInputNodes() == nin);
+             }
+
+             THEN("The network is created with the correct number of hidden nodes") {
+                 REQUIRE(loaded_network.getNumHiddenNodes() == nhn);
+             }
+
+             THEN("The network is created with the correct number of output nodes") {
+                 REQUIRE(loaded_network.getNumOutputNodes() == non);
+             }
+
+             THEN("The network is created with the correct learning rate") {
+                 REQUIRE(loaded_network.getLearningRate() == Approx(dlr));
+             }
+
+             THEN("The network is created with the correct momentum") {
+                 REQUIRE(loaded_network.getMomentum() == Approx(dm));
+             }
+
+             THEN("The network is created with the correct initial weight max") {
+                 REQUIRE(loaded_network.getInitialWeightMax() == Approx(diwm));
+             }
+         }
      }
  }
