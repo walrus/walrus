@@ -64,5 +64,49 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
          THEN("The sixth line records the initial weight max correctly") {
              REQUIRE(std::stof(lines[5]) == diwm);
          }
+
+         THEN("The hidden weights are all recorded") {
+             REQUIRE(lines.size() >= 6 + ((nin + 1) * nhn));
+         }
+
+         THEN("The correct lines record the hidden weights correctly") {
+             int line_num = 6;
+             float weight_from_file, weight_from_vector;
+
+             vector<vector<float>> hiddenWeights = network.getHiddenWeights();
+             for (int i = 0; i < nin+1; i++) {
+                 for (int j = 0; j < nhn; j++) {
+                     weight_from_file = std::stof(lines[line_num]);
+                     weight_from_vector = hiddenWeights[i][j];
+
+                     REQUIRE(weight_from_file == Approx(weight_from_vector));
+                     line_num++;
+                 }
+             }
+         }
+
+         int previous_lines = 6 + ((nin + 1) * nhn);
+
+         THEN("The output weights are all recorded") {
+             REQUIRE(lines.size() >= previous_lines + ((nhn + 1) * non));
+         }
+
+         THEN("The correct lines record the output weights correctly") {
+             int line_num = previous_lines;
+             float weight_from_file, weight_from_vector;
+
+             vector<vector<float>> outputWeights = network.getOutputWeights();
+             for (int i = 0; i < nhn+1; i++) {
+                 for (int j = 0; j < non; j++) {
+                     weight_from_file = std::stof(lines[line_num]);
+                     weight_from_vector = outputWeights[i][j];
+
+                     REQUIRE(weight_from_file == Approx(weight_from_vector));
+                     line_num++;
+                 }
+             }
+         }
+
+         config_file.close();
      }
  }
