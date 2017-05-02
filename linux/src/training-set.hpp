@@ -3,6 +3,9 @@
 
 /* Training set data type for exercise classification */
 
+#include <iostream>
+#include <fstream>
+
 #include <vector>
 using std::vector;
 

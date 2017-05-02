@@ -22,7 +22,7 @@ def run_tests():
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "../catch-main.o", "training-io-tests.o", "../network/network.o", "-o", ".catch.exe", "-std=c++11"]);  
+    o = subprocess.Popen(["g++", "../catch-main.o", "training-io-tests.o", "training-set.o", "../network/network.o", "-o", ".catch.exe", "-std=c++11"]);
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -76,6 +76,12 @@ if not (os.path.isfile("../network/network.o")) or n_flag:
     if n.returncode == 1:
             sys.exit(1)  
 
+# Compile training code
+print "Compiling training code"
+t = subprocess.Popen(["g++", "-c", "-std=c++11", "src/training-set.cpp"]);
+t.wait();
+if t.returncode == 1:
+    sys.exit(1)
 
 run_tests()
 
