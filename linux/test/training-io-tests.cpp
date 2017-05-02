@@ -93,5 +93,21 @@ TEST_CASE("Loading training sets from files works correctly") {
         THEN("The file can be read") {
             REQUIRE_NOTHROW(loadTrainingSet(filename));
         }
+
+        TrainingSet set = *loadTrainingSet(filename);
+
+        THEN("All the inputs are recorded") {
+            REQUIRE(set.inputs.size() == 3);
+            REQUIRE(set.inputs[0].size() == 20);
+            REQUIRE(set.inputs[1].size() == 20);
+            REQUIRE(set.inputs[2].size() == 20);
+        }
+
+        THEN("All the targets are recorded") {
+            REQUIRE(set.targets.size() == 3);
+            REQUIRE(set.targets[0].size() == 1);
+            REQUIRE(set.targets[1].size() == 1);
+            REQUIRE(set.targets[2].size() == 1);
+        }
     }
 }
