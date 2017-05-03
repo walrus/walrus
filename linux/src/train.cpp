@@ -10,6 +10,10 @@
  */
 
 #include <iostream>
+#include <fstream>
+
+#include "../../network/src/network.hpp"
+#include "../../network/src/network-io.hpp"
 
 int main(int argc, char * agrv[]) {
     // Parse arguments
@@ -21,5 +25,15 @@ int main(int argc, char * agrv[]) {
         return 1;
     }
 
+    // Check the network config file exists, and if it doesnt create it
+    ifstream check_config ("../../network/config/network.txt");
+    if (!check_config.good()) {
+        std::cout << "Creating new network\n";
+        Network new_network = new Network(20, 10, 1, 0.3, 0.9, 0.5);
+        saveNetwork("../../network/config/network.txt", new_network);
+    }
+
+    // Load the network
+    Network network = loadNetwork("../../network/config/network.txt");
 }
 
