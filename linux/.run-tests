@@ -78,7 +78,7 @@ if not (os.path.isfile("../network/network.o")) or n_flag:
 
 # Compile training code
 print "Compiling training code"
-t = subprocess.Popen(["g++", "-c", "-std=c++11", "src/training-set.cpp"]);
+t = subprocess.Popen(["g++", "-c", "-std=c++11", "src/training-set.cpp", "src/train.cpp"]);
 t.wait();
 if t.returncode == 1:
     sys.exit(1)
