@@ -153,3 +153,9 @@ cmake-build-debug/
 
 network/test_config_file.txt
 linux/test_normalised_log_file.txt
+
+###################################
+
+# Assorted executables etc, to be created by a script after cloning
+
+linux/train
