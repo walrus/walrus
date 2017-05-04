@@ -7,7 +7,7 @@ TEST_CASE("Loading training sets from files works correctly") {
 
     GIVEN("A correctly formatted, normalised log file") {
 
-        std::string filename = "test_normalised_log_file.txt";
+        std::string filename = "test/test_normalised_log_file.txt";
 
         // Create the file and populate it with a set of three repetitions
         std::ofstream log_file (filename);
