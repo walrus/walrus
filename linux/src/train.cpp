@@ -22,7 +22,19 @@ std::string config_file_location =  "../network/config/network.txt";
 bool directory;
 
 void trainSet(std::string filename, Network *network) {
+    std::cout << "Checking training file...";
+    // Check the training file exists, and if it doesn't, exit
+    std::ifstream check_logfile (filename);
+    if (!check_logfile.good() || filename.find("_normalised") == std::string::npos) {
+        check_logfile.close();
+        std::cout << filename << " is an invalid log file, skipping.\n";
+    } else {
+        std::cout << "training on " << filename << "\n";
+    }
+
+    std::cout << "Loading training set...";
     TrainingSet *set = loadTrainingSet(filename);
+    std::cout << "ok.\n";
 
     for (int i = 0; i < set->inputs.size(); i++) {
         network->trainNetwork(set->inputs[i], set->targets[i]);
@@ -61,19 +73,8 @@ int main(int argc, char * argv[]) {
         network = loadNetwork(config_file_location);
     }
 
-    std::cout << "Checking training file...";
-    // Check the training file exists, and if it doesn't, exit
-    std::ifstream check_logfile (argv[2]);
-    if (!check_logfile.good() || std::string(argv[2]).find("_normalised") == std::string::npos) {
-        check_logfile.close();
-        std::cout << "invalid log file, exiting.\n";
-        return 1;
-    } else {
-        std::cout << "ok\n";
-    }
-
     std::cout << "Training\n";
-    trainSet(argv[1], network);
+    trainSet(argv[2], network);
 
     saveNetwork(config_file_location, network);
 

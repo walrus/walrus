@@ -15,7 +15,7 @@ TrainingSet *loadTrainingSet(std::string filename) {
     bool readingTargets = false;
 
     while (std::getline(log_file, line)) {
-        if (line == "Repetition start") {
+        if (std::string(line).find("Repetition start") != std::string::npos) {
             if (currentTarget.size() > 0) {
                 set->inputs.push_back(currentInput);
                 set->targets.push_back(currentTarget);
@@ -23,14 +23,14 @@ TrainingSet *loadTrainingSet(std::string filename) {
             currentInput.clear();
             currentTarget.clear();
             readingTargets = false;
-        }else if (line == "Repetition end") {
+        }else if (std::string(line).find("Repetition end") != std::string::npos) {
             readingTargets = true;
         }else {
             if (readingTargets) {
-                currentTarget.push_back(std::stof(line));
+                currentTarget.push_back(std::stof(std::string(line)));
             }
             else {
-                currentInput.push_back(std::stof(line));
+                currentInput.push_back(std::stof(std::string(line)));
             }
         }
     }
