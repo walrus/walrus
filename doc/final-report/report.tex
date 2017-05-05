@@ -165,6 +165,177 @@ Daniel Clay \\
 
 \todo[inline]{Data capture and *format specification*. Talk about Curie's IMU, and how to turn the stream of inputs into the desired format for the Neural network}
 
+\subsubsection{Log File Specification (Supervised)}
+
+A supervised log file will be a \lstinline{.txt} file, and generally be called \lstinline{set}, followed by a numerical suffix, for example \lstinline{set3.txt}. It is recommended that log files be stored in folders such that it is obvious whose exercises have been recorded.
+
+The format of the file will be as follows; zero or more instances of \emph{repetitions}, each consisting of:
+
+\begin{itemize}
+\item One or more lines with the values of the inputs.
+\item A line with the text \lstinline{Repetition Start}
+\item One or more lines with the values of the inputs.
+\item A line with the text \lstinline{Repetition End}
+\item One or more lines with the values of the inputs.
+\end{itemize}
+
+An example of a valid supervised log file is as follows (this example contains two valid repetitions):
+
+\begin{lstlisting}
+16003
+15892
+14374
+14338
+15569
+Repetition Start
+16692
+22893
+23160
+24567
+21970
+26383
+21008
+22793
+21024
+20603
+18865
+18607
+16515
+15113
+16346
+14239
+18071
+18354
+18466
+Repetition End
+17255
+16897
+16973
+16911
+18007
+16843
+16108
+13672
+13464
+16149
+16609
+17538
+Repetition Start
+22227
+22166
+22201
+21680
+19268
+20274
+23043
+20271
+19949
+18652
+18440
+18251
+16334
+13850
+13632
+12386
+Repetition End
+17390
+16154
+17653
+18861
+\end{lstlisting}
+
+\subsubsection{Log File Specification (Unsupervised)}
+
+An unsupervised log file will be a \lstinline{.txt} file, and generally be called \lstinline{set}, followed by a numerical suffix, for example \lstinline{set3.txt}. It is recommended that log files be stored in folders such that it is obvious whose exercises have been recorded.
+
+The format of the file will be as follows; zero or more instances of \emph{repetitions}, each consisting of:
+
+\begin{itemize}
+\item A line with the text \lstinline{Motion detected after X milliseconds. Logging...}
+\item One or more lines with the values of the inputs.
+\item A line with the text \lstinline{Motion ended after Y milliseconds. Logging...}
+\end{itemize}
+
+Where X and Y are the intervals between the last motion detection event.
+
+An example of a valid unsupervised log file is as follows (this example contains one valid repetition and an unfinished one, which will be removed in the normalisation process):
+
+\begin{lstlisting}
+Motion detected after  823  milliseconds. Logging...
+18034
+17662
+22144
+19415
+26548
+25319
+26721
+26086
+26633
+24458
+25198
+20258
+24702
+21414
+19088
+20752
+18575
+18684
+Motion ended after  1718  milliseconds. Logging...
+Motion detected after  892  milliseconds. Logging...
+18376
+18623
+22552
+22596
+23354
+23849
+23313
+20727
+23364
+\end{lstlisting}
+
+
+\subsubsection{Normalised Log File Specification}
+
+A normalised log file will be a \lstinline{.txt} file, and have the name of the set from which it was normalised, followed by the suffix \lstinline{_normalised}. For example, the normalised log file for the (raw) log file \lstinline{set1.txt} would be \lstinline{set1_normalised.txt}.
+
+The format of the file will be as follows; zero or more instances of \emph{repetitions}, each consisting of:
+\begin{itemize}
+\item A line with the text \lstinline{Repetition Start}
+\item One or more lines with the values of the inputs, with one line/value per input node.
+\item A line with the text \lstinline{Repetition End}
+\item One or more lines with the values of the targets, with one line/value per output node.
+\end{itemize}
+
+There should be no blank lines between repetitions.
+
+An example of a valid repetition for a network with 20 input nodes and one output node is as follows:
+
+\begin{lstlisting}
+Repetition start
+20119
+20119
+23526
+25971
+30233
+33248
+33248
+34300
+29982
+29982
+27556
+25647
+22664
+17422
+17422
+17422
+15862
+15862
+16160
+18608
+Repetition end
+1
+\end{lstlisting}
+
 \subsection{Neural Network Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \todo[inline]{Architecture of the various neural networks. Note that the parameters etc will be decided on after experimentation}
