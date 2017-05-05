@@ -3,7 +3,7 @@
  *
  * Run from command line as follows:
  *
- * train config_filename|-n filename|directory
+ * train -n|config_filename  -d dirname|log_filename
  *
  * Will read every log file with the _normalised suffix and train the network on the data contained in it
  * The -n flag will use the network whose config is stored in network/config/network.txt on the data.
@@ -19,6 +19,7 @@
 #include "training-set.hpp"
 
 std::string config_file_location =  "../network/config/network.txt";
+bool directory;
 
 void trainSet(std::string filename, Network *network) {
     TrainingSet *set = loadTrainingSet(filename);
@@ -33,8 +34,11 @@ int main(int argc, char * argv[]) {
     if (argc < 3) {
         std::cout << "Too few arguments supplied\n";
         return 1;
-    } else if (argc > 3) {
+    } else if (argc > 4) {
         std::cout << "Too many arguments supplied\n";
+        return 1;
+    } else if (argc == 4 && std::string(argv[2]) != "-d") {
+        std::cout << "Wrong arguments supplied. Correct usage is train  -n|config_filename  -d dirname|log_filename\n";
         return 1;
     }
 
