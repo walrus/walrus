@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <dirent.h>
 
 #include "../../network/src/network.hpp"
 #include "../../network/src/network-io.hpp"
@@ -32,12 +33,30 @@ void trainSet(std::string filename, Network *network) {
         std::cout << "training on " << filename << "\n";
     }
 
-    std::cout << "Loading training set...";
     TrainingSet *set = loadTrainingSet(filename);
-    std::cout << "ok.\n";
 
     for (int i = 0; i < set->inputs.size(); i++) {
         network->trainNetwork(set->inputs[i], set->targets[i]);
+    }
+}
+
+void trainDir(std::string dirname, Network *network) {
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir (dirname.c_str())) != NULL) {
+        std::cout << "Scanning directory: " << dirname << "\n";
+        while ((ent = readdir (dir)) != NULL) {
+            if (ent->d_type == DT_REG &&
+                    std::string(ent->d_name).find("_normalised") != std::string::npos) {
+                trainSet(dirname + std::string(ent->d_name), network);
+            }else if (ent->d_type == DT_DIR &&
+                        std::string(ent->d_name).find(".") == std::string::npos) {
+                trainDir(dirname + std::string(ent->d_name) + "/", network);
+            }
+        }
+        closedir (dir);
+    } else {
+        std::cout << "Could not open directory " << dirname << "\n";
     }
 }
 
@@ -73,8 +92,11 @@ int main(int argc, char * argv[]) {
         network = loadNetwork(config_file_location);
     }
 
-    std::cout << "Training\n";
-    trainSet(argv[2], network);
+    if (std::string(argv[2]) == "-d") {
+        trainDir(argv[3], network);
+    } else {
+        trainSet(argv[2], network);
+    }
 
     saveNetwork(config_file_location, network);
 

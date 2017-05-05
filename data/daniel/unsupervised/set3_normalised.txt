@@ -1,5 +1,4 @@
 Repetition start
-Negative
 18780
 20756
 15969
@@ -21,8 +20,8 @@ Negative
 18029
 18074
 Repetition end
+0
 Repetition start
-Positive
 17558
 24296
 21793
@@ -44,8 +43,8 @@ Positive
 20114
 20070
 Repetition end
+1
 Repetition start
-Positive
 15969
 18498
 18266
@@ -67,7 +66,8 @@ Positive
 21881
 21020
 Repetition end
-Repetition startPositive
+1
+Repetition start
 20313
 19119
 22138
@@ -89,8 +89,8 @@ Repetition startPositive
 18219
 18219
 Repetition end
+1
 Repetition start
-Negative
 18297
 21507
 19932
@@ -112,8 +112,8 @@ Negative
 22450
 21628
 Repetition end
+0
 Repetition start
-Positive
 22249
 23192
 22200
@@ -135,8 +135,8 @@ Positive
 16265
 20821
 Repetition end
+1
 Repetition start
-Positive
 19003
 19245
 19245
@@ -158,8 +158,8 @@ Positive
 20898
 18933
 Repetition end
+1
 Repetition start
-Positive
 20133
 20133
 15109
@@ -181,8 +181,8 @@ Positive
 21217
 22989
 Repetition end
+1
 Repetition start
-Positive
 19946
 22000
 23269
@@ -204,8 +204,8 @@ Positive
 20962
 22013
 Repetition end
+1
 Repetition start
-Positive
 17259
 17259
 24082
@@ -227,8 +227,8 @@ Positive
 19766
 17598
 Repetition end
+1
 Repetition start
-Positive
 21178
 20466
 23369
@@ -250,8 +250,8 @@ Positive
 20069
 19923
 Repetition end
+1
 Repetition start
-Positive
 19955
 26609
 21537
@@ -273,8 +273,8 @@ Positive
 19670
 19963
 Repetition end
+1
 Repetition start
-Negative
 17180
 21362
 25182
@@ -296,8 +296,8 @@ Negative
 22828
 23099
 Repetition end
+0
 Repetition start
-Negative
 22296
 22885
 23562
@@ -319,8 +319,8 @@ Negative
 20915
 21337
 Repetition end
+0
 Repetition start
-Positive
 20860
 21814
 24870
@@ -342,3 +342,4 @@ Positive
 20523
 21766
 Repetition end
+1
