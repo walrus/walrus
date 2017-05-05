@@ -24,6 +24,21 @@ fi
 
 cd ..
 
+# Run training tests
+
+cd linux/
+./.run-tests
+
+if [ $? != 0 ]; then
+  echo "Training (io) tests failed, not committing"
+  exit 1
+else
+  echo "Training (io) tests passed"
+fi
+
+cd ..
+
+
 # Query when committing directly to development. 
 if [ $development_branch = $current_branch ] 
 then  

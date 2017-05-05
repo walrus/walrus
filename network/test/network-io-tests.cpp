@@ -17,7 +17,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
          float dm = 0.9;
          float diwm = 0.5;
 
-         Network network = Network(nin, nhn, non, dlr, dm, diwm);
+         Network *network = new Network(nin, nhn, non, dlr, dm, diwm);
 
          std::string filename = "test_config_file.txt";
 
@@ -73,7 +73,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
              int line_num = 6;
              float weight_from_file, weight_from_vector;
 
-             vector<vector<float>> hiddenWeights = network.getHiddenWeights();
+             vector<vector<float>> hiddenWeights = network->getHiddenWeights();
              for (int i = 0; i < nin+1; i++) {
                  for (int j = 0; j < nhn; j++) {
                      weight_from_file = std::stof(lines[line_num]);
@@ -95,7 +95,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
              int line_num = previous_lines;
              float weight_from_file, weight_from_vector;
 
-             vector<vector<float>> outputWeights = network.getOutputWeights();
+             vector<vector<float>> outputWeights = network->getOutputWeights();
              for (int i = 0; i < nhn+1; i++) {
                  for (int j = 0; j < non; j++) {
                      weight_from_file = std::stof(lines[line_num]);
@@ -138,7 +138,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
              }
 
              THEN("The network is created with the correct hidden weights") {
-                 vector<vector<float>> savedHiddenWeights = network.getHiddenWeights();
+                 vector<vector<float>> savedHiddenWeights = network->getHiddenWeights();
                  vector<vector<float>> loadedHiddenWeights = loaded_network.getHiddenWeights();
 
                  for (int i = 0; i < nin+1; i++) {
@@ -149,7 +149,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
              }
 
              THEN("The network is created with the correct output weights") {
-                 vector<vector<float>> savedOutputWeights = network.getOutputWeights();
+                 vector<vector<float>> savedOutputWeights = network->getOutputWeights();
                  vector<vector<float>> loadedOutputWeights = loaded_network.getOutputWeights();
 
                  for (int i = 0; i < nhn+1; i++) {
