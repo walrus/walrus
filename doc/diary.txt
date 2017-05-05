@@ -115,3 +115,15 @@ Individual project 'diary'
 1/5/17
     Finish file handling code for saving network config
     Finish file handling code for loading network config
+
+2/5/17
+    Write TrainingSet class
+
+3/5/17
+    None (busy)
+4/5/17
+    Begin training program (complete basic version)
+
+5/5/17
+    Finish training program (complete full version)
+    Start writing specifications etc
