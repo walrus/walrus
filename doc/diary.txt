@@ -127,3 +127,8 @@ Individual project 'diary'
 5/5/17
     Finish training program (complete full version)
     Start writing specifications etc
+
+8/5/17
+    Start on classifier code for the Curie
+        Network code #include not working, probably due to C++11 problems
+    Install latest Arduino IDE (1.8.2) to attempt to fix this, to no avail
