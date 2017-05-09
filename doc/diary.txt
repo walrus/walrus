@@ -132,3 +132,8 @@ Individual project 'diary'
     Start on classifier code for the Curie
         Network code #include not working, probably due to C++11 problems
     Install latest Arduino IDE (1.8.2) to attempt to fix this, to no avail
+
+9/5/17
+    Continue attempts to fix
+    Problem identified as C++ stl things not being included properly - relevantly strings, random_device and vectors
+    Try vector implementations to replace std::vector, but none work.
