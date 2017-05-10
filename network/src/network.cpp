@@ -18,10 +18,7 @@ Network::Network(int numInputNodes,
                  numOutputNodes(numOutputNodes),
                  learningRate(learningRate),
                  momentum(momentum),
-                 initialWeightMax(initialWeightMax),
-                 m_mt(std::random_device()()) {
-
-    dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
+                 initialWeightMax(initialWeightMax) {
 
     trainingCycle = 0;
     randomFloat = 0.0f;
@@ -46,7 +43,8 @@ Network::Network(int numInputNodes,
 
 
 /*
- * Initialise hiddenWeights to random values
+ * Initialise hiddenWeights to zero (need to be set to random values
+ * using function defined in network-io)
  * Initialise hiddenWeightsChanges to zero
  * Use when setting up a new, untrained network
  */
@@ -54,24 +52,23 @@ void Network::initialiseHiddenWeights() {
     for (int i = 0; i < numHiddenNodes; i++) {
         for (int j = 0; j <= numInputNodes; j++) {
             hiddenWeightsChanges[j][i] = 0.0;
-            randomFloat = dist(m_mt);
-            hiddenWeights[j][i] = randomFloat * initialWeightMax;
+            hiddenWeights[j][i] = 0.0;
         }
     }
 }
 
 
 /*
- * Initialise outputWeights to random values
+ * Initialise outputWeights to zero (need to be set to random values
+ * using function defined in network-io)
  * Initialise outputWeightsChanges to zero
  * Use when setting up a new, untrained network
  */
 void Network::initialiseOutputWeights() {
     for(int i = 0 ; i < numOutputNodes ; i ++ ) {
         for(int j = 0 ; j <= numHiddenNodes ; j++ ) {
-            outputWeightsChanges[j][i] = 0.0 ;
-            randomFloat = dist(m_mt);
-            outputWeights[j][i] = randomFloat * initialWeightMax ;
+            outputWeightsChanges[j][i] = 0.0;
+            outputWeights[j][i] = 0.0;
         }
     }
 }

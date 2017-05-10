@@ -1,5 +1,9 @@
+#include <random>
+
 #include "../../lib/catch.hpp"
 #include "../src/network.hpp"
+#include "../src/network-io.hpp"
+
 /* Legacy unit test file for the network code, to check that it can still do what the original code did */
 
 TEST_CASE("The library can implement the original ArduinoANN code's functionality") {
@@ -55,8 +59,16 @@ TEST_CASE("The library can implement the original ArduinoANN code's functionalit
         indexes.push_back(i);
     }
 
-    GIVEN("A network with the example parameters") {
+    GIVEN("A network with the example parameters, and weights properly initialised") {
         Network network = Network(nin, nhn, non, dlr, dm, diwm);
+
+        vector<vector<float>> hiddenWeights = generateWeights(nin, nhn, diwm);
+        vector<vector<float>> outputWeights = generateWeights(nhn, non, diwm);
+
+        REQUIRE(hiddenWeights.size() == network.getHiddenWeights().size());
+        REQUIRE(outputWeights.size() == network.getOutputWeights().size());
+
+        network.loadWeights(hiddenWeights, outputWeights);
 
         THEN("It will eventually succeed at training") {
             long TrainingCycle = 1;

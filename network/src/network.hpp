@@ -2,7 +2,6 @@
 #define NETWORK_H
 
 #include <vector>
-#include <random>
 
 using std::vector;
 
@@ -28,9 +27,6 @@ class Network {
         vector<float> outputNodesDeltas;            // AKA 'OutputDelta' in the original code
         vector<vector<float>> hiddenWeightsChanges; // AKA 'ChangeHiddenWeights' in the original code
         vector<vector<float>> outputWeightsChanges; // AKA 'ChangeOutputWeights' in the original code
-
-        std::mt19937 m_mt;                          // Mersenne twister for random number generation
-        std::uniform_real_distribution<float> dist; // Distribution for random number generation
 
         void initialiseHiddenWeights();
         void initialiseOutputWeights();

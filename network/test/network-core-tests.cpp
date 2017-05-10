@@ -1,3 +1,5 @@
+#include <random>
+
 #include "../../lib/catch.hpp"
 #include "../src/network.hpp"
 /* Main unit test file for the network code. */
@@ -34,12 +36,11 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(network.getErrorRate() == 0.0f);
             REQUIRE(network.getAccumulatedInput() == 0.0f);
         }
-        THEN("The hidden weights are all in the correct range") {
+        THEN("The hidden weights are all zero") {
             vector<vector<float>> hiddenWeights = network.getHiddenWeights();
             for (int i = 0; i < nin+1; i++) {
                 for (int j = 0; j < nhn; j++) {
-                    REQUIRE(hiddenWeights[i][j] < diwm);
-                    REQUIRE(hiddenWeights[i][j] > -1 * diwm);
+                    REQUIRE(hiddenWeights[i][j] == 0.0f);
                 }
             }
         }
@@ -47,8 +48,7 @@ TEST_CASE("The core network functionality is all correct") {
             vector<vector<float>> outputWeights = network.getOutputWeights();
             for (int i = 0; i < nhn+1; i++) {
                 for (int j = 0; j < non; j++) {
-                    REQUIRE(outputWeights[i][j] < diwm);
-                    REQUIRE(outputWeights[i][j] > -1 * diwm);
+                    REQUIRE(outputWeights[i][j] == 0.0f);
                 }
             }
         }
@@ -68,7 +68,7 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(network.getInitialWeightMax() == 0.9f);
         }
 
-        THEN("It can (badly) attempt to classify without training") {
+        THEN("It can (badly) attempt to classify without proper initialisation") {
             vector<float>  input;
             input.resize(nin);
 
@@ -83,6 +83,7 @@ TEST_CASE("The core network functionality is all correct") {
                 REQUIRE(output[i] < 1.0f);
             }
         }
+
         THEN("It can be trained") {
             vector<float> input;
             input.resize(nin);
@@ -97,37 +98,9 @@ TEST_CASE("The core network functionality is all correct") {
                 output[i] = test_dist(m_mt);
             }
 
-            //This is a bit messy, but will work until I replace all the arrays with vectors
             float error = network.trainNetwork(input, output);
 
             REQUIRE(error > 0.0f);
-        }
-        THEN("Training reduces the error") {
-            vector<float> input;
-            input.resize(nin);
-            vector<float> output;
-            output.resize(non);
-
-            for (int i = 0; i < nin; i++) {
-                input[i] = test_dist(m_mt);
-            }
-
-            for (int i = 0;  i < non; i++) {
-                output[i] = test_dist(m_mt);
-            }
-
-            float untrained_error = network.trainNetwork(input, output);
-
-            REQUIRE(untrained_error > 0.0f);
-
-            for (int i =0; i < 9; i++) {
-                network.trainNetwork(input, output);
-            }
-
-            float trained_error = network.trainNetwork(input, output);
-
-            REQUIRE(trained_error < untrained_error);
-            REQUIRE(trained_error > 0.0f);
         }
     }
 

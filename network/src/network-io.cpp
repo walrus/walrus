@@ -4,6 +4,12 @@
  * Functions for saving and loading network configurations to and from files.
  */
 
+/* Init mersenne twister and distribution */
+std::random_device rd;
+std::mt19937 m_mt (rd());
+std::uniform_real_distribution<float> dist (-1.0f, 1.0f);
+float randomFloat;
+
 Network *loadNetwork(std::string filename) {
     // Open the file and read it into a vector of lines
     std::ifstream config_file(filename.c_str());
@@ -93,4 +99,18 @@ int saveNetwork(std::string filename, Network *network) {
 
     config_file.close();
     return 0;
+}
+
+
+vector<vector<float>> generateWeights(int x, int y, float maxWeight) {
+    vector<vector<float>> weights;
+    weights.resize(x+1, vector<float>(y));
+
+    for (int i = 0; i < y; i++) {
+        for (int j = 0; j <= x; j++) {
+            randomFloat = dist(m_mt);
+            weights[j][i] = randomFloat * maxWeight;
+        }
+    }
+    return weights;
 }
