@@ -137,3 +137,8 @@ Individual project 'diary'
     Continue attempts to fix
     Problem identified as C++ stl things not being included properly - relevantly strings, random_device and vectors
     Try vector implementations to replace std::vector, but none work.
+
+10/5/17
+    Find ArduinoSTL, which includes implementation of vectors
+    ArduinoSTL does not include std::random, so remove this dependency from network and move to network-io
+    At this point you can create a Network on the Arduino, but not do much with it as it won't have it's weights properly initialised.
