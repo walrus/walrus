@@ -1,6 +1,7 @@
+#include <ArduinoSTL.h>
+
 #include "CurieIMU.h"
 #include "network.hpp"
-#include "stdlib.h"
 
 /* Initialise the network */
 Network network = Network(20, 10, 1, 0.3, 0.9, 0.5);
