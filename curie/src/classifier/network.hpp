@@ -1,8 +1,7 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <vector>
-#include <random>
+#include <ArduinoSTL.h>
 
 using std::vector;
 
