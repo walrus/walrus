@@ -3,7 +3,7 @@
  * See robotics.hobbizine.com/arduinoann.html for more information about ArduinoANN.
  */
 
-//#include <random>
+#include <random>
 
 #include "network.hpp"
 
