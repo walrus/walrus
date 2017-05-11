@@ -49,7 +49,6 @@ def main(window):
         print line
         logfile.write(line)
         ch = window.getch()
-        #ch += 1
 
     logfile.close()
 
