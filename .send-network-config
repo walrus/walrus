@@ -38,9 +38,36 @@ except:
 
 print "success"
 
+# Wait for the 'ready' signal
+msg = ""
+while "Ready" not in msg:
+    msg = arduino.readline()
+    print msg
+
+arduino.reset_input_buffer()
+
+print "Writing"
+
 # Read input from config file and write to serial, as well as to the screen
-for line in config_file:
+line = config_file.readline()
+while line:
+    print line
     arduino.write(line)
+    line = config_file.readline()
+
+arduino.write('#')
+print "Finished sending"
+
+while "Received" not in msg:
+    msg = arduino.readline()
+    if msg:
+        print msg
+
+# Wait for confirmation from Arduino
+while "Finished" not in msg:
+    msg = arduino.readline()
+    if msg:
+        print msg
 
 config_file.close()
 

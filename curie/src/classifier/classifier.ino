@@ -3,8 +3,19 @@
 #include "CurieIMU.h"
 #include "network.hpp"
 
-/* Initialise the network */
-Network network = Network(20, 10, 1, 0.3, 0.9, 0.5);
+int numInputNodes;
+int numHiddenNodes;
+int numOutputNodes;
+float learningRate;
+float momentum;
+float initialWeightMax;
+
+int numHiddenWeights;
+int numOutputWeights;
+
+Network *network;
+
+String config = "";
 
 void setup() {
   /* Initialise Serial communication */
@@ -19,6 +30,48 @@ void setup() {
   CurieIMU.autoCalibrateAccelerometerOffset(Y_AXIS, 0);
   CurieIMU.autoCalibrateAccelerometerOffset(Z_AXIS, 1);
 
+  /* Wait for data to start being sent */
+  while (Serial.available() == 0) {
+    Serial.println("Ready");
+  }
+  
+  /* Read the network configuration over Serial */
+  numInputNodes = Serial.parseInt();
+  numHiddenNodes = Serial.parseInt();
+  numOutputNodes = Serial.parseInt();
+
+  numHiddenWeights = (numInputNodes + 1) * numHiddenNodes;
+  numOutputWeights = (numHiddenNodes + 1) * numOutputNodes;
+
+  learningRate = Serial.parseFloat();
+  momentum = Serial.parseFloat();
+  initialWeightMax = Serial.parseFloat();
+  
+  while (Serial.peek() != '#') {
+    if (Serial.available() > 0) {
+      config += Serial.read();
+    }
+  }
+
+  while (Serial.available() == 0) {
+    Serial.println("Received");
+  }
+  
+  Serial.print("numInputNodes = ");
+  Serial.println(numInputNodes);
+  Serial.print("numHiddenNodes = ");
+  Serial.println(numHiddenNodes);
+  Serial.print("numOutputNodes = ");
+  Serial.println(numOutputNodes);
+
+  Serial.print("learningRate = ");
+  Serial.println(learningRate);
+  Serial.print("momentum = ");
+  Serial.println(momentum);
+  Serial.print("initialWeightMax = ");
+  Serial.println(initialWeightMax);
+
+  Serial.println("Finished");
 }
 
 void loop() {}
