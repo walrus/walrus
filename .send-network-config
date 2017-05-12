@@ -2,7 +2,6 @@
 
 # Script to read a network config from a file and send it
 # over serial to an Arduino for network setup.
-# Arduino must be already up and running for this to work
 
 import serial, time, sys
 
@@ -28,12 +27,20 @@ except IOError:
     print "Could not open file  " + filename +  "  please check the file exists"
     sys.exit(1)
 
-# Open a Serial connection to the Arduino:
+tries  = 1
+arduino = None
+
+# Open a Serial connection to the Arduino; try 20 times at 1hz then give up
 print "Connecting..."
-try:
-    arduino = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-except:
-    print "Failed to connect on /dev/ttyACM0"
+while tries < 21 and not arduino:
+    try:
+        arduino = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+    except:
+        tries += 1
+        time.sleep(1)
+
+if tries == 21:
+    print "Could not establish Serial connection on /dev/ttyACM0"
     sys.exit(2)
 
 print "success"
@@ -55,7 +62,9 @@ while line:
     arduino.write(line)
     line = config_file.readline()
 
+time.sleep(1)
 arduino.write('#')
+arduino.reset_input_buffer()
 print "Finished sending"
 
 while "Received" not in msg:
@@ -63,11 +72,20 @@ while "Received" not in msg:
     if msg:
         print msg
 
+time.sleep(1)
+arduino.write('#')
+arduino.reset_input_buffer()
+print "Received data OK"
+
 # Wait for confirmation from Arduino
-while "Finished" not in msg:
+while "Finished setup" not in msg:
     msg = arduino.readline()
-    if msg:
+    if msg and "Received" not in msg:
         print msg
+
+time.sleep(1)
+arduino.write('#')
+print "Setup complete"
 
 config_file.close()
 

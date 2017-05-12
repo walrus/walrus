@@ -19,29 +19,60 @@ Network::Network(int numInputNodes,
                  learningRate(learningRate),
                  momentum(momentum),
                  initialWeightMax(initialWeightMax) {
-                 //m_mt(std::random_device()()) {
 
-    //dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
+    Serial.println(F("In constructor"));
+    Serial.print(F("Free memory: "));
+    Serial.println(freeMemory());
+    
 
     trainingCycle = 0;
     randomFloat = 0.0f;
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
+    Serial.println(F("Resizing vectors..."));
+    Serial.print(F("Free memory: "));
+    Serial.println(freeMemory());
+    
     hiddenNodes.resize(numHiddenNodes);
     outputNodes.resize(numOutputNodes);
 
+    Serial.println(F("Nodes done, Resizing weights..."));
+    Serial.print(F("Free memory: "));
+    Serial.println(freeMemory());
+    
     hiddenWeights.resize(numInputNodes+1, vector<float>(numHiddenNodes));
     outputWeights.resize(numHiddenNodes+1, vector<float>(numOutputNodes));
 
+    Serial.println(F("Weights done, Resizing deltas..."));    
+    Serial.print(F("Free memory: "));
+    Serial.println(freeMemory());
+    
     hiddenNodesDeltas.resize(numHiddenNodes);
+
+    Serial.println(F("hiddenNodesDeltas done, Resizing outputNodesDeltas..."));    
+    Serial.print(F("Free memory: "));
+    Serial.println(freeMemory());
+    
     outputNodesDeltas.resize(numOutputNodes);
 
+    Serial.println(F("Deltas done, Resizing changes..."));
+    Serial.print(F("Free memory: "));
+    Serial.println(freeMemory());
+    
     hiddenWeightsChanges.resize(numInputNodes+1, vector<float>(numHiddenNodes));
     outputWeightsChanges.resize(numHiddenNodes+1, vector<float>(numOutputNodes));
 
+    Serial.println(F("finished resizing"));
+    Serial.print(F("Free memory: "));
+    Serial.println(freeMemory());
+    
     initialiseHiddenWeights();
     initialiseOutputWeights();
+
+    Serial.println(F("Finished constructor"));
+    Serial.print(F("Free memory: "));
+    Serial.println(freeMemory());
 }
 
 
