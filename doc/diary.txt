@@ -141,4 +141,13 @@ Individual project 'diary'
 10/5/17
     Find ArduinoSTL, which includes implementation of vectors
     ArduinoSTL does not include std::random, so remove this dependency from network and move to network-io
-    At this point you can create a Network on the Arduino, but not do much with it as it won't have it's weights properly initialised.
+    At this point you can create a Network on the Arduino*, but not do much with it as it won't have it's weights properly initialised.
+        * or not, as the case may be
+
+11/5/17
+    Start writing script to send network config over Serial
+
+12/5/17
+    Finish script; network initialisation still not working due to apparent lack of memory problem(?)
+        Posted on StackOverflow RE this
+    
