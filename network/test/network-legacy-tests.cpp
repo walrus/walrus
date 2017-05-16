@@ -1,5 +1,5 @@
 #include "../../lib/catch.hpp"
-#include "../src/network.hpp"
+#include "../src/network-linux.hpp"
 /* Legacy unit test file for the network code, to check that it can still do what the original code did */
 
 TEST_CASE("The library can implement the original ArduinoANN code's functionality") {

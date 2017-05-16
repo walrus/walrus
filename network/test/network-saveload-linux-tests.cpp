@@ -1,6 +1,6 @@
  /* Test functions for saving and loading network configurations to and from files. */
 
-#include "../src/network-io.hpp"
+#include "../src/network-saveload-linux.hpp"
 #include "../../lib/catch.hpp"
 
 TEST_CASE("Network configurations can be saved to file and loaded from file") {

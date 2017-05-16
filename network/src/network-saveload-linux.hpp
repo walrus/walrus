@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "network.hpp"
+#include "network-linux.hpp"
 
 #ifndef PROJECT_NETWORK_IO_H
 #define PROJECT_NETWORK_IO_H

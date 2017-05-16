@@ -5,7 +5,7 @@
 
 #include <random>
 
-#include "network.hpp"
+#include "network-linux.hpp"
 
 Network::Network(int numInputNodes,
                  int numHiddenNodes,

@@ -1,5 +1,5 @@
 #include "../../lib/catch.hpp"
-#include "../src/network.hpp"
+#include "../src/network-linux.hpp"
 /* Main unit test file for the network code. */
 
 TEST_CASE("The core network functionality is all correct") {
