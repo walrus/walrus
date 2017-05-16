@@ -68,7 +68,7 @@ def normalise_file(filename):
                 #Write these readings to the normalised file
                 normalised_file.write("Repetition start\n")
                 for reading in normalised_readings:
-                    normalised_file.write(reading)
+                    normalised_file.write(sum_reading(reading) + "\n")
                 normalised_file.write("Repetition end\n")
                 writing_targets = num_targets
             else:
@@ -77,6 +77,11 @@ def normalise_file(filename):
     original_file.close()
     normalised_file.close()
     print "done."
+
+# Take the three acceleration readings and sum them
+def sum_reading(reading):
+    readings = [int(value) for value in reading.split()]
+    return str(sum(readings))
 
 # Takes a list of readings and returns a normalised set with len = normalised_length
 def normalise_readings(original_readings):
