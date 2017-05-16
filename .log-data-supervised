@@ -24,9 +24,9 @@ def main(window):
     # Check argument(s). 
     #
     # First arg is filename. 
-    # This should be the path from data/ to the file 
+    # This should be the path from project/ to the file
     #
-    # E.G. 'daniel/set1'
+    # E.G. 'data/daniel/set1'
     #
     # This will create the file project/data/daniel/set1.txt
     # Note that the directory must already exist
@@ -38,7 +38,7 @@ def main(window):
         print "No filename given; try again."
         sys.exit(1)
     else:
-        filename = "data/" + sys.argv[1] + ".txt"
+        filename = sys.argv[1] + ".txt"
 
     # Create new text file
     logfile = open(filename,"a+")
