@@ -67,11 +67,11 @@ def main(window):
             print "Repetition Start\n"
         if ch == ord('g'):
             logfile.write("Repetition End\n")
-            logfile.write("1")
+            logfile.write("1\n")
             print "Repetition End (good rep)\n"
         if ch == ord('h'):
             logfile.write("Repetition End\n")
-            logfile.write("0")
+            logfile.write("0\n")
             print "Repetition End (bad rep)\n"
 
     logfile.close()
