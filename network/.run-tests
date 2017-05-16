@@ -138,8 +138,8 @@ if not (os.path.isfile("../catch-main.o")):
         sys.exit(1) 
 
 
-# Compile the network code
-print "Compiling network"
+# Compile the Linux network code
+print "Compiling network-linux"
 n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-linux.cpp"]);
 n.wait();
 if n.returncode == 1:
@@ -148,6 +148,14 @@ i = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-saveload-linux.cpp
 i.wait();
 if i.returncode == 1:
     sys.exit(1)
+
+# Compile the Arduino network code
+print "Compiling network-arduino"
+n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-arduino.cpp"]);
+n.wait();
+if n.returncode == 1:
+    sys.exit(1)
+
 
 # Run appropriate tests
 if q_flag:
