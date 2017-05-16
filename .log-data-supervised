@@ -5,7 +5,8 @@
 # Once running, press the following keys:
 #
 # 's' will note that a rep has started
-# 'e' will note that a rep has ended
+# 'g' will note that a rep has ended, and is valid
+# 'h' will note that a rep has ended, and is invalid
 # 'x' will stop the program
 
 
@@ -64,9 +65,14 @@ def main(window):
         if ch == ord('s'):
             logfile.write("Repetition Start\n")
             print "Repetition Start\n"
-        if ch == ord('e'):
+        if ch == ord('g'):
             logfile.write("Repetition End\n")
-            print "Repetition End\n"
+            logfile.write("1")
+            print "Repetition End (good rep)\n"
+        if ch == ord('h'):
+            logfile.write("Repetition End\n")
+            logfile.write("0")
+            print "Repetition End (bad rep)\n"
 
     logfile.close()
 
