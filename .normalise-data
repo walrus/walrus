@@ -11,16 +11,17 @@ import os, sys, random
 #
 # Flag must precede file or directory name
 #
-# Root directory is assumed to be project/data/
+# Root directory is assumed to be project/
 
 
 
 normalised_length = 20  # Number of readings to normalise to
+num_targets = 1         # Number of targets
 d_flag = False          # Whether or not the -d 'directory' flag is set
 r_flag = False          # Whether or not the -r 'recursive' flag is set
 
 filename = None         # Will be True if a filename was given
-directory_name = None   # Will be True if a directory name was given1
+directory_name = None   # Will be True if a directory name was given
 
 def normalise_directory(directory_name, r_flag):
     print "Normalising directory %s. Recursive flag is %r" % (directory_name, r_flag)
@@ -45,24 +46,42 @@ def normalise_file(filename):
     normalised_file = open(normalised_filename, "w+")
 
     original_readings = []
+    writing_targets = 0
 
     # Break the file into reps and normalise each rep separately
     for line in original_file:
-        if ("Motion detected" in line or "Repetition Start" in line):
-            original_readings = []
-        elif ("Motion ended" in line or "Repetition End" in line):
-            normalised_readings = normalise_readings(original_readings)
-            #Write these readings to the normalised file
-            normalised_file.write("Repetition start\n")
-            for reading in normalised_readings:
-                normalised_file.write(reading)
-            normalised_file.write("Repetition end\n")
+        if writing_targets > 0:
+            normalised_file.write(line)
+            writing_targets -= 1
         else:
-            original_readings.append(line)
+            if ("Motion detected" in line or "Repetition Start" in line):
+                original_readings = []
+            elif ("Motion ended" in line):
+                normalised_readings = normalise_readings(original_readings)
+                #Write these readings to the normalised file
+                normalised_file.write("Repetition start\n")
+                for reading in normalised_readings:
+                    normalised_file.write(reading)
+                normalised_file.write("Repetition end\n")
+            elif ("Repetition End" in line):
+                normalised_readings = normalise_readings(original_readings)
+                #Write these readings to the normalised file
+                normalised_file.write("Repetition start\n")
+                for reading in normalised_readings:
+                    normalised_file.write(sum_reading(reading) + "\n")
+                normalised_file.write("Repetition end\n")
+                writing_targets = num_targets
+            else:
+                original_readings.append(line)
 
     original_file.close()
     normalised_file.close()
     print "done."
+
+# Take the three acceleration readings and sum them
+def sum_reading(reading):
+    readings = [int(value) for value in reading.split()]
+    return str(sum(readings))
 
 # Takes a list of readings and returns a normalised set with len = normalised_length
 def normalise_readings(original_readings):
@@ -104,7 +123,7 @@ if len(sys.argv) < 2:
     print "No arguments given; try again."
     sys.exit(1)
 if len(sys.argv) == 2:
-    filename = "data/" + sys.argv[1]
+    filename =  sys.argv[1]
 if len(sys.argv) == 3:
     if (sys.argv[1] == "-d"):
         d_flag = True
@@ -113,7 +132,7 @@ if len(sys.argv) == 3:
     else:
         print "%s is not a valid argument; try again." % sys.argv[1]
         sys.exit(1)
-    directory_name = "data/" + sys.argv[2]
+    directory_name = sys.argv[2]
 
 if d_flag:
     normalise_directory(directory_name, False)
