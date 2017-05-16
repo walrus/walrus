@@ -1,109 +1,50 @@
 #include <ArduinoSTL.h>
-#include <avr/pgmspace.h>
 
-#include "CurieIMU.h"
 #include "network.hpp"
 
-int numInputNodes;
-int numHiddenNodes;
-int numOutputNodes;
-float learningRate;
-float momentum;
-float initialWeightMax;
-
-int numHiddenWeights;
-int numOutputWeights;
+int numInputNodes = 20;
+int numHiddenNodes = 10;
+int numOutputNodes = 1;
+float learningRate = 0.3;
+float momentum = 0.9;
+float initialWeightMax = 0.5;
 
 Network *network;
-vector<vector<float>> hiddenWeights;
-vector<vector<float>> outputWeights;
-
-String config = "";
 
 void setup() {
   /* Initialise Serial communication */
   Serial.begin(115200);
-  while(!Serial) ;    // wait for serial port to connect.
+  while(!Serial) ;
 
-  /* Initialise the IMU */
-  CurieIMU.begin();
-
-  /* Calibrate the IMU's accelerometer */
-  CurieIMU.autoCalibrateAccelerometerOffset(X_AXIS, 0);
-  CurieIMU.autoCalibrateAccelerometerOffset(Y_AXIS, 0);
-  CurieIMU.autoCalibrateAccelerometerOffset(Z_AXIS, 1);
-
-  /* Wait for data to start being sent */
+  /* Wait for script to notify readiness */
   while (!Serial.available()) {
     Serial.println(F("Ready"));
   }
 
+  delay(1000);
   
-  
-  /* Read the network configuration over Serial */
-  numInputNodes = Serial.parseInt();
-  numHiddenNodes = Serial.parseInt();
-  numOutputNodes = Serial.parseInt();
-
-  numHiddenWeights = (numInputNodes + 1) * numHiddenNodes;
-  numOutputWeights = (numHiddenNodes + 1) * numOutputNodes;
-
-  learningRate = Serial.parseFloat();
-  momentum = Serial.parseFloat();
-  initialWeightMax = Serial.parseFloat();
-  
-  while (Serial.peek() != '#') {
-    if (Serial.available() > 0) {
-      config += Serial.read();
-    }
-  }
-
-  /* Clear the input buffer */
-  while (Serial.available() > 0) {
-    Serial.read();
-  }
-
-  /* Send feedback over Serial for checking */
-
-  Serial.print(F("Free memory: "));
+  Serial.print(F("Free memory before test array reserved: "));
   Serial.println(freeMemory());
 
-  /* Notify computer that the data has been received */
-  while (!Serial.available()) {
-    Serial.println(F("Received"));
-  }
+  float test[100] PROGMEM;
+
+  Serial.print(F("Free memory after test vector reserved: "));
+  Serial.println(freeMemory());
+
+  std::vector<float> test2 PROGMEM;
+  test2.resize(100) PROGMEM;
+
+  Serial.print(F("Free memory after test2 vector resized: "));
+  Serial.println(freeMemory());
+
   
-  Serial.print(F("numInputNodes = "));
-  Serial.println(numInputNodes);
-  Serial.print(F("numHiddenNodes = "));
-  Serial.println(numHiddenNodes);
-  Serial.print(F("numOutputNodes = "));
-  Serial.println(numOutputNodes);
-
-  Serial.print(F("learningRate = "));
-  Serial.println(learningRate);
-  Serial.print(F("momentum = "));
-  Serial.println(momentum);
-  Serial.print(F("initialWeightMax = "));
-  Serial.println(initialWeightMax);
-
   /* Init network */
   network = new Network(numInputNodes,
                      numHiddenNodes,
                      numOutputNodes,
                      learningRate,
                      momentum,
-                     initialWeightMax);
-  
-  Serial.print(F("numHiddenWeights = "));
-  Serial.println(numHiddenWeights);
-  Serial.print(F("numOutputWeights = "));
-  Serial.println(numOutputWeights);
-
-  /* notify the computer that setup is done */
-  while (!Serial.available()) {
-    Serial.println(F("Finished setup"));
-  }
+                     initialWeightMax) PROGMEM;
 }
 
 void loop() {

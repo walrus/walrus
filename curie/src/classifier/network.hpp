@@ -1,5 +1,4 @@
 #include <MemoryFree.h>
-#include <avr/pgmspace.h>
 
 #ifndef NETWORK_H
 #define NETWORK_H
@@ -26,12 +25,12 @@ class Network {
 
         vector<float> hiddenNodes;                  // AKA 'Hidden' in the original code
         vector<float> outputNodes;                  // AKA 'Output' in the original code
-        vector<vector<float>> hiddenWeights;        // AKA 'HiddenWeights' in the original code
-        vector<vector<float>> outputWeights;        // AKA 'OutputWeights' in the original code
-        vector<float> hiddenNodesDeltas;            // AKA 'HiddenDelta' in the original code
-        vector<float> outputNodesDeltas;            // AKA 'OutputDelta' in the original code
-        vector<vector<float>> hiddenWeightsChanges; // AKA 'ChangeHiddenWeights' in the original code
-        vector<vector<float>> outputWeightsChanges; // AKA 'ChangeOutputWeights' in the original code
+        vector<vector<float>> hiddenWeights PROGMEM;        // AKA 'HiddenWeights' in the original code
+        vector<vector<float>> outputWeights PROGMEM;        // AKA 'OutputWeights' in the original code
+        vector<float> hiddenNodesDeltas PROGMEM;            // AKA 'HiddenDelta' in the original code
+        vector<float> outputNodesDeltas PROGMEM;            // AKA 'OutputDelta' in the original code
+        vector<vector<float>> hiddenWeightsChanges PROGMEM; // AKA 'ChangeHiddenWeights' in the original code
+        vector<vector<float>> outputWeightsChanges PROGMEM; // AKA 'ChangeOutputWeights' in the original code
 
         void initialiseHiddenWeights();
         void initialiseOutputWeights();
