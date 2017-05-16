@@ -23,7 +23,7 @@ TEST_CASE("The library can implement the original ArduinoANN code's functionalit
 
     int p, q, r;
 
-    vector<vector<float>> Input = {
+    std::vector<std::vector<float>> Input = {
             { 1, 1, 1, 1, 1, 1, 0 },  // 0
             { 0, 1, 1, 0, 0, 0, 0 },  // 1
             { 1, 1, 0, 1, 1, 0, 1 },  // 2
@@ -36,7 +36,7 @@ TEST_CASE("The library can implement the original ArduinoANN code's functionalit
             { 1, 1, 1, 0, 0, 1, 1 }   // 9
     };
 
-    vector<vector<float>> Target = {
+    std::vector<std::vector<float>> Target = {
             { 0, 0, 0, 0 },
             { 0, 0, 0, 1 },
             { 0, 0, 1, 0 },
@@ -49,7 +49,7 @@ TEST_CASE("The library can implement the original ArduinoANN code's functionalit
             { 1, 0, 0, 1 }
     };
 
-    vector<int> indexes;
+    std::vector<int> indexes;
     indexes.reserve(PatternCount);
     for (int i = 0; i < PatternCount; ++i) {
         indexes.push_back(i);

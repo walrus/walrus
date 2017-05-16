@@ -7,7 +7,7 @@
 Network *loadNetwork(std::string filename) {
     // Open the file and read it into a vector of lines
     std::ifstream config_file(filename.c_str());
-    vector<std::string> lines;
+    std::vector<std::string> lines;
     std::string line;
 
     while (std::getline(config_file, line))
@@ -28,8 +28,8 @@ Network *loadNetwork(std::string filename) {
 
     // Parse the hidden weights
     int line_num = 6;
-    vector<vector<float>> hiddenWeights;
-    hiddenWeights.resize(nin+1, vector<float>(nhn));
+    std::vector<std::vector<float>> hiddenWeights;
+    hiddenWeights.resize(nin+1, std::vector<float>(nhn));
 
     for (int i = 0; i < nin+1; i++) {
         for (int j = 0; j < nhn; j++) {
@@ -40,8 +40,8 @@ Network *loadNetwork(std::string filename) {
 
     // Parse the output weights
     line_num = 6 + ((nin + 1) * nhn);
-    vector<vector<float>> outputWeights;
-    outputWeights.resize(nhn+1, vector<float>(non));
+    std::vector<std::vector<float>> outputWeights;
+    outputWeights.resize(nhn+1, std::vector<float>(non));
 
     for (int i = 0; i < nhn+1; i++) {
         for (int j = 0; j < non; j++) {
@@ -72,7 +72,7 @@ int saveNetwork(std::string filename, Network *network) {
     // Save hidden weights
     int nin_plus_one = network->getNumInputNodes() +1;
     int nhn = network->getNumHiddenNodes();
-    vector<vector<float>> hiddenWeights = network->getHiddenWeights();
+    std::vector<std::vector<float>> hiddenWeights = network->getHiddenWeights();
 
     for (int i = 0; i < nin_plus_one; i++) {
         for (int j = 0; j < nhn; j++) {
@@ -83,7 +83,7 @@ int saveNetwork(std::string filename, Network *network) {
     // Save output weights
     int nhn_plus_one = network->getNumHiddenNodes() + 1;
     int non = network->getNumOutputNodes();
-    vector<vector<float>> outputWeights = network->getOutputWeights();
+    std::vector<std::vector<float>> outputWeights = network->getOutputWeights();
 
     for (int i = 0; i < nhn_plus_one; i++) {
         for (int j = 0; j < non; j++) {

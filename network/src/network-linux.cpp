@@ -13,13 +13,13 @@ Network::Network(int numInputNodes,
                  float learningRate,
                  float momentum,
                  float initialWeightMax):
-                 numInputNodes(numInputNodes),
-                 numHiddenNodes(numHiddenNodes),
-                 numOutputNodes(numOutputNodes),
-                 learningRate(learningRate),
-                 momentum(momentum),
-                 initialWeightMax(initialWeightMax),
-                 m_mt(std::random_device()()) {
+        numInputNodes(numInputNodes),
+        numHiddenNodes(numHiddenNodes),
+        numOutputNodes(numOutputNodes),
+        learningRate(learningRate),
+        momentum(momentum),
+        initialWeightMax(initialWeightMax),
+        m_mt(std::random_device()()) {
 
     dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
 
@@ -31,14 +31,14 @@ Network::Network(int numInputNodes,
     hiddenNodes.resize(numHiddenNodes);
     outputNodes.resize(numOutputNodes);
 
-    hiddenWeights.resize(numInputNodes+1, vector<float>(numHiddenNodes));
-    outputWeights.resize(numHiddenNodes+1, vector<float>(numOutputNodes));
+    hiddenWeights.resize(numInputNodes+1, std::vector<float>(numHiddenNodes));
+    outputWeights.resize(numHiddenNodes+1, std::vector<float>(numOutputNodes));
 
     hiddenNodesDeltas.resize(numHiddenNodes);
     outputNodesDeltas.resize(numOutputNodes);
 
-    hiddenWeightsChanges.resize(numInputNodes+1, vector<float>(numHiddenNodes));
-    outputWeightsChanges.resize(numHiddenNodes+1, vector<float>(numOutputNodes));
+    hiddenWeightsChanges.resize(numInputNodes+1, std::vector<float>(numHiddenNodes));
+    outputWeightsChanges.resize(numHiddenNodes+1, std::vector<float>(numOutputNodes));
 
     initialiseHiddenWeights();
     initialiseOutputWeights();
@@ -80,7 +80,7 @@ void Network::initialiseOutputWeights() {
 /*
  * Train the network on a single pattern and return the error rate post training
  */
-float Network::trainNetwork(vector<float> inputs, vector<float> targets) {
+float Network::trainNetwork(std::vector<float> inputs, std::vector<float> targets) {
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
@@ -102,7 +102,7 @@ float Network::trainNetwork(vector<float> inputs, vector<float> targets) {
 /*
  * Compute the activations of the hidden layer nodes from the given inputs
  */
-void Network::computeHiddenLayerActivations(vector<float> inputs) {
+void Network::computeHiddenLayerActivations(std::vector<float> inputs) {
     for(int i = 0 ; i < numHiddenNodes; i++ ) {
         accumulatedInput = hiddenWeights[numInputNodes][i] ;
         for(int j = 0 ; j < numInputNodes; j++ ) {
@@ -128,7 +128,7 @@ void Network::computeOutputLayerActivations() {
 }
 
 
-void Network::computeErrors(vector<float> targets) {
+void Network::computeErrors(std::vector<float> targets) {
     for(int i = 0 ; i < numOutputNodes ; i++ ) {
         outputNodesDeltas[i] = (targets[i] - outputNodes[i]) * outputNodes[i] * (1.0f - outputNodes[i]);
         errorRate += 0.5 * (targets[i] - outputNodes[i]) * (targets[i] - outputNodes[i]);
@@ -153,7 +153,7 @@ void Network::backpropagateErrors() {
 /*
  *  Using the backpropagated errors, update the weights of the hidden nodes
  */
-void Network::updateHiddenWeights(vector<float> inputs) {
+void Network::updateHiddenWeights(std::vector<float> inputs) {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         hiddenWeightsChanges[numInputNodes][i] = learningRate * hiddenNodesDeltas[i] + momentum * hiddenWeightsChanges[numInputNodes][i] ;
         hiddenWeights[numInputNodes][i] += hiddenWeightsChanges[numInputNodes][i] ;
@@ -193,10 +193,10 @@ std::string Network::writeReport() {
  * and return a pointer to an array containing the predicted output.
  * The desired output for the function must be passed in.
  */
-vector<float> Network::classify(vector<float> inputs) {
+std::vector<float> Network::classify(std::vector<float> inputs) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations();
-    vector<float> classification= outputNodes;
+    std::vector<float> classification= outputNodes;
     return classification;
 }
 
@@ -204,7 +204,7 @@ vector<float> Network::classify(vector<float> inputs) {
 /*
  *  Set both sets of weights using pre calculated vectors.
  */
-void Network::loadWeights(vector<vector<float>> hiddenWeights, vector<vector<float>> outputWeights) {
+void Network::loadWeights(std::vector<std::vector<float>> hiddenWeights, std::vector<std::vector<float>> outputWeights) {
     setHiddenWeights(hiddenWeights);
     setOutputWeights(outputWeights);
 }
@@ -259,42 +259,42 @@ float Network::getAccumulatedInput() const {
 }
 
 
-const vector<float> Network::getHiddenNodes() const {
+const std::vector<float> Network::getHiddenNodes() const {
     return hiddenNodes;
 }
 
 
-const vector<float> Network::getOutputNodes() const {
+const std::vector<float> Network::getOutputNodes() const {
     return outputNodes;
 }
 
 
-const vector<float> Network::getHiddenNodesDeltas() const {
+const std::vector<float> Network::getHiddenNodesDeltas() const {
     return hiddenNodesDeltas;
 }
 
 
-const vector<float> Network::getOutputNodesDeltas() const {
+const std::vector<float> Network::getOutputNodesDeltas() const {
     return outputNodesDeltas;
 }
 
 
-const vector<vector<float>> Network::getHiddenWeights() const {
+const std::vector<std::vector<float>> Network::getHiddenWeights() const {
     return hiddenWeights;
 }
 
 
-const vector<vector<float>> Network::getOutputWeights() const {
+const std::vector<std::vector<float>> Network::getOutputWeights() const {
     return outputWeights;
 }
 
 
-const vector<vector<float>> Network::getHiddenWeightsChanges() const {
+const std::vector<std::vector<float>> Network::getHiddenWeightsChanges() const {
     return hiddenWeightsChanges;
 }
 
 
-const vector<vector<float>> Network::getOutputWeightsChanges() const {
+const std::vector<std::vector<float>> Network::getOutputWeightsChanges() const {
     return outputWeightsChanges;
 }
 
@@ -314,12 +314,12 @@ void Network::setInitialWeightMax(float initialWeightMax) {
 }
 
 
-void Network::setHiddenWeights(vector<vector<float>> hiddenWeights) {
+void Network::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) {
     Network::hiddenWeights = hiddenWeights;
 }
 
 
-void Network::setOutputWeights(vector<vector<float>> outputWeights) {
+void Network::setOutputWeights(std::vector<std::vector<float>> outputWeights) {
     Network::outputWeights = outputWeights;
 }
 
