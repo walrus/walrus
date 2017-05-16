@@ -10,7 +10,7 @@
 #ifndef PROJECT_NETWORK_IO_H
 #define PROJECT_NETWORK_IO_H
 
-Network *loadNetwork(std::string filename);
-int saveNetwork(std::string filename, Network *network);
+Network_L *loadNetwork(std::string filename);
+int saveNetwork(std::string filename, Network_L *network);
 
 #endif //PROJECT_NETWORK_IO_H

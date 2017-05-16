@@ -56,7 +56,7 @@ TEST_CASE("The library can implement the original ArduinoANN code's functionalit
     }
 
     GIVEN("A network with the example parameters") {
-        Network network = Network(nin, nhn, non, dlr, dm, diwm);
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm);
 
         THEN("It will eventually succeed at training") {
             long TrainingCycle = 1;

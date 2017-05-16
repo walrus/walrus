@@ -26,7 +26,7 @@
 std::string config_file_location =  "../network/config/network.txt";
 bool directory;
 
-void trainSet(std::string filename, Network *network) {
+void trainSet(std::string filename, Network_L *network) {
     std::cout << "Checking training file...";
     // Check the training file exists, and if it doesn't, exit
     std::ifstream check_logfile(filename);
@@ -44,7 +44,7 @@ void trainSet(std::string filename, Network *network) {
     }
 }
 
-void trainDir(std::string dirname, Network *network) {
+void trainDir(std::string dirname, Network_L *network) {
     DIR *dir;
     struct dirent *ent;
     if ((dir = opendir (dirname.c_str())) != NULL) {
@@ -82,14 +82,14 @@ int main(int argc, char * argv[]) {
         config_file_location = argv[1];
     }
 
-    Network *network;
+    Network_L *network;
 
     // Check the network config file exists, and if it doesn't, create it.
     std::cout << "Checking network config file...";
     std::ifstream check_config(config_file_location);
     if (!check_config.is_open()) {
         std::cout << "not found, creating new network\n";
-        network = new Network(20, 10, 1, 0.3, 0.9, 0.5);
+        network = new Network_L(20, 10, 1, 0.3, 0.9, 0.5);
     } else {
         std::cout << "found, loading network\n";
         // Load the network

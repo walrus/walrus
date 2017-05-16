@@ -1,10 +1,10 @@
-#ifndef NETWORK_H
-#define NETWORK_H
+#ifndef NETWORK_L_H
+#define NETWORK_L_H
 
 #include <vector>
 #include <random>
 
-class Network {
+class Network_L {
 private:
     const int numInputNodes;                    // AKA 'InputNodes' in the original code
     const int numHiddenNodes;                   // AKA 'HiddenNodes' in the original code
@@ -42,7 +42,7 @@ private:
     void setOutputWeights(std::vector<std::vector<float>> outputWeights);
 
 public:
-    Network(int numInputNodes,
+    Network_L(int numInputNodes,
             int numHiddenNodes,
             int numOutputNodes,
             float learningRate,
@@ -78,4 +78,4 @@ public:
     void setInitialWeightMax(float initialWeightMax);
 };
 
-#endif
+#endif // NETWORK_L_H

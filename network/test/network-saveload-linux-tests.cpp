@@ -17,7 +17,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         float dm = 0.9;
         float diwm = 0.5;
 
-        Network *network = new Network(nin, nhn, non, dlr, dm, diwm);
+        Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm);
 
         std::string filename = "test_config_file.txt";
 
@@ -111,7 +111,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
         GIVEN("A saved network") {
 
-            Network loaded_network = *loadNetwork(filename);
+            Network_L loaded_network = *loadNetwork(filename);
 
             THEN("The network is created with the correct number of input nodes") {
                 REQUIRE(loaded_network.getNumInputNodes() == nin);

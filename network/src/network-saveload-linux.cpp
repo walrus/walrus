@@ -4,7 +4,7 @@
  * Functions for saving and loading network configurations to and from files.
  */
 
-Network *loadNetwork(std::string filename) {
+Network_L *loadNetwork(std::string filename) {
     // Open the file and read it into a vector of lines
     std::ifstream config_file(filename.c_str());
     std::vector<std::string> lines;
@@ -24,7 +24,7 @@ Network *loadNetwork(std::string filename) {
     float m = std::stof(lines[4]);
     float iwm = std::stof(lines[5]);
 
-    Network *network = new Network(nin, nhn, non, lr, m, iwm);
+    Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm);
 
     // Parse the hidden weights
     int line_num = 6;
@@ -56,7 +56,7 @@ Network *loadNetwork(std::string filename) {
 }
 
 
-int saveNetwork(std::string filename, Network *network) {
+int saveNetwork(std::string filename, Network_L *network) {
     std::ofstream config_file (filename);
     if (!config_file.is_open() || config_file.bad()) {
         return 1; // Error code
