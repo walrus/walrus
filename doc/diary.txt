@@ -159,6 +159,7 @@ Individual project 'diary'
     Determine that vectors cannot be stored in PROGMEM
     Determine that therefore there need to be two versions of Network
     Refactor Network into two versions: Network_L for Linux and Network_A for Arduino
+    Rewrite logging scripts to return raw acceleration values and sum them in normalising script
 
 17/5/17
     Write script to generate network config
