@@ -159,3 +159,4 @@ linux/test/test_normalised_log_file.txt
 # Assorted executables etc, to be created by a script after cloning
 
 linux/train
+linux/new-network
