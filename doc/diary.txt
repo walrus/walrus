@@ -164,4 +164,8 @@ Individual project 'diary'
 17/5/17
     Write script to generate network config
     Change format of config files to be ~valid .h file
+
+18/5/17
+    Change config files to actually valid .h files 
+    Check that they can be #included and store data in PROGMEM
     
