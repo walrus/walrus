@@ -99,7 +99,7 @@ int saveNetwork(std::string filename, Network_L *network) {
     int nhn = network->getNumHiddenNodes();
     std::vector<std::vector<float>> hiddenWeights = network->getHiddenWeights();
 
-    config_file << "const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {\n";
+    config_file << "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {\n";
     for (int i = 0; i < nin_plus_one; i++) {
         config_file << "    { ";
         for (int j = 0; j < nhn-1; j++) {
@@ -115,7 +115,7 @@ int saveNetwork(std::string filename, Network_L *network) {
     int non = network->getNumOutputNodes();
     std::vector<std::vector<float>> outputWeights = network->getOutputWeights();
 
-    config_file << "const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {\n";
+    config_file << "float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {\n";
     for (int i = 0; i < nhn_plus_one; i++) {
         config_file << "    { ";
         for (int j = 0; j < non-1; j++) {
