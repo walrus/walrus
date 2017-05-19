@@ -10,7 +10,7 @@
 bool moving = false;                
 bool calibrateOffsets = true;
 
-unsigned long readingInterval = 100;  // Time between readings when logging
+unsigned long readingInterval = 75;  // Time between readings when logging
 
 int ax, ay, az;         // Accelerometer values
 
