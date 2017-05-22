@@ -1,2 +1,6 @@
 # Ignore config files in version control
 *_config.h
+
+# Ignore Network files in version control
+*network-arduino.cpp
+*network-arduino.hpp
