@@ -19,7 +19,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
         Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm);
 
-        std::string filename = "test_config_file.h";
+        std::string filename = "test_network_config.h";
 
         int status_code = saveNetwork(filename, network);
 
