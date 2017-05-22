@@ -151,7 +151,7 @@ cmake-build-debug/
 
 # Test files used during I/O unit tests etc
 
-network/test_config_file.txt
+network/test_config_file.h
 linux/test/test_normalised_log_file.txt
 
 ###################################
@@ -159,3 +159,4 @@ linux/test/test_normalised_log_file.txt
 # Assorted executables etc, to be created by a script after cloning
 
 linux/train
+linux/new-network
