@@ -1,5 +1,5 @@
 #include "../../lib/catch.hpp"
-#include "../src/network.hpp"
+#include "../src/network-linux.hpp"
 /* Main unit test file for the network code. */
 
 TEST_CASE("The core network functionality is all correct") {
@@ -16,7 +16,7 @@ TEST_CASE("The core network functionality is all correct") {
     float diwm = 0.5;
 
     GIVEN("The network is instantiated using the constructor") {
-        Network network = Network(nin, nhn, non, dlr, dm, diwm);
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm);
 
         THEN("The default parameters are set properly") {
             REQUIRE(network.getNumInputNodes() == nin);
@@ -35,7 +35,7 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(network.getAccumulatedInput() == 0.0f);
         }
         THEN("The hidden weights are all in the correct range") {
-            vector<vector<float>> hiddenWeights = network.getHiddenWeights();
+            std::vector<std::vector<float>> hiddenWeights = network.getHiddenWeights();
             for (int i = 0; i < nin+1; i++) {
                 for (int j = 0; j < nhn; j++) {
                     REQUIRE(hiddenWeights[i][j] < diwm);
@@ -44,7 +44,7 @@ TEST_CASE("The core network functionality is all correct") {
             }
         }
         THEN("The output weights are all in the correct range") {
-            vector<vector<float>> outputWeights = network.getOutputWeights();
+            std::vector<std::vector<float>> outputWeights = network.getOutputWeights();
             for (int i = 0; i < nhn+1; i++) {
                 for (int j = 0; j < non; j++) {
                     REQUIRE(outputWeights[i][j] < diwm);
@@ -69,14 +69,14 @@ TEST_CASE("The core network functionality is all correct") {
         }
 
         THEN("It can (badly) attempt to classify without training") {
-            vector<float>  input;
+            std::vector<float>  input;
             input.resize(nin);
 
             for (int i = 0; i++; i < nin) {
                 input[i] = test_dist(m_mt);
             }
 
-            vector<float> output = network.classify(input);
+            std::vector<float> output = network.classify(input);
 
             for (int i = 0; i++; i < non) {
                 REQUIRE(output[i] > -1.0f);
@@ -84,9 +84,9 @@ TEST_CASE("The core network functionality is all correct") {
             }
         }
         THEN("It can be trained") {
-            vector<float> input;
+            std::vector<float> input;
             input.resize(nin);
-            vector<float> output;
+            std::vector<float> output;
             output.resize(non);
 
             for (int i = 0; i < nin; i++) {
@@ -103,9 +103,9 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(error > 0.0f);
         }
         THEN("Training reduces the error") {
-            vector<float> input;
+            std::vector<float> input;
             input.resize(nin);
-            vector<float> output;
+            std::vector<float> output;
             output.resize(non);
 
             for (int i = 0; i < nin; i++) {
@@ -132,11 +132,11 @@ TEST_CASE("The core network functionality is all correct") {
     }
 
     GIVEN("Pre computed hidden and output weights") {
-        Network network = Network(nin, nhn, non, dlr, dm, diwm);
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm);
 
         // Generate hidden and output node weights to load
-        vector<vector<float>> hiddenWeights;
-        hiddenWeights.resize(nin+1, vector<float>(nhn));
+        std::vector<std::vector<float>> hiddenWeights;
+        hiddenWeights.resize(nin+1, std::vector<float>(nhn));
 
         for (int i = 0; i < nhn; i++) {
             for (int j = 0; j <= nin; j++) {
@@ -145,8 +145,8 @@ TEST_CASE("The core network functionality is all correct") {
             }
         }
 
-        vector<vector<float>> outputWeights;
-        outputWeights.resize(nhn+1, vector<float>(non));
+        std::vector<std::vector<float>> outputWeights;
+        outputWeights.resize(nhn+1, std::vector<float>(non));
 
         for(int i = 0 ; i < non ; i ++ ) {
             for(int j = 0 ; j <= nhn ; j++ ) {
@@ -155,13 +155,13 @@ TEST_CASE("The core network functionality is all correct") {
             }
         }
         THEN("The weights can be loaded") {
-            vector<vector<float>> existingHiddenWeights = network.getHiddenWeights();
-            vector<vector<float>> existingOutputWeights = network.getOutputWeights();
+            std::vector<std::vector<float>> existingHiddenWeights = network.getHiddenWeights();
+            std::vector<std::vector<float>> existingOutputWeights = network.getOutputWeights();
 
             network.loadWeights(hiddenWeights, outputWeights);
 
-            vector<vector<float>> loadedHiddenWeights = network.getHiddenWeights();
-            vector<vector<float>> loadedOutputWeights = network.getOutputWeights();
+            std::vector<std::vector<float>> loadedHiddenWeights = network.getHiddenWeights();
+            std::vector<std::vector<float>> loadedOutputWeights = network.getOutputWeights();
 
             REQUIRE(loadedHiddenWeights == hiddenWeights);
             REQUIRE(loadedOutputWeights == outputWeights);
@@ -170,14 +170,14 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(loadedOutputWeights != existingOutputWeights);
         }
         THEN("It can attempt to classify without training") {
-            vector<float>  input;
+            std::vector<float>  input;
             input.resize(nin);
 
             for (int i = 0; i++; i < nin) {
                 input[i] = test_dist(m_mt);
             }
 
-            vector<float> output = network.classify(input);
+            std::vector<float> output = network.classify(input);
 
             for (int i = 0; i++; i < non) {
                 REQUIRE(output[i] > -1.0f);
@@ -185,9 +185,9 @@ TEST_CASE("The core network functionality is all correct") {
             }
         }
         THEN("It can be trained") {
-            vector<float> input;
+            std::vector<float> input;
             input.resize(nin);
-            vector<float> output;
+            std::vector<float> output;
             output.resize(non);
 
             for (int i = 0; i < nin; i++) {
@@ -204,9 +204,9 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(error > 0.0f);
         }
         THEN("Training reduces the error") {
-            vector<float> input;
+            std::vector<float> input;
             input.resize(nin);
-            vector<float> output;
+            std::vector<float> output;
             output.resize(non);
 
             for (int i = 0; i < nin; i++) {
@@ -239,17 +239,17 @@ TEST_CASE("The core network functionality is all correct") {
         dlr = 0.1;
         dm = 0.0;
 
-        Network network = Network(nin, nhn, non, dlr, dm, diwm);
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm);
 
         THEN("It can attempt to classify without training") {
-            vector<float>  input;
+            std::vector<float>  input;
             input.resize(nin);
 
             for (int i = 0; i++; i < nin) {
                 input[i] = test_dist(m_mt);
             }
 
-            vector<float> output = network.classify(input);
+            std::vector<float> output = network.classify(input);
 
             for (int i = 0; i++; i < non) {
                 REQUIRE(output[i] > -1.0f);
@@ -257,9 +257,9 @@ TEST_CASE("The core network functionality is all correct") {
             }
         }
         THEN("It can be trained") {
-            vector<float> input;
+            std::vector<float> input;
             input.resize(nin);
-            vector<float> output;
+            std::vector<float> output;
             output.resize(non);
 
             for (int i = 0; i < nin; i++) {
@@ -276,9 +276,9 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(error > 0.0f);
         }
         THEN("Training reduces the error") {
-            vector<float> input;
+            std::vector<float> input;
             input.resize(nin);
-            vector<float> output;
+            std::vector<float> output;
             output.resize(non);
 
             for (int i = 0; i < nin; i++) {

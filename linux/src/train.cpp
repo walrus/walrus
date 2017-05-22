@@ -5,7 +5,11 @@
  *
  * train -n|config_filename  -d dirname|log_filename
  *
- * Will read every log file with the _normalised suffix and train the network on the data contained in it
+ * Without -d flag will train the network on the data in the given file.
+ *
+ * With -d flag, will recursively scan directory and  read every log file with the _normalised suffix
+ * and train the network on the data contained in it.
+ *
  * The -n flag will use the network whose config is stored in network/config/network.txt on the data.
  *
  * Must be run from the linux/ directory
@@ -15,32 +19,32 @@
 #include <fstream>
 #include <dirent.h>
 
-#include "../../network/src/network.hpp"
-#include "../../network/src/network-io.hpp"
+#include "../../network/src/network-linux.hpp"
+#include "../../network/src/network-saveload-linux.hpp"
 #include "training-set.hpp"
 
 std::string config_file_location =  "../network/config/network.txt";
 bool directory;
 
-void trainSet(std::string filename, Network *network) {
+void trainSet(std::string filename, Network_L *network) {
     std::cout << "Checking training file...";
     // Check the training file exists, and if it doesn't, exit
-    std::ifstream check_logfile (filename);
+    std::ifstream check_logfile(filename);
     if (!check_logfile.good() || filename.find("_normalised") == std::string::npos) {
         check_logfile.close();
         std::cout << filename << " is an invalid log file, skipping.\n";
     } else {
         std::cout << "training on " << filename << "\n";
-    }
 
-    TrainingSet *set = loadTrainingSet(filename);
+        TrainingSet *set = loadTrainingSet(filename);
 
-    for (int i = 0; i < set->inputs.size(); i++) {
-        network->trainNetwork(set->inputs[i], set->targets[i]);
+        for (int i = 0; i < set->inputs.size(); i++) {
+            network->trainNetwork(set->inputs[i], set->targets[i]);
+        }
     }
 }
 
-void trainDir(std::string dirname, Network *network) {
+void trainDir(std::string dirname, Network_L *network) {
     DIR *dir;
     struct dirent *ent;
     if ((dir = opendir (dirname.c_str())) != NULL) {
@@ -78,20 +82,21 @@ int main(int argc, char * argv[]) {
         config_file_location = argv[1];
     }
 
-    Network *network;
+    Network_L *network;
 
     // Check the network config file exists, and if it doesn't, create it.
     std::cout << "Checking network config file...";
     std::ifstream check_config(config_file_location);
     if (!check_config.is_open()) {
         std::cout << "not found, creating new network\n";
-        network = new Network(20, 10, 1, 0.3, 0.9, 0.5);
+        network = new Network_L(20, 10, 1, 0.3, 0.9, 0.5);
     } else {
         std::cout << "found, loading network\n";
         // Load the network
         network = loadNetwork(config_file_location);
     }
 
+    // Train on the given file(s)
     if (std::string(argv[2]) == "-d") {
         trainDir(argv[3], network);
     } else {
@@ -99,6 +104,5 @@ int main(int argc, char * argv[]) {
     }
 
     saveNetwork(config_file_location, network);
-
 }
 
