@@ -13,7 +13,6 @@ bool calibrateOffsets = true;
 unsigned long readingInterval = 100;  // Time between readings when logging
 
 int ax, ay, az;         // Accelerometer values
-int acceleration;       // Overall acceleration magnitude
 
 void setup() {
   Serial.begin(9600); // initialize Serial communication
@@ -30,8 +29,10 @@ void setup() {
 
 void loop() {
   CurieIMU.readAccelerometer(ax, ay, az);
-  acceleration = abs(ax) + abs(ay) + abs(az);
-  Serial.println(acceleration);
+  Serial.print(ax); Serial.print(" ");
+  Serial.print(ay); Serial.print(" ");
+  Serial.println(az); Serial.print(" ");
+
   delay(readingInterval);
 }
 
