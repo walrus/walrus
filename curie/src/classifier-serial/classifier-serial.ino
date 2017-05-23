@@ -21,6 +21,8 @@ unsigned long interruptTime = 0;      // Time of the last interrupt
 unsigned long readingInterval = 75;  // Time between readings when logging, in milliseconds
 
 int ax, ay, az;         // Accelerometer values
+float readingsBuffer[50] = {0.0f}; 
+int readingsIndex = 0;
 
 Network_A *network;
 
@@ -52,15 +54,37 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Running...");
   if (moving) {
-    // Log movement
+    if (readingsIndex < 49) {
+      CurieIMU.readAccelerometer(ax, ay, az);
+      float reading = abs(ax) + abs(ay) + abs(az);
+      readingsBuffer[readingsIndex] = reading;
+      readingsIndex++;
+      delay(readingInterval);
+    }
+    else {
+      // Buffer full; reset
+      readingsIndex = 0;
+    }
   } 
   else {
-    // Do nothing
+    // Wait for movement to start
   }
 }
 
+/* 
+ * Take the current buffer of readings and attempt to classify
+ * using the network, sending the result over Serial
+ */
+void classifyMovement() {
+  float normalisedReadings[numInputNodes];
+  for (int i = 0; i < numInputNodes; i++) {
+    Serial.print("NormalisedReadings["); Serial.print(i); Serial.print("] is: "); Serial.println(readingsBuffer[i]);
+    normalisedReadings[i] = readingsBuffer[i];
+  }
+  float *result = network->classify(normalisedReadings);
+  Serial.print("Classification is: "); Serial.println(result[0]);
+}
 
 static void eventCallback(void){
   interruptTime = millis();
@@ -71,6 +95,7 @@ static void eventCallback(void){
     Serial.println("  milliseconds. Logging...");
     moving = true;
     lastSwitchTime = interruptTime;
+    readingsIndex = 0;
   } 
   
   if (CurieIMU.getInterruptStatus(CURIE_IMU_ZERO_MOTION) && moving && (interruptTime - lastSwitchTime > cooldownTime)) {
@@ -79,6 +104,8 @@ static void eventCallback(void){
     Serial.println("  milliseconds. Logging...");    
     moving = false;
     lastSwitchTime = interruptTime;
+    classifyMovement();
+    readingsIndex = 0;
   } 
 
 }
