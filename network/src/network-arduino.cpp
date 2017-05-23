@@ -7,37 +7,20 @@
  */
 
 #include <random>
-
+#include <iostream>
 #include "network-arduino.hpp"
 
-Network_A::Network_A(int numInputNodes,
-                     int numHiddenNodes,
-                     int numOutputNodes,
-                     float learningRate,
-                     float momentum,
-                     float initialWeightMax):
-        numInputNodes(numInputNodes),
-        numHiddenNodes(numHiddenNodes),
-        numOutputNodes(numOutputNodes),
-        learningRate(learningRate),
-        momentum(momentum),
-        initialWeightMax(initialWeightMax) {
+Network_A::Network_A() {
 
     accumulatedInput = 0.0f;
-
-    hiddenNodes.resize(numHiddenNodes);
-    outputNodes.resize(numOutputNodes);
-
-    hiddenWeights.resize(numInputNodes+1, std::vector<float>(numHiddenNodes));
-    outputWeights.resize(numHiddenNodes+1, std::vector<float>(numOutputNodes));
 }
 
 /*
  * Compute the activations of the hidden layer nodes from the given inputs
  */
-void Network_A::computeHiddenLayerActivations(std::vector<float> inputs) {
+void Network_A::computeHiddenLayerActivations(float inputs[]) {
     for(int i = 0 ; i < numHiddenNodes; i++ ) {
-        accumulatedInput = hiddenWeights[numInputNodes][i] ;
+        accumulatedInput = hiddenWeights[numInputNodes][i];
         for(int j = 0 ; j < numInputNodes; j++ ) {
             accumulatedInput += inputs[j] * hiddenWeights[j][i] ;
         }
@@ -65,21 +48,13 @@ void Network_A::computeOutputLayerActivations() {
  * and return a pointer to an array containing the predicted output.
  * The desired output for the function must be passed in.
  */
-std::vector<float> Network_A::classify(std::vector<float> inputs) {
+float * Network_A::classify(float inputs[]) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations();
-    std::vector<float> classification= outputNodes;
+    float * classification= outputNodes;
     return classification;
 }
 
-
-/*
- *  Set both sets of weights using pre calculated vectors.
- */
-void Network_A::loadWeights(std::vector<std::vector<float>> hiddenWeights, std::vector<std::vector<float>> outputWeights) {
-    setHiddenWeights(hiddenWeights);
-    setOutputWeights(outputWeights);
-}
 
 int Network_A::getNumInputNodes() const {
     return numInputNodes;
@@ -117,31 +92,11 @@ float Network_A::getAccumulatedInput() const {
 }
 
 
-const std::vector<float> Network_A::getHiddenNodes() const {
+const float * Network_A::getHiddenNodes() const {
     return hiddenNodes;
 }
 
 
-const std::vector<float> Network_A::getOutputNodes() const {
+const float * Network_A::getOutputNodes() const {
     return outputNodes;
-}
-
-
-const std::vector<std::vector<float>> Network_A::getHiddenWeights() const {
-    return hiddenWeights;
-}
-
-
-const std::vector<std::vector<float>> Network_A::getOutputWeights() const {
-    return outputWeights;
-}
-
-
-void Network_A::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) {
-    Network_A::hiddenWeights = hiddenWeights;
-}
-
-
-void Network_A::setOutputWeights(std::vector<std::vector<float>> outputWeights) {
-    Network_A::outputWeights = outputWeights;
 }
