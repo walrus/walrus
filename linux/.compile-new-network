@@ -2,7 +2,7 @@
 
 import os, sys, subprocess
 
-# Compile script for the training program, will recompile all dependencies
+# Compile script for the new-network program, will recompile all dependencies
 #
 # This script should be run from linux/
 
@@ -26,10 +26,9 @@ if len(sys.argv) > 1:
 
 # Compile the various source files
 print "Compiling..."
-a = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-linux.cpp"]);
-b = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-saveload-linux.cpp"]);
-c = subprocess.Popen(["g++", "-c", "-std=c++11", "src/training-set.cpp"]);
-d = subprocess.Popen(["g++", "-c", "-std=c++11", "src/train.cpp"]);
+a = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-linux.cpp"])
+b = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-saveload-linux.cpp"])
+c = subprocess.Popen(["g++", "-c", "-std=c++11", "src/new-network.cpp"])
 
 a.wait();
 if a.returncode == 1:
@@ -40,16 +39,14 @@ if b.returncode == 1:
 c.wait();
 if c.returncode == 1:
     sys.exit(1)
-d.wait();
-if d.returncode == 1:
-    sys.exit(1)
 
 
 # Link the object files together into an executable
 print "Linking..."
-o = subprocess.Popen(["g++", "train.o", "training-set.o", "../network/network-linux.o", "../network/network-saveload-linux.o", "-o", "train", "-std=c++11"]);
+o = subprocess.Popen(["g++", "new-network.o", "../network/network-linux.o", "../network/network-saveload-linux.o", "-o", "new-network", "-std=c++11"]);
 o.wait();
 if o.returncode == 1:
     sys.exit(1)
 
+print "Success"
 sys.exit(0)

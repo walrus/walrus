@@ -1,25 +1,27 @@
 /*
  * A C++ library reworking of ArduinoANN - An artificial neural network for the Arduino
  * See robotics.hobbizine.com/arduinoann.html for more information about ArduinoANN.
+ *
+ * Network_L is the full featured version that will run on a Linux machine.
  */
 
 #include <random>
 
-#include "network.hpp"
+#include "network-linux.hpp"
 
-Network::Network(int numInputNodes,
+Network_L::Network_L(int numInputNodes,
                  int numHiddenNodes,
                  int numOutputNodes,
                  float learningRate,
                  float momentum,
                  float initialWeightMax):
-                 numInputNodes(numInputNodes),
-                 numHiddenNodes(numHiddenNodes),
-                 numOutputNodes(numOutputNodes),
-                 learningRate(learningRate),
-                 momentum(momentum),
-                 initialWeightMax(initialWeightMax),
-                 m_mt(std::random_device()()) {
+        numInputNodes(numInputNodes),
+        numHiddenNodes(numHiddenNodes),
+        numOutputNodes(numOutputNodes),
+        learningRate(learningRate),
+        momentum(momentum),
+        initialWeightMax(initialWeightMax),
+        m_mt(std::random_device()()) {
 
     dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
 
@@ -31,14 +33,14 @@ Network::Network(int numInputNodes,
     hiddenNodes.resize(numHiddenNodes);
     outputNodes.resize(numOutputNodes);
 
-    hiddenWeights.resize(numInputNodes+1, vector<float>(numHiddenNodes));
-    outputWeights.resize(numHiddenNodes+1, vector<float>(numOutputNodes));
+    hiddenWeights.resize(numInputNodes+1, std::vector<float>(numHiddenNodes));
+    outputWeights.resize(numHiddenNodes+1, std::vector<float>(numOutputNodes));
 
     hiddenNodesDeltas.resize(numHiddenNodes);
     outputNodesDeltas.resize(numOutputNodes);
 
-    hiddenWeightsChanges.resize(numInputNodes+1, vector<float>(numHiddenNodes));
-    outputWeightsChanges.resize(numHiddenNodes+1, vector<float>(numOutputNodes));
+    hiddenWeightsChanges.resize(numInputNodes+1, std::vector<float>(numHiddenNodes));
+    outputWeightsChanges.resize(numHiddenNodes+1, std::vector<float>(numOutputNodes));
 
     initialiseHiddenWeights();
     initialiseOutputWeights();
@@ -50,7 +52,7 @@ Network::Network(int numInputNodes,
  * Initialise hiddenWeightsChanges to zero
  * Use when setting up a new, untrained network
  */
-void Network::initialiseHiddenWeights() {
+void Network_L::initialiseHiddenWeights() {
     for (int i = 0; i < numHiddenNodes; i++) {
         for (int j = 0; j <= numInputNodes; j++) {
             hiddenWeightsChanges[j][i] = 0.0;
@@ -66,7 +68,7 @@ void Network::initialiseHiddenWeights() {
  * Initialise outputWeightsChanges to zero
  * Use when setting up a new, untrained network
  */
-void Network::initialiseOutputWeights() {
+void Network_L::initialiseOutputWeights() {
     for(int i = 0 ; i < numOutputNodes ; i ++ ) {
         for(int j = 0 ; j <= numHiddenNodes ; j++ ) {
             outputWeightsChanges[j][i] = 0.0 ;
@@ -80,7 +82,7 @@ void Network::initialiseOutputWeights() {
 /*
  * Train the network on a single pattern and return the error rate post training
  */
-float Network::trainNetwork(vector<float> inputs, vector<float> targets) {
+float Network_L::trainNetwork(std::vector<float> inputs, std::vector<float> targets) {
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
@@ -102,7 +104,7 @@ float Network::trainNetwork(vector<float> inputs, vector<float> targets) {
 /*
  * Compute the activations of the hidden layer nodes from the given inputs
  */
-void Network::computeHiddenLayerActivations(vector<float> inputs) {
+void Network_L::computeHiddenLayerActivations(std::vector<float> inputs) {
     for(int i = 0 ; i < numHiddenNodes; i++ ) {
         accumulatedInput = hiddenWeights[numInputNodes][i] ;
         for(int j = 0 ; j < numInputNodes; j++ ) {
@@ -117,7 +119,7 @@ void Network::computeHiddenLayerActivations(vector<float> inputs) {
  * Compute the activations of the hidden layer nodes from the current state of the hidden nodes,
  * then compute the output errors and overall error rate
  */
-void Network::computeOutputLayerActivations() {
+void Network_L::computeOutputLayerActivations() {
     for(int i = 0 ; i < numOutputNodes ; i++ ) {
         accumulatedInput = outputWeights[numHiddenNodes][i] ;
         for(int j = 0 ; j < numHiddenNodes ; j++ ) {
@@ -128,7 +130,7 @@ void Network::computeOutputLayerActivations() {
 }
 
 
-void Network::computeErrors(vector<float> targets) {
+void Network_L::computeErrors(std::vector<float> targets) {
     for(int i = 0 ; i < numOutputNodes ; i++ ) {
         outputNodesDeltas[i] = (targets[i] - outputNodes[i]) * outputNodes[i] * (1.0f - outputNodes[i]);
         errorRate += 0.5 * (targets[i] - outputNodes[i]) * (targets[i] - outputNodes[i]);
@@ -139,7 +141,7 @@ void Network::computeErrors(vector<float> targets) {
 /*
  *  Backpropagate the output layer errors to the hidden layer
  */
-void Network::backpropagateErrors() {
+void Network_L::backpropagateErrors() {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         accumulatedInput = 0.0 ;
         for(int j = 0 ; j < numOutputNodes ; j++ ) {
@@ -153,7 +155,7 @@ void Network::backpropagateErrors() {
 /*
  *  Using the backpropagated errors, update the weights of the hidden nodes
  */
-void Network::updateHiddenWeights(vector<float> inputs) {
+void Network_L::updateHiddenWeights(std::vector<float> inputs) {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         hiddenWeightsChanges[numInputNodes][i] = learningRate * hiddenNodesDeltas[i] + momentum * hiddenWeightsChanges[numInputNodes][i] ;
         hiddenWeights[numInputNodes][i] += hiddenWeightsChanges[numInputNodes][i] ;
@@ -168,7 +170,7 @@ void Network::updateHiddenWeights(vector<float> inputs) {
 /*
  *  Using the backpropagated errors, update the weights of the hidden nodes
  */
-void Network::updateOutputWeights() {
+void Network_L::updateOutputWeights() {
     for(int i = 0 ; i < numOutputNodes ; i ++ ) {
         outputWeightsChanges[numHiddenNodes][i] = learningRate * outputNodesDeltas[i] + momentum * outputWeightsChanges[numHiddenNodes][i] ;
         outputWeights[numHiddenNodes][i] += outputWeightsChanges[numHiddenNodes][i] ;
@@ -183,7 +185,7 @@ void Network::updateOutputWeights() {
 /*
  * outputs the current training cycle and error rate as a string for display or logging
  */
-std::string Network::writeReport() {
+std::string Network_L::writeReport() {
     return "Training cycle: " + std::to_string(trainingCycle) + ". Error rate: " + std::to_string(errorRate);
 }
 
@@ -193,10 +195,10 @@ std::string Network::writeReport() {
  * and return a pointer to an array containing the predicted output.
  * The desired output for the function must be passed in.
  */
-vector<float> Network::classify(vector<float> inputs) {
+std::vector<float> Network_L::classify(std::vector<float> inputs) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations();
-    vector<float> classification= outputNodes;
+    std::vector<float> classification= outputNodes;
     return classification;
 }
 
@@ -204,123 +206,121 @@ vector<float> Network::classify(vector<float> inputs) {
 /*
  *  Set both sets of weights using pre calculated vectors.
  */
-void Network::loadWeights(vector<vector<float>> hiddenWeights, vector<vector<float>> outputWeights) {
+void Network_L::loadWeights(std::vector<std::vector<float>> hiddenWeights, std::vector<std::vector<float>> outputWeights) {
     setHiddenWeights(hiddenWeights);
     setOutputWeights(outputWeights);
 }
 
-int Network::getNumInputNodes() const {
+int Network_L::getNumInputNodes() const {
     return numInputNodes;
 }
 
 
-int Network::getNumHiddenNodes() const {
+int Network_L::getNumHiddenNodes() const {
     return numHiddenNodes;
 }
 
 
-int Network::getNumOutputNodes() const {
+int Network_L::getNumOutputNodes() const {
     return numOutputNodes;
 }
 
 
-float Network::getLearningRate() const {
+float Network_L::getLearningRate() const {
     return learningRate;
 }
 
 
-float Network::getMomentum() const {
+float Network_L::getMomentum() const {
     return momentum;
 }
 
 
-float Network::getInitialWeightMax() const {
+float Network_L::getInitialWeightMax() const {
     return initialWeightMax;
 }
 
 
-long Network::getTrainingCycle() const {
+long Network_L::getTrainingCycle() const {
     return trainingCycle;
 }
 
 
-float Network::getRandomFloat() const {
+float Network_L::getRandomFloat() const {
     return randomFloat;
 }
 
 
-float Network::getErrorRate() const {
+float Network_L::getErrorRate() const {
     return errorRate;
 }
 
 
-float Network::getAccumulatedInput() const {
+float Network_L::getAccumulatedInput() const {
     return accumulatedInput;
 }
 
 
-const vector<float> Network::getHiddenNodes() const {
+const std::vector<float> Network_L::getHiddenNodes() const {
     return hiddenNodes;
 }
 
 
-const vector<float> Network::getOutputNodes() const {
+const std::vector<float> Network_L::getOutputNodes() const {
     return outputNodes;
 }
 
 
-const vector<float> Network::getHiddenNodesDeltas() const {
+const std::vector<float> Network_L::getHiddenNodesDeltas() const {
     return hiddenNodesDeltas;
 }
 
 
-const vector<float> Network::getOutputNodesDeltas() const {
+const std::vector<float> Network_L::getOutputNodesDeltas() const {
     return outputNodesDeltas;
 }
 
 
-const vector<vector<float>> Network::getHiddenWeights() const {
+const std::vector<std::vector<float>> Network_L::getHiddenWeights() const {
     return hiddenWeights;
 }
 
 
-const vector<vector<float>> Network::getOutputWeights() const {
+const std::vector<std::vector<float>> Network_L::getOutputWeights() const {
     return outputWeights;
 }
 
 
-const vector<vector<float>> Network::getHiddenWeightsChanges() const {
+const std::vector<std::vector<float>> Network_L::getHiddenWeightsChanges() const {
     return hiddenWeightsChanges;
 }
 
 
-const vector<vector<float>> Network::getOutputWeightsChanges() const {
+const std::vector<std::vector<float>> Network_L::getOutputWeightsChanges() const {
     return outputWeightsChanges;
 }
 
 
-void Network::setLearningRate(float learningRate) {
-    Network::learningRate = learningRate;
+void Network_L::setLearningRate(float learningRate) {
+    Network_L::learningRate = learningRate;
 }
 
 
-void Network::setMomentum(float momentum) {
-    Network::momentum = momentum;
+void Network_L::setMomentum(float momentum) {
+    Network_L::momentum = momentum;
 }
 
 
-void Network::setInitialWeightMax(float initialWeightMax) {
-    Network::initialWeightMax = initialWeightMax;
+void Network_L::setInitialWeightMax(float initialWeightMax) {
+    Network_L::initialWeightMax = initialWeightMax;
 }
 
 
-void Network::setHiddenWeights(vector<vector<float>> hiddenWeights) {
-    Network::hiddenWeights = hiddenWeights;
+void Network_L::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) {
+    Network_L::hiddenWeights = hiddenWeights;
 }
 
 
-void Network::setOutputWeights(vector<vector<float>> outputWeights) {
-    Network::outputWeights = outputWeights;
+void Network_L::setOutputWeights(std::vector<std::vector<float>> outputWeights) {
+    Network_L::outputWeights = outputWeights;
 }
-
-

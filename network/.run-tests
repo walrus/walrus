@@ -16,23 +16,40 @@ a_flag = False          # Whether or not the -a 'all' flag is set
 
 
 def run_quick_tests():
-    # Compile core tests
-    print "Compiling core tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-core-tests.cpp"]);
+    # Compile core Linux tests
+    print "Compiling core Linux tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-linux-core-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Compile core Arduino tests
+    print "Compiling core Arduino tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-arduino-core-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
         sys.exit(1)
 
     # Compile IO tests
     print "Compiling IO tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-io-tests.cpp"]);
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-saveload-linux-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
         sys.exit(1)
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "../catch-main.o", "network-core-tests.o", "network-io-tests.o", "network.o", "network-io.o", "-o", ".catch.exe", "-std=c++11"]);
+    o = subprocess.Popen(["g++",
+                          "../catch-main.o",
+                          "network-linux-core-tests.o",
+                          "network-arduino-core-tests.o",
+                          "network-saveload-linux-tests.o",
+                          "network-linux.o",
+                          "network-arduino.o",
+                          "network-saveload-linux.o",
+                          "-o",
+                          ".catch.exe",
+                          "-std=c++11"]);
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -48,14 +65,21 @@ def run_quick_tests():
 def run_slow_tests():
     # Compile core tests
     print "Compiling legacy tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-legacy-tests.cpp"]);
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-linux-legacy-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
         sys.exit(1) 
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "../catch-main.o", "network-legacy-tests.o", "network.o", "network-io.o", "-o", ".catch.exe", "-std=c++11"]);
+    o = subprocess.Popen(["g++",
+                          "../catch-main.o",
+                          "network-linux-legacy-tests.o",
+                          "network-linux.o",
+                          "network-saveload-linux.o",
+                          "-o",
+                          ".catch.exe",
+                          "-std=c++11"]);
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -70,29 +94,47 @@ def run_slow_tests():
 
 def run_all_tests():
     # Compile core tests
-    print "Compiling core tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-core-tests.cpp"]);
+    print "Compiling core Linux tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-linux-core-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Compile core Arduino tests
+    print "Compiling core Arduino tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-arduino-core-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
         sys.exit(1)
 
     # Compile IO tests
     print "Compiling IO tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-io-tests.cpp"]);
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-saveload-linux-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
         sys.exit(1)
 
     # Compile legacy/regression tests
     print "Compiling legacy tests..."
-    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-legacy-tests.cpp"]);
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-linux-legacy-tests.cpp"]);
     t.wait();
     if t.returncode == 1:
         sys.exit(1) 
 
     # Link the various bits together into an executable
     print "Linking..."
-    o = subprocess.Popen(["g++", "../catch-main.o", "network-core-tests.o", "network-io-tests.o", "network-legacy-tests.o", "network.o", "network-io.o", "-o", ".catch.exe", "-std=c++11"]);
+    o = subprocess.Popen(["g++",
+                          "../catch-main.o",
+                          "network-linux-core-tests.o",
+                          "network-arduino-core-tests.o",
+                          "network-saveload-linux-tests.o",
+                          "network-linux-legacy-tests.o",
+                          "network-linux.o",
+                          "network-saveload-linux.o",
+                          "network-arduino.o",
+                          "-o",
+                          ".catch.exe",
+                          "-std=c++11"]);
     o.wait();
     if o.returncode == 1:
         sys.exit(1)
@@ -138,16 +180,24 @@ if not (os.path.isfile("../catch-main.o")):
         sys.exit(1) 
 
 
-# Compile the network code
-print "Compiling network"
-n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network.cpp"]);
+# Compile the Linux network code
+print "Compiling network-linux"
+n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-linux.cpp"]);
 n.wait();
 if n.returncode == 1:
         sys.exit(1)
-i = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-io.cpp"]);
+i = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-saveload-linux.cpp"]);
 i.wait();
 if i.returncode == 1:
     sys.exit(1)
+
+# Compile the Arduino network code
+print "Compiling network-arduino"
+n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-arduino.cpp"]);
+n.wait();
+if n.returncode == 1:
+    sys.exit(1)
+
 
 # Run appropriate tests
 if q_flag:
