@@ -19,7 +19,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
         Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm);
 
-        std::string filename = "test_config_file.h";
+        std::string filename = "test_network_config.h";
 
         int status_code = saveNetwork(filename, network);
 
@@ -37,66 +37,79 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             lines.push_back(line);
         }
 
-        THEN("The main configuration options are all recorded") {
-            REQUIRE(lines.size() >= 6);
+        THEN("The first two lines record the #define properly") {
+            std::string lineOneBody = "#ifndef ARDUINO_CONFIG_H";
+            std::string lineTwoBody = "#define ARDUINO_CONFIG_H";
+
+            REQUIRE(lines[0] == lineOneBody);
+            REQUIRE(lines[1] == lineTwoBody);
+
         }
 
-        THEN("The first line records the number of input nodes correctly") {
+        THEN("The third line is blank") {
+            REQUIRE(lines[2] == "");
+        }
+
+        THEN("The main configuration options are all recorded") {
+            REQUIRE(lines.size() >= 9);
+        }
+
+        THEN("The fourth line records the number of input nodes correctly") {
             std::string ninBody = "const int numInputNodes =";
-            REQUIRE(lines[0].substr(0,25) == ninBody);
-            int fileNin = std::stoi(lines[0].substr(26, lines[0].length() - 2));
+            REQUIRE(lines[3].substr(0,25) == ninBody);
+            int fileNin = std::stoi(lines[3].substr(26, lines[3].length() - 2));
             REQUIRE(fileNin == nin);
         }
 
-        THEN("The second line records the number of hidden nodes correctly") {
+        THEN("The fifth line records the number of hidden nodes correctly") {
             std::string nhnBody = "const int numHiddenNodes =";
-            REQUIRE(lines[1].substr(0,26) == nhnBody);
-            int fileNhn = std::stoi(lines[1].substr(27, lines[1].length() - 2));
+            REQUIRE(lines[4].substr(0,26) == nhnBody);
+            int fileNhn = std::stoi(lines[4].substr(27, lines[4].length() - 2));
             REQUIRE(fileNhn == nhn);
         }
 
-        THEN("The third line records the number of output nodes correctly") {
+        THEN("The sixth line records the number of output nodes correctly") {
             std::string nonBody = "const int numOutputNodes =";
-            REQUIRE(lines[2].substr(0,26) == nonBody);
-            int fileNon = std::stoi(lines[2].substr(27, lines[2].length() - 2));
+            REQUIRE(lines[5].substr(0,26) == nonBody);
+            int fileNon = std::stoi(lines[5].substr(27, lines[5].length() - 2));
             REQUIRE(fileNon == non);
         }
 
-        THEN("The fourth line records the learning rate correctly") {
+        THEN("The seventh line records the learning rate correctly") {
             std::string lrBody = "const float learningRate =";
-            REQUIRE(lines[3].substr(0, 26) == lrBody);
-            float fileLr = std::stof(lines[3].substr(27, lines[3].length()-28));
+            REQUIRE(lines[6].substr(0, 26) == lrBody);
+            float fileLr = std::stof(lines[6].substr(27, lines[6].length()-28));
             REQUIRE(fileLr == dlr);
         }
 
-        THEN("The fifth line records the momentum correctly") {
+        THEN("The eighth line records the momentum correctly") {
             std::string mBody = "const float momentum =";
-            REQUIRE(lines[4].substr(0, 22) == mBody);
-            float fileM = std::stof(lines[4].substr(23, lines[4].length()-24));
+            REQUIRE(lines[7].substr(0, 22) == mBody);
+            float fileM = std::stof(lines[7].substr(23, lines[7].length()-24));
             REQUIRE(fileM == dm);
         }
 
-        THEN("The sixth line records the initial weight max correctly") {
+        THEN("The ninth line records the initial weight max correctly") {
             std::string iwmBody = "const float initialWeightMax =";
-            REQUIRE(lines[5].substr(0, 30) == iwmBody);
-            float fileIwm = std::stof(lines[5].substr(31, lines[5].length()-32));
+            REQUIRE(lines[8].substr(0, 30) == iwmBody);
+            float fileIwm = std::stof(lines[8].substr(31, lines[8].length()-32));
             REQUIRE(fileIwm == diwm);
         }
 
-        THEN("The seventh line is blank") {
-            REQUIRE(lines[6] == "");
+        THEN("The tenth line is blank") {
+            REQUIRE(lines[9] == "");
         }
 
-        THEN("The eighth line records the hidden weight declaration") {
-            REQUIRE(lines[7] == "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
+        THEN("The eleventh line records the hidden weight declaration") {
+            REQUIRE(lines[10] == "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
         }
 
         THEN("The hidden weights are all recorded") {
-            REQUIRE(lines.size() >= 8 + (nin + 1));
+            REQUIRE(lines.size() >= 11 + (nin + 1));
         }
 
         THEN("The correct lines record the hidden weights correctly") {
-            int line_num = 8;
+            int line_num = 11;
             float weight_from_file, weight_from_vector;
 
             std::vector<std::vector<float>> hiddenWeights = network->getHiddenWeights();
@@ -122,7 +135,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             }
         }
 
-        int previous_lines = 8 + (nin + 1);
+        int previous_lines = 11 + (nin + 1);
 
         THEN("The line after the hidden weights encloses the array") {
             REQUIRE(lines[previous_lines] == "};");
@@ -181,7 +194,19 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
         previous_lines++;
 
-        THEN("There is nothing else after the output weights") {
+        THEN("The line after is blank") {
+            REQUIRE(lines[previous_lines] == "");
+        }
+
+        previous_lines++;
+
+        THEN("The final line ends the #define") {
+            REQUIRE(lines[previous_lines] == "#endif // ARDUINO_CONFIG_H");
+        }
+
+        previous_lines++;
+
+        THEN("There are no more lines") {
             REQUIRE(lines.size() == previous_lines);
         }
 

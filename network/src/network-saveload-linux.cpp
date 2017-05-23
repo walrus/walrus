@@ -18,18 +18,18 @@ Network_L *loadNetwork(std::string filename) {
     }
 
     // Parse the config data in the first six lines and create the network with the specified configuration
-    int nin = std::stoi(lines[0].substr(26, lines[0].length() - 2));
-    int nhn = std::stoi(lines[1].substr(27, lines[1].length() - 2));
-    int non = std::stoi(lines[2].substr(27, lines[2].length() - 2));
+    int nin = std::stoi(lines[3].substr(26, lines[3].length() - 2));
+    int nhn = std::stoi(lines[4].substr(27, lines[4].length() - 2));
+    int non = std::stoi(lines[5].substr(27, lines[5].length() - 2));
 
-    float lr = std::stof(lines[3].substr(27, lines[3].length()-28));
-    float m = std::stof(lines[4].substr(23, lines[4].length()-24));
-    float iwm = std::stof(lines[5].substr(31, lines[5].length()-32));
+    float lr = std::stof(lines[6].substr(27, lines[6].length()-28));
+    float m = std::stof(lines[7].substr(23, lines[7].length()-24));
+    float iwm = std::stof(lines[8].substr(31, lines[8].length()-32));
 
     Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm);
 
     // Parse the hidden weights
-    int line_num = 8;
+    int line_num = 11;
     std::vector<std::vector<float>> hiddenWeights;
     hiddenWeights.resize(nin+1, std::vector<float>(nhn));
 
@@ -52,7 +52,7 @@ Network_L *loadNetwork(std::string filename) {
     }
 
     // Parse the output weights
-    line_num = 11 + (nin + 1);
+    line_num = 14 + (nin + 1);
     std::vector<std::vector<float>> outputWeights;
     outputWeights.resize(nhn+1, std::vector<float>(non));
 
@@ -85,6 +85,11 @@ int saveNetwork(std::string filename, Network_L *network) {
     if (!config_file.is_open() || config_file.bad()) {
         return 1; // Error code
     }
+    // Save #define
+    config_file << "#ifndef ARDUINO_CONFIG_H\n";
+    config_file << "#define ARDUINO_CONFIG_H\n";
+    config_file << "\n";
+
     // Save main config data
     config_file << "const int numInputNodes = " << std::to_string(network->getNumInputNodes()) + ";\n";
     config_file << "const int numHiddenNodes = " <<  std::to_string(network->getNumHiddenNodes()) + ";\n";
@@ -124,6 +129,8 @@ int saveNetwork(std::string filename, Network_L *network) {
         config_file << std::to_string(outputWeights[i][non-1]) << " }, \n";
     }
     config_file << "};\n";
+    config_file << "\n";
+    config_file << "#endif // ARDUINO_CONFIG_H";
 
     config_file.close();
     return 0;
