@@ -10,6 +10,7 @@
 */
 
 #include "CurieIMU.h"
+#include "network-arduino.hpp"
 
 bool moving = false;                
 bool calibrateOffsets = true;
@@ -20,6 +21,8 @@ unsigned long interruptTime = 0;      // Time of the last interrupt
 unsigned long readingInterval = 75;  // Time between readings when logging, in milliseconds
 
 int ax, ay, az;         // Accelerometer values
+
+Network_A *network;
 
 void setup() {
   Serial.begin(9600); // initialize Serial communication
@@ -43,11 +46,15 @@ void setup() {
   CurieIMU.setDetectionThreshold(CURIE_IMU_ZERO_MOTION, 35 );  // mg
   CurieIMU.setDetectionDuration(CURIE_IMU_ZERO_MOTION, 0.5);   // seconds
   CurieIMU.interrupts(CURIE_IMU_ZERO_MOTION);
+
+  /* Initialise Network */
+  network = new Network_A();
 }
 
 void loop() {
+  Serial.println("Running...");
   if (moving) {
-        delay(readingInterval);
+    // Log movement
   } 
   else {
     // Do nothing
