@@ -168,4 +168,15 @@ Individual project 'diary'
 18/5/17
     Change config files to actually valid .h files 
     Check that they can be #included and store data in PROGMEM
+
+19/5/17
+    Find valid formats for config file that will work on Arduino
+        (don't work with Network code, however)
+
+22/5/17
+    Convert Network_A to use arrays
+     
+23/5/17
+    Finish fixing Arduino code/save format
+    Write basic classifier code on Arduino (it works!)
     
