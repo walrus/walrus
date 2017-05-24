@@ -23,6 +23,7 @@ unsigned long readingInterval = 75;  // Time between readings when logging, in m
 int ax, ay, az;         // Accelerometer values
 float readingsBuffer[50] = {0.0f}; 
 int readingsIndex = 0;
+float normalisedReadings[numInputNodes];
 
 Network_A *network;
 
@@ -72,16 +73,37 @@ void loop() {
   }
 }
 
+/* If there are too many readings, remove some at random */
+void cullReadings(int diff) {
+  
+}
+
+/* If there are too few readings, duplicate them at random */
+void expandReadings(int diff) {
+  
+}
+
+/* Take the current buffer of readings and normalise it. */
+void normaliseReadings() {
+  int diff = readingsIndex -1 - numInputNodes;
+  if (diff == 0) {
+    for (int i = 0; i < numInputNodes; i++) {
+      normalisedReadings[i] = readingsBuffer[i];
+    }
+  } else if(diff > 0) {
+    cullReadings(diff);
+  } else if(diff < 0) {
+    expandReadings(-1 * diff);
+  }
+}
+
+
 /* 
  * Take the current buffer of readings and attempt to classify
  * using the network, sending the result over Serial
  */
 void classifyMovement() {
-  float normalisedReadings[numInputNodes];
-  for (int i = 0; i < numInputNodes; i++) {
-    Serial.print("NormalisedReadings["); Serial.print(i); Serial.print("] is: "); Serial.println(readingsBuffer[i]);
-    normalisedReadings[i] = readingsBuffer[i];
-  }
+  normaliseReadings();
   float *result = network->classify(normalisedReadings);
   Serial.print("Classification is: "); 
   for (int i= 0; i < numOutputNodes; i++) {
