@@ -52,6 +52,9 @@ void setup() {
 
   /* Initialise Network */
   network = new Network_A();
+
+  /* Initialise pseudorandom number generator */
+  randomSeed(analogRead(0));
 }
 
 void loop() {
@@ -75,7 +78,40 @@ void loop() {
 
 /* If there are too many readings, remove some at random */
 void cullReadings(int diff) {
+  /* Randomly choose some indexes to remove */
+  int indexesToRemove[diff];
+  int randomIndex;
+  int i = 0;
+  bool alreadyInIndexes = false;
   
+  while(i < diff) {
+    randomIndex = int(random(0, readingsIndex +1));
+    for(int j = 0; j < diff; j++) {
+      if(indexesToRemove[j] == randomIndex) {
+        alreadyInIndexes = true; 
+      }
+    }
+    if (!alreadyInIndexes) {
+      indexesToRemove[i] = randomIndex;
+      i++;
+    }
+    alreadyInIndexes = false;
+  }
+  i = 0;
+  bool inIndexes = false;
+  
+  for (int j = 0; j < readingsIndex; j++) {
+    for(int k = 0; k < diff; k++) {
+      if(indexesToRemove[k] == j) {
+        inIndexes = true; 
+      }
+    }
+    if (!inIndexes) {
+      normalisedReadings[i] = readingsBuffer[j];
+      i++;
+    }
+    inIndexes = false;
+  }
 }
 
 /* If there are too few readings, duplicate them at random */
