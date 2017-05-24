@@ -83,7 +83,11 @@ void classifyMovement() {
     normalisedReadings[i] = readingsBuffer[i];
   }
   float *result = network->classify(normalisedReadings);
-  Serial.print("Classification is: "); Serial.println(result[0]);
+  Serial.print("Classification is: "); 
+  for (int i= 0; i < numOutputNodes; i++) {
+    Serial.print(result[i]); Serial.print(" ");
+  }
+  Serial.println("");
 }
 
 static void eventCallback(void){
