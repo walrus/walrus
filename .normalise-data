@@ -17,6 +17,8 @@ import os, sys, random
 
 normalised_length = 20  # Number of readings to normalise to
 num_targets = 1         # Number of targets
+acceleration_multiplier = 16384 # Value to convert raw IMU value into mg
+
 d_flag = False          # Whether or not the -d 'directory' flag is set
 r_flag = False          # Whether or not the -r 'recursive' flag is set
 
@@ -28,20 +30,22 @@ def normalise_directory(directory_name, r_flag):
 
     if not r_flag:
         for item in os.listdir(directory_name):
-            if os.path.isfile(os.path.join(directory_name, item)) and "_normalised.txt" not in item:
+            if os.path.isfile(os.path.join(directory_name, item)) \
+                    and "_normalised.txt" not in item \
+                    and ".txt" in item:
                 normalise_file(directory_name + item)
     else:
         for path, dirs, files in os.walk(directory_name):
             for item in files:
-                if "_normalised.txt" not in item:
-                    normalise_file(os.path.join(path, item)) 
+                if "_normalised.txt" not in item and ".txt" in item:
+                    normalise_file(os.path.join(path, item))
 
 
 def normalise_file(filename):
     print "Normalising file %s..." % filename
-    
+
     original_file = open(filename,"r")
-    
+
     normalised_filename = filename[:-4] + "_normalised.txt"
     normalised_file = open(normalised_filename, "w+")
 
@@ -68,7 +72,7 @@ def normalise_file(filename):
                 #Write these readings to the normalised file
                 normalised_file.write("Repetition start\n")
                 for reading in normalised_readings:
-                    normalised_file.write(sum_reading(reading) + "\n")
+                    normalised_file.write(normalise_reading(reading) + "\n")
                 normalised_file.write("Repetition end\n")
                 writing_targets = num_targets
             else:
@@ -79,9 +83,9 @@ def normalise_file(filename):
     print "done."
 
 # Take the three acceleration readings and sum them
-def sum_reading(reading):
+def normalise_reading(reading):
     readings = [int(value) for value in reading.split()]
-    return str(sum(readings))
+    return str(sum(readings) / float(acceleration_multiplier))
 
 # Takes a list of readings and returns a normalised set with len = normalised_length
 def normalise_readings(original_readings):
@@ -100,7 +104,7 @@ def cull_readings(original_readings, diff):
     for _ in range(diff):
         index = random.randrange(len(original_readings))
         original_readings.pop(index)
-    
+
     return original_readings
 
 # Takes a set of readings with len < normalised_length and extrapolates so that len = normalised_length
