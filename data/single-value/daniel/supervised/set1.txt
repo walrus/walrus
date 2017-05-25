@@ -28,6 +28,7 @@ Repetition Start
 17596
 17332
 Repetition End
+1
 16421
 17685
 16663
@@ -69,6 +70,7 @@ Repetition Start
 18354
 18466
 Repetition End
+1
 17255
 16897
 16973
@@ -99,6 +101,7 @@ Repetition Start
 13632
 12386
 Repetition End
+1
 17390
 16154
 17653
@@ -123,6 +126,7 @@ Repetition Start
 21106
 16379
 Repetition End
+0
 16791
 17116
 14257
@@ -154,6 +158,7 @@ Repetition Start
 14801
 16446
 Repetition End
+1
 16838
 18170
 17952
@@ -182,6 +187,7 @@ Repetition Start
 12679
 15968
 Repetition End
+1
 17435
 18408
 18086
@@ -210,6 +216,7 @@ Repetition Start
 15020
 16986
 Repetition End
+1
 17552
 18866
 17467
@@ -236,6 +243,7 @@ Repetition Start
 12329
 17560
 Repetition End
+1
 17334
 16965
 16706
@@ -262,3 +270,4 @@ Repetition Start
 14369
 15337
 Repetition End
+1
