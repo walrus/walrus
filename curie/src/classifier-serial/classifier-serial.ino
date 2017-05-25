@@ -116,7 +116,43 @@ void cullReadings(int diff) {
 
 /* If there are too few readings, duplicate them at random */
 void expandReadings(int diff) {
+  /* Randomly choose some indexes to duplicate */
+  int indexesToCopy[diff];
+  int randomIndex;
+  int i = 0;
+  bool alreadyInIndexes = false;
   
+  while(i < diff) {
+    randomIndex = int(random(0, readingsIndex +1));
+    for(int j = 0; j < diff; j++) {
+      if(indexesToCopy[j] == randomIndex) {
+        alreadyInIndexes = true; 
+      }
+    }
+    if (!alreadyInIndexes) {
+      indexesToCopy[i] = randomIndex;
+      i++;
+    }
+    alreadyInIndexes = false;
+  }
+  
+  i = 0;
+  bool inIndexes = false;
+
+  for (int j = 0; j < readingsIndex; j++) {
+    for(int k = 0; k < diff; k++) {
+      if(indexesToCopy[k] == j) {
+        inIndexes = true; 
+      }
+    }
+    if (inIndexes) {
+      normalisedReadings[i] = readingsBuffer[j];
+      i++;
+    }
+    normalisedReadings[i] = readingsBuffer[j];
+    i++;
+    inIndexes = false;
+  }
 }
 
 /* Take the current buffer of readings and normalise it. */
@@ -140,6 +176,9 @@ void normaliseReadings() {
  */
 void classifyMovement() {
   normaliseReadings();
+  for(int i = 0; i < numInputNodes; i++) {
+    Serial.print("normalisedReadings "); Serial.print(i); Serial.print(" is "); Serial.println(normalisedReadings[i]);
+  }
   float *result = network->classify(normalisedReadings);
   Serial.print("Classification is: "); 
   for (int i= 0; i < numOutputNodes; i++) {
