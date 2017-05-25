@@ -60,14 +60,7 @@ def normalise_file(filename):
         else:
             if ("Motion detected" in line or "Repetition Start" in line):
                 original_readings = []
-            elif ("Motion ended" in line):
-                normalised_readings = normalise_readings(original_readings)
-                #Write these readings to the normalised file
-                normalised_file.write("Repetition start\n")
-                for reading in normalised_readings:
-                    normalised_file.write(reading)
-                normalised_file.write("Repetition end\n")
-            elif ("Repetition End" in line):
+            elif ("Motion ended" in line or "Repetition End" in line):
                 normalised_readings = normalise_readings(original_readings)
                 #Write these readings to the normalised file
                 normalised_file.write("Repetition start\n")
