@@ -179,4 +179,12 @@ Individual project 'diary'
 23/5/17
     Finish fixing Arduino code/save format
     Write basic classifier code on Arduino (it works!)
-    
+
+24/5/17
+    Start on normalising code on Arduino
+
+25/6/17
+    Finish normalising code on Arduino
+    Update normalising code on Arduino to use mg instead of raw acceleration values
+    Update normalising script on linux to use mg instead of raw acceleration values
+    Renormalise data
