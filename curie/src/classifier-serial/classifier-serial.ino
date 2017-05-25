@@ -11,6 +11,7 @@
 
 #include "CurieIMU.h"
 #include "network-arduino.hpp"
+#include <MemoryFree.h>
 
 bool moving = false;                
 bool calibrateOffsets = true;
@@ -19,6 +20,7 @@ unsigned long cooldownTime = 750;     //Cooldown period before another switch ca
 unsigned long lastSwitchTime = 0;     // Time of the last switch in 'moving' state
 unsigned long interruptTime = 0;      // Time of the last interrupt
 unsigned long readingInterval = 75;  // Time between readings when logging, in milliseconds
+const float accelerationMultiplier = 16384; // Value to divide by to get an acceleration in mg
 
 int ax, ay, az;         // Accelerometer values
 float readingsBuffer[50] = {0.0f}; 
@@ -49,7 +51,7 @@ void setup() {
   CurieIMU.setDetectionThreshold(CURIE_IMU_ZERO_MOTION, 35 );  // mg
   CurieIMU.setDetectionDuration(CURIE_IMU_ZERO_MOTION, 0.5);   // seconds
   CurieIMU.interrupts(CURIE_IMU_ZERO_MOTION);
-
+  
   /* Initialise Network */
   network = new Network_A();
 
@@ -107,7 +109,7 @@ void cullReadings(int diff) {
       }
     }
     if (!inIndexes) {
-      normalisedReadings[i] = readingsBuffer[j];
+      normalisedReadings[i] = readingsBuffer[j] / accelerationMultiplier;
       i++;
     }
     inIndexes = false;
@@ -146,21 +148,20 @@ void expandReadings(int diff) {
       }
     }
     if (inIndexes) {
-      normalisedReadings[i] = readingsBuffer[j];
+      normalisedReadings[i] = readingsBuffer[j] / accelerationMultiplier;
       i++;
     }
-    normalisedReadings[i] = readingsBuffer[j];
+    normalisedReadings[i] = readingsBuffer[j] / accelerationMultiplier;
     i++;
     inIndexes = false;
   }
 }
 
 /* Take the current buffer of readings and normalise it. */
-void normaliseReadings() {
-  int diff = readingsIndex -1 - numInputNodes;
+void normaliseReadings(int diff) {
   if (diff == 0) {
     for (int i = 0; i < numInputNodes; i++) {
-      normalisedReadings[i] = readingsBuffer[i];
+      normalisedReadings[i] = readingsBuffer[i] / accelerationMultiplier;
     }
   } else if(diff > 0) {
     cullReadings(diff);
@@ -174,17 +175,20 @@ void normaliseReadings() {
  * Take the current buffer of readings and attempt to classify
  * using the network, sending the result over Serial
  */
-void classifyMovement() {
-  normaliseReadings();
-  for(int i = 0; i < numInputNodes; i++) {
-    Serial.print("normalisedReadings "); Serial.print(i); Serial.print(" is "); Serial.println(normalisedReadings[i]);
+void classifyMovement() {  
+    int diff = readingsIndex +1 - numInputNodes;
+  if (diff > numInputNodes / -2) {
+    /* Only attempt to classify if there are greater than nin/2 readings */
+    normaliseReadings(diff);
+    float *result = network->classify(normalisedReadings);
+    Serial.print("Classification is: "); 
+    for (int i= 0; i < numOutputNodes; i++) {
+      Serial.print(result[i]); Serial.print(" ");
+    }
+    Serial.println("");
+  } else {
+    Serial.println("Too few readings to normalise, not classifying");
   }
-  float *result = network->classify(normalisedReadings);
-  Serial.print("Classification is: "); 
-  for (int i= 0; i < numOutputNodes; i++) {
-    Serial.print(result[i]); Serial.print(" ");
-  }
-  Serial.println("");
 }
 
 static void eventCallback(void){
