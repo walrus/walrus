@@ -28,7 +28,7 @@ Network_L *loadNetwork(std::string filename) {
 
     long tc = std::stol(lines[10].substr(42, lines[10].length()-42));
 
-    Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm);
+    Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm, tc);
 
     // Parse the hidden weights
     int line_num = 13;

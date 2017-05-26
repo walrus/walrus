@@ -17,7 +17,9 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         float dm = 0.9;
         float diwm = 0.5;
 
-        Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm);
+        long tc = 0;
+
+        Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         std::string filename = "test_network_config.h";
 
@@ -104,7 +106,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             std::string tcBody = "// TrainingCycle (not needed on Arduino):";
             REQUIRE(lines[10].substr(0, 41) == tcBody);
             float fileTC = std::stol(lines[10].substr(42, lines[10].length()-42));
-            REQUIRE(fileTC == 0);
+            REQUIRE(fileTC == tc);
         }
 
         THEN("The twelfth line is blank") {

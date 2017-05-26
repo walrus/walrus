@@ -15,8 +15,10 @@ TEST_CASE("The core network functionality is all correct") {
     float dm = 0.9;
     float diwm = 0.5;
 
+    long tc = 0;
+
     GIVEN("The network is instantiated using the constructor") {
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm);
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         THEN("The default parameters are set properly") {
             REQUIRE(network.getNumInputNodes() == nin);
@@ -132,7 +134,7 @@ TEST_CASE("The core network functionality is all correct") {
     }
 
     GIVEN("Pre computed hidden and output weights") {
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm);
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         // Generate hidden and output node weights to load
         std::vector<std::vector<float>> hiddenWeights;
@@ -239,7 +241,7 @@ TEST_CASE("The core network functionality is all correct") {
         dlr = 0.1;
         dm = 0.0;
 
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm);
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         THEN("It can attempt to classify without training") {
             std::vector<float>  input;
