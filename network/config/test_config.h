@@ -12,7 +12,7 @@ const float initialWeightMax = 0.500000;
 
 // TrainingCycle (not needed on Arduino): 317
 
-float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {
+const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {
     { -0.208936, 0.465415, -0.051608, 0.266630, 0.244777, -0.345782, 0.473185, 0.130999, -0.512141, 0.541225 }, 
     { -0.184242, -0.185961, 0.048651, -0.447796, -0.403301, -0.377087, -0.363783, -0.344564, 0.268100, 0.156894 }, 
     { -0.438798, -0.231550, -0.432171, 0.417060, 0.295765, 0.006337, 0.381011, -0.045423, 0.253946, -0.132465 }, 
@@ -36,7 +36,7 @@ float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {
     { -0.090482, -0.197617, 0.347492, -0.188813, 0.381779, -0.349393, -0.213947, -0.088926, -0.425888, 0.317125 }, 
 };
 
-float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
+const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
     { 0.033657 }, 
     { 0.187269 }, 
     { 0.944105 }, 

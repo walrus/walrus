@@ -123,7 +123,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         }
 
         THEN("The fifteenth line records the hidden weight declaration") {
-            REQUIRE(lines[14] == "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
+            REQUIRE(lines[14] == "const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
         }
 
         THEN("The hidden weights are all recorded") {
@@ -172,7 +172,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         previous_lines++;
 
         THEN("The next line records the output weight declaration") {
-            REQUIRE(lines[previous_lines] == "float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {");
+            REQUIRE(lines[previous_lines] == "const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {");
         }
 
         previous_lines++;
