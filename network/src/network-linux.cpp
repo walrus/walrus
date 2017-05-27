@@ -10,20 +10,20 @@
 #include "network-linux.hpp"
 
 Network_L::Network_L(int numInputNodes,
-                 int numHiddenNodes,
-                 int numOutputNodes,
-                 float learningRate,
-                 float momentum,
-                 float initialWeightMax,
-                 long trainingCycle):
-        numInputNodes(numInputNodes),
-        numHiddenNodes(numHiddenNodes),
-        numOutputNodes(numOutputNodes),
-        learningRate(learningRate),
-        momentum(momentum),
-        initialWeightMax(initialWeightMax),
-        trainingCycle(trainingCycle),
-        m_mt(std::random_device()()) {
+                     int numHiddenNodes,
+                     int numOutputNodes,
+                     float learningRate,
+                     float momentum,
+                     float initialWeightMax,
+                     long trainingCycle):
+                     numInputNodes(numInputNodes),
+                     numHiddenNodes(numHiddenNodes),
+                     numOutputNodes(numOutputNodes),
+                     learningRate(learningRate),
+                     momentum(momentum),
+                     initialWeightMax(initialWeightMax),
+                     trainingCycle(trainingCycle),
+                     m_mt(std::random_device()()) {
 
     dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
 

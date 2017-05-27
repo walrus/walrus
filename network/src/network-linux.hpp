@@ -6,29 +6,29 @@
 
 class Network_L {
 private:
-    const int numInputNodes;                    // AKA 'InputNodes' in the original code
-    const int numHiddenNodes;                   // AKA 'HiddenNodes' in the original code
-    const int numOutputNodes;                   // AKA 'OutputNodes' in the original code
-    float learningRate;                         // AKA 'LearningRate' in the original code
-    float momentum;                             // AKA 'Momentum' in the original code
-    float initialWeightMax;                     // AKA 'InitialWeightMax' in the original code
+    const int numInputNodes;                                // AKA 'InputNodes' in the original code
+    const int numHiddenNodes;                               // AKA 'HiddenNodes' in the original code
+    const int numOutputNodes;                               // AKA 'OutputNodes' in the original code
+    float learningRate;                                     // AKA 'LearningRate' in the original code
+    float momentum;                                         // AKA 'Momentum' in the original code
+    float initialWeightMax;                                 // AKA 'InitialWeightMax' in the original code
 
-    long trainingCycle;                         // AKA 'TrainingCycle' in the original code
-    float randomFloat;                          // AKA 'Rando' in the original code
-    float errorRate;                            // AKA 'Error' in the original code
-    float accumulatedInput;                     // AKA 'Accum' in the original code
+    long trainingCycle;                                     // AKA 'TrainingCycle' in the original code
+    float randomFloat;                                      // AKA 'Rando' in the original code
+    float errorRate;                                        // AKA 'Error' in the original code
+    float accumulatedInput;                                 // AKA 'Accum' in the original code
 
-    std::vector<float> hiddenNodes;                  // AKA 'Hidden' in the original code
-    std::vector<float> outputNodes;                  // AKA 'Output' in the original code
-    std::vector<std::vector<float>> hiddenWeights;        // AKA 'HiddenWeights' in the original code
-    std::vector<std::vector<float>> outputWeights;        // AKA 'OutputWeights' in the original code
-    std::vector<float> hiddenNodesDeltas;            // AKA 'HiddenDelta' in the original code
-    std::vector<float> outputNodesDeltas;            // AKA 'OutputDelta' in the original code
-    std::vector<std::vector<float>> hiddenWeightsChanges; // AKA 'ChangeHiddenWeights' in the original code
-    std::vector<std::vector<float>> outputWeightsChanges; // AKA 'ChangeOutputWeights' in the original code
+    std::vector<float> hiddenNodes;                         // AKA 'Hidden' in the original code
+    std::vector<float> outputNodes;                         // AKA 'Output' in the original code
+    std::vector<std::vector<float>> hiddenWeights;          // AKA 'HiddenWeights' in the original code
+    std::vector<std::vector<float>> outputWeights;          // AKA 'OutputWeights' in the original code
+    std::vector<float> hiddenNodesDeltas;                   // AKA 'HiddenDelta' in the original code
+    std::vector<float> outputNodesDeltas;                   // AKA 'OutputDelta' in the original code
+    std::vector<std::vector<float>> hiddenWeightsChanges;   // AKA 'ChangeHiddenWeights' in the original code
+    std::vector<std::vector<float>> outputWeightsChanges;   // AKA 'ChangeOutputWeights' in the original code
 
-    std::mt19937 m_mt;                          // Mersenne twister for random number generation
-    std::uniform_real_distribution<float> dist; // Distribution for random number generation
+    std::mt19937 m_mt;                                      // Mersenne twister for random number generation
+    std::uniform_real_distribution<float> dist;             // Distribution for random number generation
 
     void initialiseHiddenWeights();
     void initialiseOutputWeights();
@@ -43,12 +43,12 @@ private:
 
 public:
     Network_L(int numInputNodes,
-            int numHiddenNodes,
-            int numOutputNodes,
-            float learningRate,
-            float momentum,
-            float initialWeightMax,
-            long trainingCycle);
+              int numHiddenNodes,
+              int numOutputNodes,
+              float learningRate,
+              float momentum,
+              float initialWeightMax,
+              long trainingCycle);
     float trainNetwork(std::vector<float> inputs,
                        std::vector<float> targets);
     std::string writeReport();

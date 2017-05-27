@@ -10,7 +10,7 @@ Exercise classification using an Artificial Neural Network running on an Intel C
 An Intel Curie.
 Bluetooth Low Energy (BLE) capable Android phone
 
-- [Arduino IDE](https://www.arduino.cc/en/Main/Software)
+- [Arduino IDE (v1.6 or later)](https://www.arduino.cc/en/Main/Software)
 - [Curie IMU (library)](https://www.arduino.cc/en/Reference/CurieIMU)
 - [ArduinoANN](http://robotics.hobbizine.com/arduinoann.zip)
 - [Python 2](https://www.python.org/downloads/) (Hoping to switch to Python 3 soon...)
@@ -27,10 +27,10 @@ To install version-controlled git hooks, run the following script:
 
 ## Training the Classifier
 
-# Logging data from the Curie
+### Logging data from the Curie
 
 To log data from the curie, upload the sketch `logger.ino`, then run `./.log-data` 
 
-# Normalising data for training
+### Normalising data for training
 
 The normalisation script has multiple options. Once you've logged enough data, either run `./.normalise-data file` for each file, or run `./.normalise-data -r directory` to normalise all the files in the given directory.

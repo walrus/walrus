@@ -17,21 +17,21 @@ Network_L *loadNetwork(std::string filename) {
         lines.push_back(line);
     }
 
-    // Parse the config data in the first six lines and create the network with the specified configuration
-    int nin = std::stoi(lines[3].substr(26, lines[3].length() - 2));
-    int nhn = std::stoi(lines[4].substr(27, lines[4].length() - 2));
-    int non = std::stoi(lines[5].substr(27, lines[5].length() - 2));
+    // Parse the basic config data and create the network with the specified configuration
+    int nin = std::stoi(lines[5].substr(26, lines[5].length() - 2));
+    int nhn = std::stoi(lines[6].substr(27, lines[6].length() - 2));
+    int non = std::stoi(lines[7].substr(27, lines[7].length() - 2));
 
-    float lr = std::stof(lines[6].substr(27, lines[6].length()-28));
-    float m = std::stof(lines[7].substr(23, lines[7].length()-24));
-    float iwm = std::stof(lines[8].substr(31, lines[8].length()-32));
+    float lr = std::stof(lines[8].substr(27, lines[8].length()-28));
+    float m = std::stof(lines[9].substr(23, lines[9].length()-24));
+    float iwm = std::stof(lines[10].substr(31, lines[10].length()-32));
 
-    long tc = std::stol(lines[10].substr(42, lines[10].length()-42));
+    long tc = std::stol(lines[12].substr(42, lines[12].length()-42));
 
     Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm, tc);
 
     // Parse the hidden weights
-    int line_num = 13;
+    int line_num = 15;
     std::vector<std::vector<float>> hiddenWeights;
     hiddenWeights.resize(nin+1, std::vector<float>(nhn));
 
@@ -54,7 +54,7 @@ Network_L *loadNetwork(std::string filename) {
     }
 
     // Parse the output weights
-    line_num = 16 + (nin + 1);
+    line_num = 18 + (nin + 1);
     std::vector<std::vector<float>> outputWeights;
     outputWeights.resize(nhn+1, std::vector<float>(non));
 
@@ -92,6 +92,10 @@ int saveNetwork(std::string filename, Network_L *network) {
     config_file << "#define ARDUINO_CONFIG_H\n";
     config_file << "\n";
 
+    // Save the #include so that PROGMEM works
+    config_file << "#include \"avr/pgmspace.h\"\n";
+    config_file << "\n";
+
     // Save main config data
     config_file << "const int numInputNodes = " << std::to_string(network->getNumInputNodes()) + ";\n";
     config_file << "const int numHiddenNodes = " <<  std::to_string(network->getNumHiddenNodes()) + ";\n";
@@ -110,7 +114,7 @@ int saveNetwork(std::string filename, Network_L *network) {
     int nhn = network->getNumHiddenNodes();
     std::vector<std::vector<float>> hiddenWeights = network->getHiddenWeights();
 
-    config_file << "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {\n";
+    config_file << "const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {\n";
     for (int i = 0; i < nin_plus_one; i++) {
         config_file << "    { ";
         for (int j = 0; j < nhn-1; j++) {
@@ -126,7 +130,7 @@ int saveNetwork(std::string filename, Network_L *network) {
     int non = network->getNumOutputNodes();
     std::vector<std::vector<float>> outputWeights = network->getOutputWeights();
 
-    config_file << "float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {\n";
+    config_file << "const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {\n";
     for (int i = 0; i < nhn_plus_one; i++) {
         config_file << "    { ";
         for (int j = 0; j < non-1; j++) {

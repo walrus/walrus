@@ -1,9 +1,13 @@
 /*
  * Functions for saving and loading network configurations to and from files.
+ * Also includes function to generate weights for initialisation.
+ *
+ * WILL NOT COMPILE ON ARDUINO
  */
 
 #include <iostream>
 #include <fstream>
+#include <random>
 
 #include "network-linux.hpp"
 
