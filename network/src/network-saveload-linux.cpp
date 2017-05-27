@@ -26,10 +26,12 @@ Network_L *loadNetwork(std::string filename) {
     float m = std::stof(lines[7].substr(23, lines[7].length()-24));
     float iwm = std::stof(lines[8].substr(31, lines[8].length()-32));
 
-    Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm);
+    long tc = std::stol(lines[10].substr(42, lines[10].length()-42));
+
+    Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm, tc);
 
     // Parse the hidden weights
-    int line_num = 11;
+    int line_num = 13;
     std::vector<std::vector<float>> hiddenWeights;
     hiddenWeights.resize(nin+1, std::vector<float>(nhn));
 
@@ -52,7 +54,7 @@ Network_L *loadNetwork(std::string filename) {
     }
 
     // Parse the output weights
-    line_num = 14 + (nin + 1);
+    line_num = 16 + (nin + 1);
     std::vector<std::vector<float>> outputWeights;
     outputWeights.resize(nhn+1, std::vector<float>(non));
 
@@ -98,6 +100,10 @@ int saveNetwork(std::string filename, Network_L *network) {
     config_file << "const float momentum = " <<  std::to_string(network->getMomentum()) + ";\n";
     config_file << "const float initialWeightMax = " <<  std::to_string(network->getInitialWeightMax()) + ";\n";
     config_file << "\n";
+
+    config_file << "// TrainingCycle (not needed on Arduino): " << std::to_string(network->getTrainingCycle()) <<"\n";
+    config_file << "\n";
+
 
     // Save hidden weights
     int nin_plus_one = network->getNumInputNodes() +1;

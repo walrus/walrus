@@ -47,7 +47,8 @@ public:
             int numOutputNodes,
             float learningRate,
             float momentum,
-            float initialWeightMax);
+            float initialWeightMax,
+            long trainingCycle);
     float trainNetwork(std::vector<float> inputs,
                        std::vector<float> targets);
     std::string writeReport();

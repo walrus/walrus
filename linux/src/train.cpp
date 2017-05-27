@@ -89,7 +89,7 @@ int main(int argc, char * argv[]) {
     std::ifstream check_config(config_file_location);
     if (!check_config.is_open()) {
         std::cout << "not found, creating new network\n";
-        network = new Network_L(20, 10, 1, 0.3, 0.9, 0.5);
+        network = new Network_L(20, 10, 1, 0.3, 0.9, 0.5, 0);
     } else {
         std::cout << "found, loading network\n";
         // Load the network

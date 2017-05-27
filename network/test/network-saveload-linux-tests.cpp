@@ -17,7 +17,9 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         float dm = 0.9;
         float diwm = 0.5;
 
-        Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm);
+        long tc = 0;
+
+        Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         std::string filename = "test_network_config.h";
 
@@ -100,16 +102,27 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             REQUIRE(lines[9] == "");
         }
 
-        THEN("The eleventh line records the hidden weight declaration") {
-            REQUIRE(lines[10] == "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
+        THEN("The eleventh line records the training cycle correctly") {
+            std::string tcBody = "// TrainingCycle (not needed on Arduino):";
+            REQUIRE(lines[10].substr(0, 41) == tcBody);
+            float fileTC = std::stol(lines[10].substr(42, lines[10].length()-42));
+            REQUIRE(fileTC == tc);
+        }
+
+        THEN("The twelfth line is blank") {
+            REQUIRE(lines[11] == "");
+        }
+
+        THEN("The thirteenth line records the hidden weight declaration") {
+            REQUIRE(lines[12] == "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
         }
 
         THEN("The hidden weights are all recorded") {
-            REQUIRE(lines.size() >= 11 + (nin + 1));
+            REQUIRE(lines.size() >= 13 + (nin + 1));
         }
 
         THEN("The correct lines record the hidden weights correctly") {
-            int line_num = 11;
+            int line_num = 13;
             float weight_from_file, weight_from_vector;
 
             std::vector<std::vector<float>> hiddenWeights = network->getHiddenWeights();
@@ -135,7 +148,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             }
         }
 
-        int previous_lines = 11 + (nin + 1);
+        int previous_lines = 13 + (nin + 1);
 
         THEN("The line after the hidden weights encloses the array") {
             REQUIRE(lines[previous_lines] == "};");
@@ -238,6 +251,10 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
             THEN("The network is created with the correct initial weight max") {
                 REQUIRE(loaded_network.getInitialWeightMax() == Approx(diwm));
+            }
+
+            THEN("The network is created with the correct training cycle") {
+                REQUIRE(loaded_network.getTrainingCycle() == 0);
             }
 
             THEN("The network is created with the correct hidden weights") {
