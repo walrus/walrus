@@ -16,6 +16,8 @@ TEST_CASE("The library can implement the original ArduinoANN code's functionalit
     float dm = 0.9;
     float diwm = 0.5;
 
+    long tc = 0;
+
     int PatternCount = 10;
 
     float Error = 1.0;
@@ -56,7 +58,7 @@ TEST_CASE("The library can implement the original ArduinoANN code's functionalit
     }
 
     GIVEN("A network with the example parameters") {
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm);
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         THEN("It will eventually succeed at training") {
             long TrainingCycle = 1;

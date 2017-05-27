@@ -14,18 +14,19 @@ Network_L::Network_L(int numInputNodes,
                      int numOutputNodes,
                      float learningRate,
                      float momentum,
-                     float initialWeightMax):
-        numInputNodes(numInputNodes),
-        numHiddenNodes(numHiddenNodes),
-        numOutputNodes(numOutputNodes),
-        learningRate(learningRate),
-        momentum(momentum),
-        initialWeightMax(initialWeightMax),
-        m_mt(std::random_device()()) {
+                     float initialWeightMax,
+                     long trainingCycle):
+                     numInputNodes(numInputNodes),
+                     numHiddenNodes(numHiddenNodes),
+                     numOutputNodes(numOutputNodes),
+                     learningRate(learningRate),
+                     momentum(momentum),
+                     initialWeightMax(initialWeightMax),
+                     trainingCycle(trainingCycle),
+                     m_mt(std::random_device()()) {
 
     dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
 
-    trainingCycle = 0;
     randomFloat = 0.0f;
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
