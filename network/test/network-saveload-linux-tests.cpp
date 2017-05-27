@@ -52,77 +52,86 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             REQUIRE(lines[2] == "");
         }
 
-        THEN("The main configuration options are all recorded") {
-            REQUIRE(lines.size() >= 9);
+        THEN("The fourth line includes avr/prgmspace") {
+            REQUIRE(lines[3] == "#include \"avr/pgmspace.h\"");
         }
 
-        THEN("The fourth line records the number of input nodes correctly") {
+        THEN("The fifth line is blank") {
+            REQUIRE(lines[4] == "");
+        }
+
+
+        THEN("The main configuration options are all recorded") {
+            REQUIRE(lines.size() >= 10);
+        }
+
+        THEN("The sixth line records the number of input nodes correctly") {
             std::string ninBody = "const int numInputNodes =";
-            REQUIRE(lines[3].substr(0,25) == ninBody);
-            int fileNin = std::stoi(lines[3].substr(26, lines[3].length() - 2));
+            REQUIRE(lines[5].substr(0,25) == ninBody);
+            int fileNin = std::stoi(lines[5].substr(26, lines[5].length() - 2));
             REQUIRE(fileNin == nin);
         }
 
-        THEN("The fifth line records the number of hidden nodes correctly") {
+        THEN("The seventh line records the number of hidden nodes correctly") {
             std::string nhnBody = "const int numHiddenNodes =";
-            REQUIRE(lines[4].substr(0,26) == nhnBody);
-            int fileNhn = std::stoi(lines[4].substr(27, lines[4].length() - 2));
+            REQUIRE(lines[6].substr(0,26) == nhnBody);
+            int fileNhn = std::stoi(lines[6].substr(27, lines[6].length() - 2));
             REQUIRE(fileNhn == nhn);
         }
 
-        THEN("The sixth line records the number of output nodes correctly") {
+        THEN("The eighth line records the number of output nodes correctly") {
             std::string nonBody = "const int numOutputNodes =";
-            REQUIRE(lines[5].substr(0,26) == nonBody);
-            int fileNon = std::stoi(lines[5].substr(27, lines[5].length() - 2));
+            REQUIRE(lines[7].substr(0,26) == nonBody);
+            int fileNon = std::stoi(lines[7].substr(27, lines[7].length() - 2));
             REQUIRE(fileNon == non);
         }
 
-        THEN("The seventh line records the learning rate correctly") {
+        THEN("The ninth line records the learning rate correctly") {
             std::string lrBody = "const float learningRate =";
-            REQUIRE(lines[6].substr(0, 26) == lrBody);
-            float fileLr = std::stof(lines[6].substr(27, lines[6].length()-28));
+            REQUIRE(lines[8].substr(0, 26) == lrBody);
+            float fileLr = std::stof(lines[8].substr(27, lines[8].length()-28));
             REQUIRE(fileLr == dlr);
         }
 
-        THEN("The eighth line records the momentum correctly") {
+        THEN("The tenth line records the momentum correctly") {
             std::string mBody = "const float momentum =";
-            REQUIRE(lines[7].substr(0, 22) == mBody);
-            float fileM = std::stof(lines[7].substr(23, lines[7].length()-24));
+            REQUIRE(lines[9].substr(0, 22) == mBody);
+            float fileM = std::stof(lines[9].substr(23, lines[9].length()-24));
             REQUIRE(fileM == dm);
         }
 
-        THEN("The ninth line records the initial weight max correctly") {
+        THEN("The eleventh line records the initial weight max correctly") {
             std::string iwmBody = "const float initialWeightMax =";
-            REQUIRE(lines[8].substr(0, 30) == iwmBody);
-            float fileIwm = std::stof(lines[8].substr(31, lines[8].length()-32));
+            REQUIRE(lines[10].substr(0, 30) == iwmBody);
+            float fileIwm = std::stof(lines[10].substr(31, lines[10].length()-32));
             REQUIRE(fileIwm == diwm);
-        }
-
-        THEN("The tenth line is blank") {
-            REQUIRE(lines[9] == "");
-        }
-
-        THEN("The eleventh line records the training cycle correctly") {
-            std::string tcBody = "// TrainingCycle (not needed on Arduino):";
-            REQUIRE(lines[10].substr(0, 41) == tcBody);
-            float fileTC = std::stol(lines[10].substr(42, lines[10].length()-42));
-            REQUIRE(fileTC == tc);
         }
 
         THEN("The twelfth line is blank") {
             REQUIRE(lines[11] == "");
         }
 
-        THEN("The thirteenth line records the hidden weight declaration") {
-            REQUIRE(lines[12] == "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
+        THEN("The thirteenth line records the training cycle correctly") {
+            std::string tcBody = "// TrainingCycle (not needed on Arduino):";
+            REQUIRE(lines[12].substr(0, 41) == tcBody);
+            float fileTC = std::stol(lines[12].substr(42, lines[12].length()-42));
+            REQUIRE(fileTC == tc);
+        }
+
+        THEN("The fourteenth line is blank") {
+            REQUIRE(lines[13] == "");
+        }
+
+        THEN("The fifteenth line records the hidden weight declaration") {
+            REQUIRE(lines[14] == "float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
         }
 
         THEN("The hidden weights are all recorded") {
-            REQUIRE(lines.size() >= 13 + (nin + 1));
+            REQUIRE(lines.size() >= 15 + (nin + 1));
         }
 
         THEN("The correct lines record the hidden weights correctly") {
-            int line_num = 13;
+            int line_num = 15;
             float weight_from_file, weight_from_vector;
 
             std::vector<std::vector<float>> hiddenWeights = network->getHiddenWeights();
@@ -148,7 +157,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             }
         }
 
-        int previous_lines = 13 + (nin + 1);
+        int previous_lines = 15 + (nin + 1);
 
         THEN("The line after the hidden weights encloses the array") {
             REQUIRE(lines[previous_lines] == "};");
