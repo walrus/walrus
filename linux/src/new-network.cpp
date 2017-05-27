@@ -60,7 +60,7 @@ int main(int argc, char * argv[]) {
     std::ifstream check_config(config_file_path);
     if (!check_config.is_open()) {
         std::cout << "not found, creating new network.\n";
-        Network_L *network = new Network_L(nin, nhn, non, lr, m, diwm);
+        Network_L *network = new Network_L(nin, nhn, non, lr, m, diwm, 0);
         saveNetwork(config_file_path, network);
         std::cout << "Network created.\n";
     } else {
