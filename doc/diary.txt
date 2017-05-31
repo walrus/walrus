@@ -183,8 +183,20 @@ Individual project 'diary'
 24/5/17
     Start on normalising code on Arduino
 
-25/6/17
+25/5/17
     Finish normalising code on Arduino
     Update normalising code on Arduino to use mg instead of raw acceleration values
     Update normalising script on linux to use mg instead of raw acceleration values
     Renormalise data
+
+26/5/17
+    Finish (serial) classifier code on Arduino
+
+27/5/17
+    Tidy up then merge finished MVP to Master
+
+30/5/17
+    No real progress except data recording
+
+31/5/17
+    Write Arduino portion of BLE logging script
