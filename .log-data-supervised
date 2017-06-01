@@ -9,8 +9,8 @@
 # 'h' will note that a rep has ended, and is invalid
 # 'x' will stop the program
 
-
-
+good_reps = 0
+bad_reps = 0
 
 import serial, time, sys, curses
 
@@ -57,6 +57,9 @@ def main(window):
     # Will exit when any character is pressed
     ch = -1
 
+    global good_reps
+    global bad_reps
+
     while ch != ord('x'):
         line = arduino.readline()
         print line
@@ -68,14 +71,18 @@ def main(window):
         if ch == ord('g'):
             logfile.write("Repetition End\n")
             logfile.write("1\n")
+            good_reps += 1
             print "Repetition End (good rep)\n"
         if ch == ord('h'):
             logfile.write("Repetition End\n")
             logfile.write("0\n")
+            bad_reps += 1
             print "Repetition End (bad rep)\n"
 
     logfile.close()
 
 curses.wrapper(main)
+
+print "Finished logging. Recorded {} reps: {} good form and {} bad form".format(good_reps + bad_reps, good_reps, bad_reps)
 
 sys.exit(0)
