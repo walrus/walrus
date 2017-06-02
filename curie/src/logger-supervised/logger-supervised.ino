@@ -15,9 +15,6 @@ unsigned long readingInterval = 75;  // Time between readings when logging
 int ax, ay, az;         // Accelerometer values
 
 void setup() {
-  Serial.begin(9600); // initialize Serial communication
-  while(!Serial) ;    // wait for serial port to connect.
-
   /* Initialise the IMU */
   CurieIMU.begin();
 
@@ -25,9 +22,20 @@ void setup() {
   CurieIMU.autoCalibrateAccelerometerOffset(X_AXIS, 0);
   CurieIMU.autoCalibrateAccelerometerOffset(Y_AXIS, 0);
   CurieIMU.autoCalibrateAccelerometerOffset(Z_AXIS, 1);
+
+  /* Initialise the builtin LED to blink and indicate activity */
+  pinMode(LED_BUILTIN, OUTPUT);
+  /* Leave LED on while waiting for Serial*/
+  digitalWrite(LED_BUILTIN, HIGH);
+  
+  Serial.begin(9600); // initialize Serial communication
+  while(!Serial) ;    // wait for serial port to connect.
 }
 
 void loop() {
+  /* Blink the LED while connected*/
+  digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+  
   CurieIMU.readAccelerometer(ax, ay, az);
   Serial.print(ax); Serial.print(" ");
   Serial.print(ay); Serial.print(" ");
