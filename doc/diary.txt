@@ -200,3 +200,11 @@ Individual project 'diary'
 
 31/5/17
     Write Arduino portion of BLE logging script
+
+1/6/17
+    Begin writing Android BLE programs
+
+2/6/17
+    Continue writing Android BLE programs
+    Write Arduino BLE classifier
+    Review structure of report and begin transferring body of Interim Report
