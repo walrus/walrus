@@ -54,8 +54,8 @@
 Exercise classification on embedded hardware}
 \date{2017}
 \author{
-Daniel Clay \\
-\emph{Supervised by Dr Thomas Heinis} 
+Daniel Clay\\
+\emph{Supervised by Dr Thomas Heinis}\\ 
 }
 \maketitle
 \pagebreak
@@ -83,13 +83,21 @@ Daniel Clay \\
 % Use arabic numerals after contents
 \pagenumbering{arabic}
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Motivation}%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{I have some, probably}
+In the West, obesity is a growing problem - as of 2015, \textbf{62.9\%} of adults in the UK were either overweight or obese, a number which is still increasing.\cite{ref1}
+
+While many people express a desire to exercise more this does not always translate into action, and one of the reasons for this is that
+people often don't know how to exercise, and even if they do exercise this lack of knowledge stops or hampers them from exercising as effectively as they might be able to.
+
+Traditionally the solution to this dilemma has been provided by people like coaches, instructors and personal trainers. They generally bring a lot of expertise and experience, and are highly effective, but the cost of hiring them can be unaffordable for many people.
+
+With advances in technology, more and more of the tasks which personal trainers and their ilk were relied upon to do can instead be performed by machines. Companies are starting to release gadgets which can classify different exercises, normally into large groups such as 'walking' or 'cycling', but as yet they do not tell the user how well they are performing said exercise.
 
 \subsection{Issues}%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -99,34 +107,153 @@ Daniel Clay \\
 
 \todo[inline]{As it says on the tin. List all the deliverables}
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Neural Networks}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{What is the current state of research regarding neural networks?, mostly from Interim Report. Also discuss what frameworks are available?}
+Neural networks are currently the focus of a lot of research in academia, and also the focus of a lot of commercial work to realise their potential - virtually all of the major tech companies make use of the technology, or are experimenting with it.
 
-\subsection{Embedded Systems}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Because my project is centered around a novel usage of existing neural network techniques, rather than any new techniques, my research into the theory of neural networks has been relatively limited, and I have focussed on their application to my project.
 
-\todo[inline]{Current state of embedded systems etc, including performance}
+Most of my general knowledge of Neural Networks comes from the third year DoC course \textbf{395 Machine Learning}\cite{bgref1}. (in particular, see the notes for the Artificial Neural Networks lectures):
+
+As well as the course notes, the lecturers have recommended several other resources (a list of which can be found on the previously linked page), of which the paper \textit{Artifical Neural Networks: A Tutorial}\cite{bgref2} is the most relevant. This provided an overall introduction to neural networks and gave a different perspective to that given by the DoC course.
+
+Another useful reference has been \textit{Neural Networks - Algorithms and Applications}\cite{bgref3}. This contains lots of practical information of direct relevance to the implementation of neural networks.
+
+\subsection{ArduinoANN}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+My neural network implementation is based on \textit{ArduinoANN}\cite{bgref4}, a C implementation of a two layer feed-forward backpropogation network. 
+
+ArduinoANN itself draws heavily on \textit{John Bullinaria's Step by Step Guide to Implementing a Neural Network in C}\cite{bgref5}.
+
+\subsection{Embedded Systems \& The Intel Curie}%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Embedded Systems}
+
+While most machine learning has historically done on relatively powerful desktop systems or specialised hardware, modern embedded systems are often more powerful than the desktop computers available when techniques such as back propagation were developed.\cite{bgref5b}. 
+
+As embedded systems become more powerful and more widespread, machine learning programs will be run on them much more often.
+
+\subsubsection{The Intel Curie}
+
+The Intel Curie is a System-On-a-Chip (SOC) with an integrated six-axis accelerometer/gyroscope and an integrated 128-neuron neural network that operates on the data from the sensors.
+
+Despite the presence of the neural network, which Intel call the \textit{Curie Pattern Matching Engine}\cite{bgref6}, I will be implementing a separate neural network. This decision is explained in another section. \todo[inline]{link when written}
+
+The module is currently available on an Arduino 101 board (known as the Genuino 101 outside the US), or an Intel Quark microcontroller - I will be developing using the Arduino board.
+
+The Arduino/Genuino 101 provides a set of I/O pins, power supply, and Bluetooth connectivity for the on-board Curie module.
+
+More information can be found at Intel's homepage for the Curie\cite{bgref6}.
+
+Information on software dependencies can be found here. \todo[inline]{link when done}
 
 \subsection{Bluetooth / Bluetooth Low Energy (BLE)}%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Look, it's a thing. Explain why it's useful}
+Bluetooth Low Energy\cite{bgref7} is a low power version of the Bluetooth standard designed to allow devices to transfer small amounts of data in an energy efficient manner. The standard debuted in 2011, and is now widely supported by Internet of Things (IoT) and mobile devices.
 
 \subsection{Fitness Trackers}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Current state of fitness trackers available, mostly from Interim Report}
+There are a wide variety of fitness trackers available on the market - most utilise a combination of gyroscopes, accelerometers and GPS, and more sometimes heart rate monitors, altimeters and other sensors to track the user's movements and provide feedback.
 
-\subsection{Intel Curie}%%%%%%%%%%%%%%%%%%%%%%%%%
+Tracking via sensors other than those available on the Intel Curie (I.E. gyroscope and accelerometer) is outside the scope of this project, so I will be ignoring this functionality in other fitness trackers.
 
-\todo[inline]{Info about the Intel Curie. Note what is currently available, and what could be available soon, mostly from Interim Report}
+Of these, the majority simply measure the input data and do simple analysis to provide basic data, E.G. heart rate or calories burned, but a growing number use various forms of machine learning to do more in depth analysis. 
 
-\subsection{Bodyweight Exercises}%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Fitbit}
 
-\todo[inline]{Discuss these exercises and their form, mostly from Interim Report}
+Fitbit is one of the leading brands in wearables and fitness tracking. In particular, their \textit{SmartTrack}\cite{bgref8} technology aims to automatically recognise which activity the wearer is currently doing, and currently supports seven different activities.
 
+\subsubsection{Google}
+
+Google has a line of wearables called \textit{Android Wear}\cite{bgref9}, which make use of their \textit{Google Fit}\cite{bgref10} software (also compatible with other wearables).
+Google Fit automatically detects walking, running and cycling.
+
+\subsubsection{Optimize Fitness}
+
+Optimize Fitness\cite{bgref11} is an iOS application that claims to use 'Powerful machine learning algorithms' to 'analyze your preferences, workout history, and goals to deliver efficient workouts that keep you improving wherever and whenever you exercise.'
+
+\subsubsection{Boltt}
+
+Boltt\cite{bgref12} is a startup that aims to use multiple sensors (embedded in shoes and on a wristband) along with AI to give guidance. Currently it is in the pre-order stage.
+
+\subsubsection{Actofit}
+
+Actofit\cite{bgref13} is another startup that recently funded via Indiegogo\cite{bgref14}. They claim to 'identify 75+ exercises, count reps, evaluate form, measure heart rate, calories burned and more' using a wristband.
+
+\subsubsection{FocusMotion}
+
+FocusMotion\cite{bgref15} provides an SDK that works on many different devices, and uses their sensors as input to their machine learning algorithms, which aim to classify and analyse user's movements.
+
+\subsection{Bodyweight Exercises}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+While there is no objective standard for how most exercises should be performed, for the most common exercises there exists a broad consensus on the proper technique.
+
+I will use these as a baseline to compare a user's movements to, and to ensure that when recording training data the examples are correct. I have used the following guides as my references.
+
+\subsubsection{Press Ups}
+
+The generally agreed proper technique for a press up is as follows:
+
+\begin{itemize}
+    \item Place your hands on the ground slightly more than shoulder width apart, and your feet behind you. Your body should be straight, with no sagging at the hips. You should be looking slightly ahead, not vertically downwards, and your arms should be locked out.
+    \item Keeping your body straight, lower yourself down until your elbows are at a 90° angle to the floor, and upper arms are horizontal. Your elbows should remain close in to the side of your body, not splayed out to the sides.
+    \item In the same manner, raise yourself back up with your arms until they lock out again.
+\end{itemize}
+
+I have used the following two articles as my reference for good technique when doing a press up:
+
+Nerd Fitness' article \textit{How to do a Proper Push Up}\cite{bgref16}
+is a good overall guide to technique, while Breaking Muscle's article \textit{Pimp Your Push Up: 3 Common Mistakes And 5 Challenging Variations}\cite{bgref17} addresses a few common issues with people's technique.
+
+A video illustrating these points can be found on Youtube.\cite{bgref18}
+
+\subsubsection{Sit Ups}
+
+Opinions on proper sit up technique vary, primarily over the placement of the arms - some guides recommend crossing them over your chest, while others recommend placing your hands on the back of your head. 
+
+LiveStrong.com\cite{bgref19} recommends placing hands behind the head, while military.com\cite{bgref20}recommends crossing your arms over your chest. 
+
+The general opinion seems to be that either is acceptable, with the hands-behind-the-head technique considered slightly harder\cite{bgref21}.
+
+Keeping your hands loose is generally considered a bad thing as it allows you to use them to lift your torso, rather than your abdominal muscles. 
+
+For my reference, I will use the crossed arms technique because placing your arms behind your head encourages you to pull yourself up from the neck, rather than the waist, which the crossed arms technique avoids.
+
+There is also not a consensus on whether it is better to anchor your feet during a sit up. For the purposes of my reference, I will be recommending unanchored feet. 
+
+For more specific information on unanchored sit ups, the article \textit{How to Do Sit-Ups Without Anchoring Your Feet}\cite{bgref22}
+The proper technique for a sit up, with the caveats above, is as follows:
+
+\begin{itemize}
+    \item Lie flat on your back, with your knees bent at a 90° angle and feet on the floor. Cross your arms over your chest and straighten your neck. and spine.
+    \item Keeping your legs immobile, lift your back off the floor by flexing at the waist, and continue until your back is vertical. This should be a smooth, controlled movement not a jerk, and should not be assisted by the arms. Your neck should remain straight, but the spine can flex a little. You may find it helpful to exhale as you do this.
+    \item Having reached the upright position, rest if necessary and lower yourself back down in the same manner. You may find it helpful to inhale as you do this.
+\end{itemize}
+
+This video\cite{bgref23} gives a good demonstration of good sit up technique, although it uses the hands behind the head technique.
+
+\subsubsection{Lunges}
+
+Opinions on proper lunge technique are fairly settled, with a strong consensus. While there are many possible varieties of lunges, including those with weights, I will concentrate on lunges using bodyweight alone.
+
+My main source for technique was Shape.com\cite{bgref24}.
+
+My baseline reference for good lunge technique is as follows:
+
+\begin{itemize}
+    \item Stand up straight, with shoulders relaxed and core engaged
+    \item Step forwards with one leg, and lower your body until the forward knees is bent at 90° to the floor. The back knee should not touch the floor, and your upper body should remain upright.
+    \item In the same manner, smoothly push back up to your starting position.
+\end{itemize}
+
+This video\cite{bgref25} illustrates good lunge technique.
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Design \& Specification}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -356,6 +483,7 @@ Repetition end
 
 \todo[inline]{What the phone should display in response to different things}
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Plan and Management}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -382,6 +510,7 @@ Repetition end
 
 \todo[inline]{More Subsections? (Hardware?}
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Evaluation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -402,6 +531,7 @@ Repetition end
 
 \todo[inline]{Does it crash? Is it easy to install and use?}
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions and Future Work}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -414,6 +544,7 @@ Repetition end
 
 \todo[inline]{Where can the technology go from here?}
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Appendix 1: User Guide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -430,6 +561,7 @@ Repetition end
 
 \todo[inline]{How to: actually use the thing}
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
 \newpage
@@ -437,7 +569,147 @@ Repetition end
 
 \begin{thebibliography}{9}
 
-%\bibitem{yes}
+\bibitem{ref1}
+\url{http://webarchive.nationalarchives.gov.uk/20170110165405/http://www.noo.org.uk/NOO_about_obesity/adult_obesity/UK_prevalence_and_trends}
+\textbf{Public Health England / UK Government}
+UK and Ireland obesity prevalence and trends
+
+% Background references (bgref#)
+
+\bibitem{bgref1}
+\url{https://ibug.doc.ic.ac.uk/courses}
+\textbf{Imperial College London, Department of Computing}
+CO395 Machine Learning course home page
+
+\bibitem{bgref2}
+\url{http://people.sabanciuniv.edu/berrin/cs512/reading/mao-NN-tutorial.pdf}
+\textbf{A.K Jain, J. Mao \& K. Mohiuddin, Michigan Stage University}
+Artificial Neural Networks: A Tutorial
+
+\bibitem{bgref3}
+\url{http://www.glyn.dk/download/Synopsis.pdf}
+\textbf{F. Nelson}
+Neural Networks - Algorithms and Applications
+
+\bibitem{bgref4}
+\url{http://robotics.hobbizine.com/arduinoann.html}
+\textbf{Author Unknown, Hobbizine}
+A Neural Network for Arduino
+
+\bibitem{bgref5}
+\url{http://www.cs.bham.ac.uk/~jxb/INC/nn.html}
+\textbf{J.A. Bullinaria, School of Computer Science, University of Birmingham}
+John Bullinaria's Step by Step Guide to Implementing a Neural Network in C
+
+\bibitem{bgref5b}
+Looking specifically at backpropagation, D.E. Rumelhart, G.E. Hinton and R.J. Williams were working on back propagation in neural networks in 1986 (see \url{https://www.iro.umontreal.ca/~vincentp/ift3395/lectures/backprop_old.pdf}), although much of their work was based on the earlier work of others, in particular Paul Werbos. 
+The original Apple Macintosh, released in 1984, had a 7.83MHz processor and 128KB of RAM. (source: \url{http://oldcomputers.net/macintosh.html}). For comparison, the Arduino 101 I am using runs at 32MHz, and 196KB of Flash memory, although it only has 24KB of SRAM. (source: \url{https://www.arduino.cc/en/Main/ArduinoBoard101}).
+
+If devices such as smartphones are considered, the superiority in power is obvious.
+
+\bibitem{bgref6}
+\url{https://www-ssl.intel.com/content/www/us/en/wearables/wearable-soc.html}
+\textbf{Intel}
+Intel Curie Module home page
+
+\bibitem{bgref7}
+\url{https://www.bluetooth.com/specifications/bluetooth-core-specification}
+\textbf{Bluetooth}
+Bluetooth core specification
+
+\bibitem{bgref8}
+\url{https://www.fitbit.com/uk/smarttrack}
+\textbf{Fitbit}
+Fitbit SmartTrack Auto Exercise Recognition
+
+\bibitem{bgref9}
+\url{https://www.android.com/intl/en_uk/wear/}
+\textbf{Google}
+Android Wear home page
+
+\bibitem{bgref10}
+\url{https://www.google.com/fit/}
+\textbf{Google}
+Google Fit home page
+
+\bibitem{bgref11}
+\url{http://optimize.fitness}
+\textbf{Optimize Fitness}
+Optimize Fitness home page
+
+\bibitem{bgref12}
+\url{https://boltt.com/}
+\textbf{Boltt}
+Boltt home page
+
+\bibitem{bgref13}
+\url{http://www.actofit.com/}
+\textbf{Actofit Wearables}
+Actofit home page
+
+\bibitem{bgref14}
+\url{https://www.indiegogo.com/projects/actofit-redefining-fitness-tracking--3#/}
+\textbf{Indiegogo}
+Indiegogo campaign page for Actofit
+
+\bibitem{bgref15}
+\url{http://focusmotion.io/}
+\textbf{Focus Ventures}
+FocusMotion home page
+
+\bibitem{bgref16}
+\url{https://www.nerdfitness.com/blog/proper-push-up/}
+\textbf{S. Kamb, Nerd Fitness}
+How to do a Proper Push Up
+
+\bibitem{bgref17}
+\url{https://breakingmuscle.com/learn/pimp-your-push-up-3-common-mistakes-and-5-challenging-variations}
+\textbf{N. Tumminello, Breaking Muscle}
+Pimp Your Push Up: 3 Common Mistakes And 5 Challenging Variations
+
+\bibitem{bgref18}
+\url{https://www.youtube.com/watch?v=Eh00_rniF8E}
+\textbf{S. Malin}
+How to Do a Push Up Correctly
+
+\bibitem{bgref19}
+\url{https://www.livestrong.com/article/487008-how-to-do-a-correct-sit-up/}
+\textbf{A. Cespedes, Livestrong.com}
+How to Do a Correct Sit-Up
+
+\bibitem{bgref20}
+\url{http://www.military.com/military-fitness/fitness-test-prep/proper-technique-for-curl-ups}
+\textbf{S. Smith, Military.com}
+The Proper Technique for Curl-ups
+
+\bibitem{bgref21}
+\url{http://www.mensfitness.com/weight-loss/burn-fat-fast/situp}
+\textbf{N. Green, Men's Fitness}
+The Situp
+
+\bibitem{bgref22}
+\url{https://www.livestrong.com/article/539595-how-to-do-sit-ups-without-anchoring-your-feet/}
+\textbf{A. Cespedes, Livestrong.com}
+How to Do Sit-Ups Without Anchoring Your Feet
+
+\bibitem{bgref23}
+\url{https://www.youtube.com/watch?v=jDwoBqPH0jk}
+\textbf{M. Tapper, Howcast}
+How to Do a Sit-Up Properly
+
+\bibitem{bgref24}
+\url{http://www.shape.com/fitness/workouts/know-your-basics-how-do-lunge}
+\textbf{POPSUGAR Fitness}
+Know Your Basics: How to Do a Lunge
+
+\bibitem{bgref25}
+\url{https://www.youtube.com/watch?v=jzbXc2OmRMk}
+\textbf{30 Day Fitness Challenges}
+How To Do The lunge Exercise
+
+\bibitem{bgref26}
+\url{}
+\textbf{}
 
 \end{thebibliography}
 
