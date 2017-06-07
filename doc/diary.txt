@@ -208,3 +208,18 @@ Individual project 'diary'
     Continue writing Android BLE programs
     Write Arduino BLE classifier
     Review structure of report and begin transferring body of Interim Report
+
+3/6/17
+    No real progress (more BLE faff)
+
+4/6/17
+    No real progress (more BLE faff)
+
+5/6/17
+    Make classifier work (when notifications are manually enabled)
+
+6/6/17
+    No real progress (more BLE faff)
+
+7/6/17
+    Finish background section of report
