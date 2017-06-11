@@ -274,15 +274,15 @@ The requirements of the microcontroller for this project are as follows:
 \todo[inline]{finish}
 
 \begin{description}
-\item[Processor] The microcontroller's processor needs to be capable of performing a classification
-\item[Memory]
-\item[Storage]
+\item[Processor] The microcontroller's processor needs to be capable of performing a classification within 100 milliseconds, to ensure that the user receives feedback on their exercises in a short enough interval to be useful. Given \todo[inline]{the network}, the minimum clock speed is around 211KHz.\cite{dsref0}
+\item[Memory] \todo[inline]{work out how much memory the damn thing takes}
+\item[Storage] The microcontroller needs to have enough storage for the weights. Given \todo[inline]{the network}, this takes about 17KB not including the bootloader\cite{dsref2}.
 \item[Accelerometer] The microcontroller needs to be capable of measuring acceleration on three axes through an IMU or accelerator, either onboard or via a shield.
 \item[Bluetooth] The microcontroller needs to be capable of connecting over a Bluetooth Low Energy connection, either onboard or via a shield.
-\item[Battery] 
+\item[Battery] A battery capable of providing enough current for the chosen microcontroller. The Arduino 101 draws around 70 mA when processing reasonably intensely.\cite{dsref3}
 \end{description}
 
-For my implementation, I used an \textbf{Arduino 101} board, which contains an Intel Curie module. It has the following specifications:\cite{dsref0}
+For my implementation, I used an \textbf{Arduino 101} board, which contains an Intel Curie module. It has the following specifications:\cite{dsref4}
 
 \begin{description}
 \item[Processor] 32MHz
@@ -309,7 +309,7 @@ My machine, a 2013 Lenovo IdeaPad running Ubuntu 16.04, fulfills all of the abov
 
 \subsubsection{Android Phone}
 
-Bluetooth Low Energy support was added in Android 4.3 (Jelly Bean MR2), with the Level 18 API.\cite{dsref1} Any phone running Android 4.3 or later, and which supports Bluetooth Low Energy, will suffice for this project.
+Bluetooth Low Energy support was added in Android 4.3 (Jelly Bean MR2), with the Level 18 API.\cite{dsref5} Any phone running Android 4.3 or later, and which supports Bluetooth Low Energy, will suffice for this project.
 
 My phone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
 
@@ -394,7 +394,7 @@ An example of a valid repetition can be found \todo[inline]{link}
 
 \subsection{Connectivity}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Data exchange protocol specification etc. How do connect between microcontroller and phone???}
+The microcontroller will communicate over a Bluetooth Low Energy connection with the phone. Upon classification, microcontroller will send a single integer representing the (zero indexed) index of the output node corresponding to the classification, or the integer \lstinline{-1} if the input was not classifiable.
 
 \subsection{Data Display}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -407,7 +407,7 @@ An example of a valid repetition can be found \todo[inline]{link}
 
 This section briefly details how I managed my project, and the tools and methodologies that I employed. 
 
-\todo[inline]{expand. Written largely without evaluation}
+Hardware specifications can be found \todo[inline]{in the Design and Spec section (link)}, while an evaluation of how the various tools and methodologies worked in practice can be found \todo[inline]{in the evaluation section (link)}
 
 \subsection{Timetable}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -750,7 +750,7 @@ UK and Ireland obesity prevalence and trends
 
 
 
-% Background references (bgref#)
+% Background references (bgref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibitem{bgref0}
 \url{https://ibug.doc.ic.ac.uk/courses}
@@ -909,21 +909,36 @@ Know Your Basics: How to Do a Lunge
 How To Do The lunge Exercise
 \\\textit{Accessed 7/6/2017}
 
-% Design and Specification references (dsref#)
+% Design and Specification references (dsref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibitem{dsref0}
+Figure calculated as follows: On an Arduino 101 (32MHz clock speed), classification took an average of 658 microseconds, so the minimum clock speed necessary is given by 32 * 0.658 / 100 = 211 KHz
+
+\bibitem{dsref1}
+Calculations for memory usage
+
+\bibitem{dsref2}
+The 'BareMinimum' example sketch uses 48432B of program memory. The classifier sketch uses 65456B of program memory, a difference of 17033B.
+
+\bibitem{dsref3}
+\url{https://tlextrait.svbtle.com/arduino-power-consumption-compared}
+\textbf{T. Lextrait}
+Arduino: Power Consumption Compared
+\\\textit{Accessed 11/6/17}
+
+\bibitem{dsref4}
 \url{https://www-ssl.intel.com/content/dam/support/us/en/documents/boardsandkits/curie/intel-curie-module-datasheet.pdf}
 \textbf{Intel}
 Intel Curie Module Datasheet
 \\\textit{Accessed 10/6/17}
 
-\bibitem{dsref1}
+\bibitem{dsref5}
 \url{https://developer.android.com/about/versions/android-4.3.html#Wireless}
 \textbf{Google}
 Android 4.3 API Guide
 \\\textit{Accessed 10/6/17}
 
-% Project Plan and Management references (ppref#)
+% Project Plan and Management references (ppref#)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibitem{ppref0}
 \url{https://git-scm.com/}
@@ -1077,14 +1092,14 @@ Arduino main software page
 \textbf{}
 \\\textit{Accessed 8/6/17}
 
-% Evaluation references (evref#)
+% Evaluation references (evref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibitem{}
 \url{}
 \textbf{}
 
 
-% Conclusions and future work references (fwref#)
+% Conclusions and future work references (fwref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibitem{}
 \url{}
