@@ -90,7 +90,10 @@ Daniel Clay\\
 
 \subsection{Motivation}%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In the West, obesity is a growing problem - as of 2015, \textbf{62.9\%} of adults in the UK were either overweight or obese, a number which is still increasing.\cite{ref1}
+
+
+
+In the West, obesity is a growing problem - as of 2015, \textbf{62.9\%} of adults in the UK were either overweight or obese, a number which is still increasing.\cite{inref1}
 
 While many people express a desire to exercise more this does not always translate into action, and one of the reasons for this is that
 people often don't know how to exercise, and even if they do exercise this lack of knowledge stops or hampers them from exercising as effectively as they might be able to.
@@ -118,23 +121,23 @@ Neural networks are currently the focus of a lot of research in academia, and al
 
 Because my project is centered around a novel usage of existing neural network techniques, rather than any new techniques, my research into the theory of neural networks has been relatively limited, and I have focussed on their application to my project.
 
-Most of my general knowledge of Neural Networks comes from the third year DoC course \textbf{395 Machine Learning}\cite{bgref1}. (in particular, see the notes for the Artificial Neural Networks lectures):
+Most of my general knowledge of Neural Networks comes from the third year DoC course \textbf{395 Machine Learning}\cite{bgref0}. (in particular, see the notes for the Artificial Neural Networks lectures):
 
-As well as the course notes, the lecturers have recommended several other resources (a list of which can be found on the previously linked page), of which the paper \textit{Artifical Neural Networks: A Tutorial}\cite{bgref2} is the most relevant. This provided an overall introduction to neural networks and gave a different perspective to that given by the DoC course.
+As well as the course notes, the lecturers have recommended several other resources (a list of which can be found on the previously linked page), of which the paper \textit{Artifical Neural Networks: A Tutorial}\cite{bgref1} is the most relevant. This provided an overall introduction to neural networks and gave a different perspective to that given by the DoC course.
 
-Another useful reference has been \textit{Neural Networks - Algorithms and Applications}\cite{bgref3}. This contains lots of practical information of direct relevance to the implementation of neural networks.
+Another useful reference has been \textit{Neural Networks - Algorithms and Applications}\cite{bgref2}. This contains lots of practical information of direct relevance to the implementation of neural networks.
 
 \subsection{ArduinoANN}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-My neural network implementation is based on \textit{ArduinoANN}\cite{bgref4}, a C implementation of a two layer feed-forward backpropogation network. 
+My neural network implementation is based on \textit{ArduinoANN}\cite{bgref3}, a C implementation of a two layer feed-forward backpropogation network. 
 
-ArduinoANN itself draws heavily on \textit{John Bullinaria's Step by Step Guide to Implementing a Neural Network in C}\cite{bgref5}.
+ArduinoANN itself draws heavily on \textit{John Bullinaria's Step by Step Guide to Implementing a Neural Network in C}\cite{bgref4}.
 
 \subsection{Embedded Systems \& The Intel Curie}%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Embedded Systems}
 
-While most machine learning has historically done on relatively powerful desktop systems or specialised hardware, modern embedded systems are often more powerful than the desktop computers available when techniques such as back propagation were developed.\cite{bgref5b}. 
+While most machine learning has historically done on relatively powerful desktop systems or specialised hardware, modern embedded systems are often more powerful than the desktop computers available when techniques such as back propagation were developed.\cite{bgref5}. 
 
 As embedded systems become more powerful and more widespread, machine learning programs will be run on them much more often.
 
@@ -266,15 +269,49 @@ This video\cite{bgref25} illustrates good lunge technique.
 
 \subsubsection{Microcontroller}
 
-\todo[inline]{Details of the microcontroller and specification. Also touch on alternatives. Also also pick a consistent name}
+The requirements of the microcontroller for this project are as follows:
+
+\todo[inline]{finish}
+
+\begin{description}
+\item[Processor] The microcontroller's processor needs to be capable of performing a classification
+\item[Memory]
+\item[Storage]
+\item[Accelerometer] The microcontroller needs to be capable of measuring acceleration on three axes through an IMU or accelerator, either onboard or via a shield.
+\item[Bluetooth] The microcontroller needs to be capable of connecting over a Bluetooth Low Energy connection, either onboard or via a shield.
+\item[Battery] 
+\end{description}
+
+For my implementation, I used an \textbf{Arduino 101} board, which contains an Intel Curie module. It has the following specifications:\cite{dsref0}
+
+\begin{description}
+\item[Processor] 32MHz
+\item[Memory] 24KB SRAM
+\item[Storage] 196KB Flash memory
+\item[Accelerometer] 6-axis IMU
+\item[Bluetooth] Integrated BLE 
+\item[Battery] A standard 9V battery
+\end{description}
 
 \subsubsection{Linux Computer}
 
-\todo[inline]{For training. Details of my machine and specification}
+The requirements of the computer are not onerous, and most of them are standard on just about all modern computers:
+
+\begin{description}
+\item[Processor] In order to train the network effectively, a faster processor than that of the microcontroller is necessary. 
+\item[Memory] Likewise, the computer will need enough memory to hold the network. For any network which can be fitted onto the Flash (or other) memory of a microcontroller, this is unlikely to be a problem.
+\item[USB Ports] At least one USB port is necessary to upload files to the microcontroller.
+\item[Linux] I haven't tested any of the software on other operating systems, so a machine running a Linux variant is probably necessary.
+\item[Software] A list of the necessary software can be found in the \todo{Project Management section (link)}
+\end{description}
+
+My machine, a 2013 Lenovo IdeaPad running Ubuntu 16.04, fulfills all of the above requirements.
 
 \subsubsection{Android Phone}
 
-\todo[inline]{Details of my phone and specifications needed}
+Bluetooth Low Energy support was added in Android 4.3 (Jelly Bean MR2), with the Level 18 API.\cite{dsref1} Any phone running Android 4.3 or later, and which supports Bluetooth Low Energy, will suffice for this project.
+
+My phone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
 
 \subsection{Microcontroller Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -303,73 +340,11 @@ The format of the file will be as follows; zero or more instances of \emph{repet
 \item A line with the text \lstinline{Repetition Start}
 \item One or more lines with the values of the inputs.
 \item A line with the text \lstinline{Repetition End}
+\item One or more lines with the values of the outputs, one line per output node
 \item One or more lines with the values of the inputs.
 \end{itemize}
 
-An example of a valid supervised log file is as follows (this example contains two valid repetitions):
-
-\begin{lstlisting}
-16003
-15892
-14374
-14338
-15569
-Repetition Start
-16692
-22893
-23160
-24567
-21970
-26383
-21008
-22793
-21024
-20603
-18865
-18607
-16515
-15113
-16346
-14239
-18071
-18354
-18466
-Repetition End
-17255
-16897
-16973
-16911
-18007
-16843
-16108
-13672
-13464
-16149
-16609
-17538
-Repetition Start
-22227
-22166
-22201
-21680
-19268
-20274
-23043
-20271
-19949
-18652
-18440
-18251
-16334
-13850
-13632
-12386
-Repetition End
-17390
-16154
-17653
-18861
-\end{lstlisting}
+An example of a valid supervised log file can be found \todo[inline]{todo: link}
 
 \subsubsection{Log File Specification (Unsupervised)}
 
@@ -385,41 +360,9 @@ The format of the file will be as follows; zero or more instances of \emph{repet
 
 Where X and Y are the intervals between the last motion detection event.
 
-An example of a valid unsupervised log file is as follows (this example contains one valid repetition and an unfinished one, which will be removed in the normalisation process):
+Prior to normalisation, the correct targets will need to be manually added to the log file.
 
-\begin{lstlisting}
-Motion detected after  823  milliseconds. Logging...
-18034
-17662
-22144
-19415
-26548
-25319
-26721
-26086
-26633
-24458
-25198
-20258
-24702
-21414
-19088
-20752
-18575
-18684
-Motion ended after  1718  milliseconds. Logging...
-Motion detected after  892  milliseconds. Logging...
-18376
-18623
-22552
-22596
-23354
-23849
-23313
-20727
-23364
-\end{lstlisting}
-
+An example of a valid unsupervised log file can be found \todo[inline]{todo: link}
 
 \subsubsection{Normalised Log File Specification}
 
@@ -428,12 +371,328 @@ A normalised log file will be a \lstinline{.txt} file, and have the name of the 
 The format of the file will be as follows; zero or more instances of \emph{repetitions}, each consisting of:
 \begin{itemize}
 \item A line with the text \lstinline{Repetition Start}
-\item One or more lines with the values of the inputs, with one line/value per input node.
+\item One or more lines with the values of the inputs, with one line/value per input node. Each value will be equal to the \textbf{sum} of the raw input values
 \item A line with the text \lstinline{Repetition End}
 \item One or more lines with the values of the targets, with one line/value per output node.
 \end{itemize}
 
 There should be no blank lines between repetitions.
+
+An example of a valid repetition can be found \todo[inline]{link}
+
+\subsection{Neural Network Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{Architecture of the various neural networks. Note that the parameters etc will be decided on after experimentation}
+
+\subsection{Training of Neural Network}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{How to train neural network on computer (and to get the network weights etc back onto the Curie}
+
+\subsection{Classification by the Neural Network}%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{Spec for how neural network should classify examples, and output data format for display}
+
+\subsection{Connectivity}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{Data exchange protocol specification etc. How do connect between microcontroller and phone???}
+
+\subsection{Data Display}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{What the phone should display in response to different things}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Project Plan and Management}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This section briefly details how I managed my project, and the tools and methodologies that I employed. 
+
+\todo[inline]{expand. Written largely without evaluation}
+
+\subsection{Timetable}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Because the focus of my project changed significantly between the submission of my interim report and the submission of this report, my initial project timetable (as recorded in my interim report) is different to my revised project timetable. The revised project timetable is detailed below, while the initial timetable can be found in the appendices.\todo[inline]{Add initial timetable to appendices and link}
+
+Because the revised timetable was only drawn up after the interim report, it contains no entries before March.
+
+My timetable is organised by 'milestones' - each consisting of a set piece of implementation with a projected date for completion.
+
+\subsubsection{End of research/start of implementation - 4/4/17}
+
+Finish research so as to be ready to start implementation on time.
+
+\subsubsection{Implementation of logging functionality - 14/4/17}
+
+Finish implementation of a logging program to record example data and store it on computer in preparation for training.\todo[inline]{See relevant section and link}
+
+Finishing this functionality early will enable data collection to continue alongside development, so that when I am ready to start training I will have a large enough data set to do so.
+
+\subsubsection{Implementation of C++ neural network library - 28/4/17}
+
+Reimplement ArduinoANN as a C++ library (see \todo[inline]{link to design section}). Additionally, implement a program to train an example of a network on the training data already connected, and do so.
+
+\subsubsection{Implementation of classifier - 5/5/17}
+
+Using the previously implemented neural network library, implement a classifier that runs on the Arduino and sends it's classifications back to the computer over Serial for display.
+
+\subsubsection{Implementation of BLE functionality - 19/5/17}
+
+Extend the classifier to send results over a BLE connection to a phone. Implement a program that runs on the phone and displays classifications sent over BLE from the Arduino.
+
+\subsubsection{Implementation of multiple Curie networking (extension)- 2/6/17}
+
+Train multiple networks to enable classification together, and adapt the classifier as necessary.
+Extend the phone program to accept multiple BLE connections and display the results.
+
+This milestone also acts as a buffer, giving an extra two weeks if the core implementation overruns without eating into the time to write the report.
+
+\subsubsection{Report submission - 19/6/17}
+
+Write the project report, and evaluate the classifier performance. 
+
+\subsubsection{Presentation - 26/6/17}
+
+Prepare for the project presentation, fixing bugs as necessary to make a demonstration work. 
+
+\subsubsection{Project archive submission - 3/7/17}
+
+Tidy up codebase and write user guide. Fix any remaining bugs and make programs more robust.
+
+\subsection{Version Control}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{git}
+
+I chose git\cite{ppref0} for my version control system, largely because of my prior experience with it. Within git, I used a variation of a standard workflow known as \textit{gitflow}.\cite{ppref1} 
+
+I kept the convention of having separate \lstinline{master} and \lstinline{development} branches, but did not use release branches. 
+
+In addition to these two branches, and the feature branches, I used two more long term branches:
+
+The branch \lstinline{data} was created once the logging functionality was complete, and was used to track changes to the loggers and to track the recording of data. This branch was then merged to \lstinline{development} whenever necessary to make the data available for other branches.
+
+The branch \lstinline{documentation} was created at the very start, and contains only documentation, in particular the project diary (\todo[inline]{link}) and both reports. While the projects were both written in Overleaf\todo[inline]{link}, the changes were transferred to the branch regularly.
+
+\subsubsection{Github}
+
+Much like git, I chose to use Github\cite{ppref2} to host my git repository largely because of my familiarity with it. 
+
+I maintained a repository\cite{ppref3} for the duration of the project and stored virtually everything relating to my project in it.
+
+\subsection{Languages \& Libraries Used}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The multi platform nature of this project meant that I used several languages for the various constituent parts/
+
+\subsubsection{C++}
+
+The core neural network code (for both the Linux and Arduino versions, see \todo[inline]{link} for details) was written in C++\cite{ppref4}. I also wrote the training and save/load code in C++.
+
+I chose to follow the \lstinline{c++11}\cite{ppref5} standard to enable me to make use of the new \lstinline{std::vector<>} that was introduced with \lstinline{c++11}.
+
+I used the C++ unit testing library \textit{Catch}\cite{ppref6} to write unit tests for my C++ code.
+
+\subsubsection{Arduino}
+
+While software for the Arduino can be written in any language which has a compiler capable of compiling a binary for the Arduino's processor, most Arduino programming is done in the Arduino C/C++ variant\cite{ppref7}, which takes file suffix \lstinline{.ino}. This variant adds some Arduino specific libraries\cite{ppref8}, but lacks many of the normal C/C++ libraries - most notably the C++ Standard Template Library (STL).\cite{ppref9}
+
+The main Arduino programs were written in Arduino C++. I used the Intel libraries \textit{CurieIMU}\cite{ppref10} and \textit{CurieBLE}\cite{ppref11} to provide access to the Curie's IMU and BLE adapter respectively.
+
+\subsubsection{Python}
+
+I used Python\cite{ppref12} to write all of the necessary scripts for logging data on the computer, normalising data, and for compiling and running automated unit tests.
+
+I used Python 2.7.12 for this project, but could have just as easily done it in Python 3.
+
+Alongside the core Python modules \textit{sys, serial, os, subprocess} and \textit{random}, I made use of the \textit{curses}\cite{ppref13} module for terminal control.
+
+\subsubsection{Java (Android)}
+
+Android\cite{ppref14} programs are written in Java, which is then compiled for the Android Runtime (ART)\cite{ppref15}, instead of normal Java bytecode.
+
+I wrote the Android phone programs to display data in Java.
+
+\subsection{Tools Used}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{GCC}
+
+All versions of the Gnu Compiler Collection (GCC) since GCC 4.8.1 have supported the C++11 standard\cite{ppref16}. I chose to use version 6.3.0\cite{ppref17} to compile all C++ code that runs on my computer.
+
+\subsubsection{AVR-GCC}
+
+To compile C/C++ code for the Arduino requires the AVR-GCC compiler. This comes bundled with the Arduino IDE\cite{ppref8} (see below).
+
+All versions of the Arduino IDE since 1.6.6 have enabled C++11 by default.
+
+\subsubsection{Arduino IDE}
+
+Aside from allowing the user to edit code, the Arduino IDE\cite{ppref18} manages compilation and upload of programs to a connected Arduino.
+
+I used version 1.8.2, but any version since 1.6.6 would have worked just as well.
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evaluation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Contribution/Deliverable Progress \& Completion}%%%%%%%%%%%%%%
+
+\todo[inline]{Better name? Which deliverables did I actually deliver}
+
+\subsection{Project Management}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{How well did my project management go, were the tools adequate, etc}
+\todo[inline]{Remember to include diary in appendices and link to it}
+
+\subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{All the normal classification measures. Will probably need numbers for all the versions}
+
+\subsection{Network Limitations}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{No training on Arduino is a blow}
+
+\subsection{Energy Consumption}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{How long did the battery last? Is this practicable for the smaller form factor Curie etc}
+
+\subsection{Stability \& Ease of Use}%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{Does it crash? Is it easy to install and use?}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions and Future Work}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Conclusion}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{What has *humanity* learned? What worked and what didn't, etc}
+
+\subsection{Future Work}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{Where can the technology go from here?}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Appendix 1: User Guide}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Installation}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{How to: install all the stuff. Ideally git repo + single script to install dependencies should be enough}
+
+\subsection{Setup}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{How to get ready to classify (inc. training the network to match your movements, probably. If not this section becomes less useful).}
+
+\subsection{Usage}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{How to: actually use the thing}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Appendix 2: Examples and Code Samples}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Example Log Files}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Supervised Log File Example}
+
+An example of a valid supervised log file is as follows (this example contains two repetitions, and there are two output nodes - the correct target is the first of the two):
+
+\begin{lstlisting}
+2112 3521 9697
+ -820 4980 8498
+ 4928 1414 12078
+ 2182 2625 17658
+Repetition Start
+ 420 6706 17109
+ 390 4711 18996
+ 34 4158 16245
+ 112 3384 18010
+ -122 988 16876
+ 1132 1626 18761
+ 133 2256 17444
+ 1329 758 17024
+ 162 1943 14781
+ 260 2308 14217
+ 438 3703 14671
+ 1522 3522 8614
+Repetition End
+1
+0
+ 267 1716 11535
+ 2021 2455 11427
+ 1941 2974 9327
+ 1187 3642 12921
+ 1484 624 13763
+Repetition Start
+ 2301 4362 15325
+ 2448 786 14240
+ 1014 3284 17920
+ 1094 4471 17259
+ 3094 623 18312
+ 315 3334 16080
+ 1351 1072 20128
+ 2352 564 16417
+ 2270 66 17622
+ 1286 238 15131
+ 2303 2767 13679
+ 2078 2553 13658
+ 3072 3089 11358
+ -1023 2758 10359
+Repetition End
+1
+0
+ 2286 1498 10641
+ 1187 3017 11019
+ 938 2236 10331
+\end{lstlisting}
+
+\subsubsection{Unsupervised Log File Example}
+
+An example of a valid unsupervised log file is as follows (this example contains one valid repetition and an unfinished one, which will be removed in the normalisation process):
+
+\begin{lstlisting}
+Motion detected after  794  milliseconds. Logging...
+-3645 258 18409
+ -1192 -1167 21047
+ -2562 -3021 25236
+ -2985 -4357 29204
+ -1892 -6278 24810
+ -1823 -4548 25039
+ -347 -4235 22112
+ -1465 -5232 24840
+ -1546 -5415 26162
+ -1849 -4882 22686
+ -3693 -5339 22833
+ -2114 -4549 21613
+ -2126 -6574 21918
+ -2303 -4939 20830
+ -1795 -3754 19054
+ -209 -2626 19330
+ 506 -460 19227
+ 874 -1628 17378
+ -3168 -813 18150
+ -4758 -501 17496
+ 595 1684 15219
+ 976 -1727 15472
+ 264 -629 19411
+ Motion ended after  3018  milliseconds. Logging...
+Motion detected after  784  milliseconds. Logging...
+-2141 1791 16200
+ -395 -237 17426
+ -2397 164 19727
+ -1568 -1193 22452
+ -1612 -4823 26304
+ -2882 -6720 26317
+ -2768 -6063 24776
+ -2561 -4488 23331
+ -1143 -3689 23230
+ -2256 -5549 23404
+ -823 -3498 23925
+ -1676 -6678 26284
+\end{lstlisting}
+
+\subsubsection{Normalised Log File Example}
 
 An example of a valid repetition for a network with 20 input nodes and one output node is as follows:
 
@@ -463,103 +722,15 @@ Repetition end
 1
 \end{lstlisting}
 
-\subsection{Neural Network Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example Network Configuration File}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Architecture of the various neural networks. Note that the parameters etc will be decided on after experimentation}
+\todo[inline]{Add config file}
 
-\subsection{Training of Neural Network}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Code Samples}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{How to train neural network on computer (and to get the network weights etc back onto the Curie}
+\todo[inline]{Code samples?}
 
-\subsection{Classification by the Neural Network}%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Spec for how neural network should classify examples, and output data format for display}
-
-\subsection{Connectivity}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Data exchange protocol specification etc. How do connect between microcontroller and phone???}
-
-\subsection{Data Display}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{What the phone should display in response to different things}
-
-\newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Project Plan and Management}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Timetable}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Subsubsections.}
-
-\subsection{Version Control}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Subsubsections.}
-
-\subsection{Methodologies Used}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Subsubsections. Include this at all?}
-
-\subsection{Languages \& Libraries Used}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Subsubsections.}
-
-\subsection{Tools Used}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Subsubsections.}
-
-\todo[inline]{More Subsections? (Hardware?}
-
-\newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Evaluation}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Contribution/Deliverable Progress \& Completion}%%%%%%%%%%%%%%
-
-\todo[inline]{Better name? Which deliverables did I actually deliver}
-
-\subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{All the normal classification measures. Will probably need numbers for all the versions}
-
-\subsection{Energy Consumption}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{How long did the battery last? Is this practicable for the smaller form factor Curie etc}
-
-\subsection{Stability \& Ease of Use}%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Does it crash? Is it easy to install and use?}
-
-\newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusions and Future Work}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Conclusion}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{What have *we* learned? What worked and what didn't, etc}
-
-\subsection{Future Work}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{Where can the technology go from here?}
-
-\newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Appendix 1: User Guide}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{Installation}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{How to: install all the stuff. Ideally git repo + single script to install dependencies should be enough}
-
-\subsection{Setup}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{How to get ready to classify (inc. training the network to match your movements, probably. If not this section becomes less useful).}
-
-\subsection{Usage}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{How to: actually use the thing}
+\todo[inline]{Add additional things}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -569,41 +740,52 @@ Repetition end
 
 \begin{thebibliography}{9}
 
-\bibitem{ref1}
+% Introduction references (inref#)
+
+\bibitem{inref1}
 \url{http://webarchive.nationalarchives.gov.uk/20170110165405/http://www.noo.org.uk/NOO_about_obesity/adult_obesity/UK_prevalence_and_trends}
 \textbf{Public Health England / UK Government}
 UK and Ireland obesity prevalence and trends
+\\\textit{Accessed 7/6/2017}
+
+
 
 % Background references (bgref#)
 
-\bibitem{bgref1}
+\bibitem{bgref0}
 \url{https://ibug.doc.ic.ac.uk/courses}
 \textbf{Imperial College London, Department of Computing}
 CO395 Machine Learning course home page
+\\\textit{Accessed 7/6/2017}
 
-\bibitem{bgref2}
+\bibitem{bgref1}
 \url{http://people.sabanciuniv.edu/berrin/cs512/reading/mao-NN-tutorial.pdf}
 \textbf{A.K Jain, J. Mao \& K. Mohiuddin, Michigan Stage University}
 Artificial Neural Networks: A Tutorial
+\\\textit{Accessed 7/6/2017}
 
-\bibitem{bgref3}
+\bibitem{bgref2}
 \url{http://www.glyn.dk/download/Synopsis.pdf}
 \textbf{F. Nelson}
 Neural Networks - Algorithms and Applications
+\\\textit{Accessed 7/6/2017}
 
-\bibitem{bgref4}
+\bibitem{bgref3}
 \url{http://robotics.hobbizine.com/arduinoann.html}
 \textbf{Author Unknown, Hobbizine}
 A Neural Network for Arduino
+\\\textit{Accessed 7/6/2017}
 
-\bibitem{bgref5}
+\bibitem{bgref4}
 \url{http://www.cs.bham.ac.uk/~jxb/INC/nn.html}
 \textbf{J.A. Bullinaria, School of Computer Science, University of Birmingham}
 John Bullinaria's Step by Step Guide to Implementing a Neural Network in C
+\\\textit{Accessed 7/6/2017}
 
-\bibitem{bgref5b}
+\bibitem{bgref5}
 Looking specifically at backpropagation, D.E. Rumelhart, G.E. Hinton and R.J. Williams were working on back propagation in neural networks in 1986 (see \url{https://www.iro.umontreal.ca/~vincentp/ift3395/lectures/backprop_old.pdf}), although much of their work was based on the earlier work of others, in particular Paul Werbos. 
-The original Apple Macintosh, released in 1984, had a 7.83MHz processor and 128KB of RAM. (source: \url{http://oldcomputers.net/macintosh.html}). For comparison, the Arduino 101 I am using runs at 32MHz, and 196KB of Flash memory, although it only has 24KB of SRAM. (source: \url{https://www.arduino.cc/en/Main/ArduinoBoard101}).
+The original Apple Macintosh, released in 1984, had a 7.83MHz processor and 128KB of RAM. (source: \url{http://oldcomputers.net/macintosh.html}, \textit{accessed 7/6/2017}
+). For comparison, the Arduino 101 I am using runs at 32MHz, and 196KB of Flash memory, although it only has 24KB of SRAM. (source: \url{https://www.arduino.cc/en/Main/ArduinoBoard101}, \textit{accessed 7/6/2017}).
 
 If devices such as smartphones are considered, the superiority in power is obvious.
 
@@ -611,105 +793,303 @@ If devices such as smartphones are considered, the superiority in power is obvio
 \url{https://www-ssl.intel.com/content/www/us/en/wearables/wearable-soc.html}
 \textbf{Intel}
 Intel Curie Module home page
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref7}
 \url{https://www.bluetooth.com/specifications/bluetooth-core-specification}
 \textbf{Bluetooth}
 Bluetooth core specification
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref8}
 \url{https://www.fitbit.com/uk/smarttrack}
 \textbf{Fitbit}
 Fitbit SmartTrack Auto Exercise Recognition
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref9}
 \url{https://www.android.com/intl/en_uk/wear/}
 \textbf{Google}
 Android Wear home page
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref10}
 \url{https://www.google.com/fit/}
 \textbf{Google}
 Google Fit home page
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref11}
 \url{http://optimize.fitness}
 \textbf{Optimize Fitness}
 Optimize Fitness home page
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref12}
 \url{https://boltt.com/}
 \textbf{Boltt}
 Boltt home page
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref13}
 \url{http://www.actofit.com/}
 \textbf{Actofit Wearables}
 Actofit home page
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref14}
 \url{https://www.indiegogo.com/projects/actofit-redefining-fitness-tracking--3#/}
 \textbf{Indiegogo}
 Indiegogo campaign page for Actofit
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref15}
 \url{http://focusmotion.io/}
 \textbf{Focus Ventures}
 FocusMotion home page
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref16}
 \url{https://www.nerdfitness.com/blog/proper-push-up/}
 \textbf{S. Kamb, Nerd Fitness}
 How to do a Proper Push Up
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref17}
 \url{https://breakingmuscle.com/learn/pimp-your-push-up-3-common-mistakes-and-5-challenging-variations}
 \textbf{N. Tumminello, Breaking Muscle}
 Pimp Your Push Up: 3 Common Mistakes And 5 Challenging Variations
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref18}
 \url{https://www.youtube.com/watch?v=Eh00_rniF8E}
 \textbf{S. Malin}
 How to Do a Push Up Correctly
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref19}
 \url{https://www.livestrong.com/article/487008-how-to-do-a-correct-sit-up/}
 \textbf{A. Cespedes, Livestrong.com}
 How to Do a Correct Sit-Up
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref20}
 \url{http://www.military.com/military-fitness/fitness-test-prep/proper-technique-for-curl-ups}
 \textbf{S. Smith, Military.com}
 The Proper Technique for Curl-ups
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref21}
 \url{http://www.mensfitness.com/weight-loss/burn-fat-fast/situp}
 \textbf{N. Green, Men's Fitness}
 The Situp
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref22}
 \url{https://www.livestrong.com/article/539595-how-to-do-sit-ups-without-anchoring-your-feet/}
 \textbf{A. Cespedes, Livestrong.com}
 How to Do Sit-Ups Without Anchoring Your Feet
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref23}
 \url{https://www.youtube.com/watch?v=jDwoBqPH0jk}
 \textbf{M. Tapper, Howcast}
 How to Do a Sit-Up Properly
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref24}
 \url{http://www.shape.com/fitness/workouts/know-your-basics-how-do-lunge}
 \textbf{POPSUGAR Fitness}
 Know Your Basics: How to Do a Lunge
+\\\textit{Accessed 7/6/2017}
 
 \bibitem{bgref25}
 \url{https://www.youtube.com/watch?v=jzbXc2OmRMk}
 \textbf{30 Day Fitness Challenges}
 How To Do The lunge Exercise
+\\\textit{Accessed 7/6/2017}
 
-\bibitem{bgref26}
+% Design and Specification references (dsref#)
+
+\bibitem{dsref0}
+\url{https://www-ssl.intel.com/content/dam/support/us/en/documents/boardsandkits/curie/intel-curie-module-datasheet.pdf}
+\textbf{Intel}
+Intel Curie Module Datasheet
+\\\textit{Accessed 10/6/17}
+
+\bibitem{dsref1}
+\url{https://developer.android.com/about/versions/android-4.3.html#Wireless}
+\textbf{Google}
+Android 4.3 API Guide
+\\\textit{Accessed 10/6/17}
+
+% Project Plan and Management references (ppref#)
+
+\bibitem{ppref0}
+\url{https://git-scm.com/}
+\textbf{Git }
+Git home page
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref1}
+\url{https://www.atlassian.com/git/tutorials/comparing-workflows#gitflow-workflow}
+\textbf{Author unknown, Atlassian}
+Comparing Workflows
+\\textit{Accessed 8/6/17}
+
+\bibitem{ppref2}
+\url{https://github.com/}
+\textbf{Github Inc}
+Github home page
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref3}
+\url{https://github.com/walrus/walrus}
+\textbf{D. Clay ('walrus')}
+WALRUS (project) Github repository
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref4}
+\url{https://isocpp.org/}
+\textbf{Standard C++ Foundation}
+Isocpp home page
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref5}
+\url{https://isocpp.org/wiki/faq/cpp11}
+\textbf{Standard C++ Foundation}
+C++11 Overview and FAQ
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref6}
+\url{https://github.com/philsquared/Catch}
+\textbf{P. Nash ('philsquared')}
+Catch Github repository
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref7}
+\url{https://www.arduino.cc/en/Reference/HomePage}
+\textbf{Arduino AG}
+Arduino Language Reference
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref8}
+\url{https://www.arduino.cc/en/Hacking/BuildProcess}
+\textbf{Arduino AG}
+Arduino Build Process
+\\\textit{Accessed 8/6/17}
+
+
+\bibitem{ppref9}
+\url{http://www.arduinolibraries.info/types/official}
+\textbf{Arduino Library List}
+Official Libraries
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref10}
+\url{https://www.arduino.cc/en/Reference/CurieIMU}
+\textbf{Arduino AG / Intel}
+CurieIMU Reference
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref11}
+\url{https://www.arduino.cc/en/Reference/CurieBLE}
+\textbf{Arduino AG / Intel}
+CurieBLE Reference
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref12}
+\url{https://www.python.org/}
+\textbf{The Python Software Foundation}
+Python home page
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref13}
+\url{https://docs.python.org/2/library/curses.html#module-curses}
+\textbf{The Python Softwaer Foundation}
+Curses documentation home
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref14}
+\url{https://developer.android.com/guide/index.html}
+\textbf{Google}
+Introduction to Android
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref15}
+\url{https://source.android.com/devices/tech/dalvik/}
+\textbf{Google}
+ART and Dalvik
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref16}
+\url{https://gcc.gnu.org/projects/cxx-status.html#cxx11}
+\textbf{The GNU Project}
+C++11 Support in GCC
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref17}
+\url{https://gcc.gnu.org/gcc-6/}
+\textbf{The GNU Project}
+GCC 6 Release Series
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref18}
+\url{https://www.arduino.cc/en/Main/Software}
+\textbf{Arduino AG}
+Arduino main software page
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref19}
 \url{}
 \textbf{}
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref20}
+\url{}
+\textbf{}
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref21}
+\url{}
+\textbf{}
+\\\textit{Accessed 8/6/17}
+
+
+\bibitem{ppref22}
+\url{}
+\textbf{}
+\\\textit{Accessed 8/6/17}
+
+\bibitem{ppref23}
+\url{}
+\textbf{}
+\\\textit{Accessed 8/6/17}
+
+
+\bibitem{ppref24}
+\url{}
+\textbf{}
+\\\textit{Accessed 8/6/17}
+
+\bibitem{}
+\url{}
+\textbf{}
+\\\textit{Accessed 8/6/17}
+
+% Evaluation references (evref#)
+
+\bibitem{}
+\url{}
+\textbf{}
+
+
+% Conclusions and future work references (fwref#)
+
+\bibitem{}
+\url{}
+\textbf{}
+\\\textit{}
 
 \end{thebibliography}
 
