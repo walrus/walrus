@@ -232,7 +232,11 @@ Individual project 'diary'
     Some work on referencing
     
 10/6/17
-    Work on design
+    Start design + spec section
 
 11/6/17
-    Work on design
+    Work on design + spec section
+
+12/6/17
+    Work on design + spec section
+    Start on NN spec section
