@@ -129,7 +129,7 @@ Another useful reference has been \textit{Neural Networks - Algorithms and Appli
 
 \subsection{ArduinoANN}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-My neural network implementation is based on \textit{ArduinoANN}\cite{bgref3}, a C implementation of a two layer feed-forward backpropogation network. 
+My neural network implementation is based on \textit{ArduinoANN}\cite{bgref3}, a C implementation of a two layer feed-forward backpropagation network. 
 
 ArduinoANN itself draws heavily on \textit{John Bullinaria's Step by Step Guide to Implementing a Neural Network in C}\cite{bgref4}.
 
@@ -258,7 +258,34 @@ This video\cite{bgref25} illustrates good lunge technique.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Design \& Specification}
+\section{Design \& Specification - Neural Network Library}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+I will be creating a C++ class-based library to facilitate the implementation of two layer feed-forward backpropagation neural networks on embedded systems, based on \todo[inline]{ArduinoANN (link to background).}
+
+The library is designed to enable a network to be trained on a (more powerful) desktop system, and then uploaded to the embedded system for use.
+
+Because of this, there are two core Network classes: \lstinline{Network_L} (which can be found in the file \lstinline{network-linux.hpp}) supports training and makes more extensive use of RAM, while \lstinline{Network_A} (found in the file \lstinline{network-arduino.hpp} cannot be trained and is designed to minimise RAM usage, instead storing as much data as possible in Program Memory.
+
+Functions for writing and reading network configurations to and from disk can be found in the file \lstinline{network-saveload-linux.hpp}
+
+\subsection{Language \& Dependencies}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+All three files are written to conform to the C++11 standard\cite{nnref0}. The two Linux-based files further depend on the C++ Standard Template Library, in particular the \lstinline{std::vector} data structure.
+
+The Arduino file lacks the dependency on the STL, but itself depends on the \textit{pgmspace} library.\cite{nnref1}
+
+\subsection{API}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{List public methods}
+
+\subsection{Network Configuration File Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{Specify network config file format. Include link to examples}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Design \& Specification - Exercise Classifier}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \todo[inline]{Overall design. Note different versions, and throughout note differences due to different versions. This is basically a specification}
@@ -328,6 +355,10 @@ My phone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
 \subsection{Data Capture \& Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \todo[inline]{Data capture and *format specification*. Talk about Curie's IMU, and how to turn the stream of inputs into the desired format for the Neural network}
+
+\subsubsection{Microcontroller Placement}
+
+\todo[inline]{Where to pt the microcontroller while recording...}
 
 \subsubsection{Log File Specification (Supervised)}
 
@@ -1018,7 +1049,22 @@ Know Your Basics: How to Do a Lunge
 How To Do The lunge Exercise
 \\\textit{Accessed 7/6/2017}
 
-% Design and Specification references (dsref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Neural Network library references (nnref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibitem{nnref0}
+\url{https://isocpp.org/wiki/faq/cpp11}
+\textbf{Standard C++ Foundation}
+C++11 Overview and FAQ
+\\\textit{Accessed 8/6/17}
+
+\bibitem{nnref1}
+\url{http://www.nongnu.org/avr-libc/user-manual/group__avr__pgmspace.html}
+\textbf{avr-libc contributors (see \url{http://www.nongnu.org/avr-libc/user-manual/index.html})}
+Program Space Utilities
+\\\textit{Accessed 12/6/17}
+
+
+% Design and Specification references (dsref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibitem{dsref0}
 Figure calculated as follows: On an Arduino 101 (32MHz clock speed), classification took an average of 658 microseconds, so the minimum clock speed necessary is given by 32 * 0.658 / 100 = 211 KHz
