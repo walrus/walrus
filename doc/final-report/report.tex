@@ -665,26 +665,184 @@ Setter for \lstinline{momentum}
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \textbf{Signature:} \begin{lstlisting}
-
+Network_A();
 \end{lstlisting}
 
 \textbf{Description: }
+Constructs a new instance of \lstinline{Network_A}, with the nodes in RAM. Relies on the presence of the network configuration in program memory.
 
-\textbf{Parameters: } 
+\textbf{Parameters: } None
 
 \textbf{Returns: }
+A pointer to the newly initialised \lstinline{Network_A}.
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \textbf{Signature:} \begin{lstlisting}
-
+std::string writeReport();
 \end{lstlisting}
 
 \textbf{Description: }
+Returns information about the current state of the network for display purposes.
 
-\textbf{Parameters: } 
+\textbf{Parameters: } None
 
 \textbf{Returns: }
+A string which contains the current training cycle and error rate of the network.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float * classify(float inputs[]);
+\end{lstlisting}
+\textbf{Description: }
+Attempts to classify the given set of inputs using the network.
+
+\textbf{Parameters: }
+
+\lstinline{inputs} The set of inputs to the network. Must contain \lstinline{numInputNodes} elements.
+
+\textbf{Returns: }
+A pointer to the array containing the values of the output nodes after classification. 
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+int getNumInputNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{numInputNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The number of nodes in the input layer.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+int getNumHiddenNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{numHiddenNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The number of nodes in the hidden layer.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+int getNumOutputNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{numOutputNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The number of nodes in the output layer.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getLearningRate() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{learningRate}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current network learning rate.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getMomentum() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{momentum}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current network momentum.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getInitialWeightMax() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{initialWeightMax}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The initial weight maximum value.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+long getTrainingCycle() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{trainingCycle}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current training cycle
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getAccumulatedInput() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{accumulatedInput}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current value of the network's accumulated input.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const float * getHiddenNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{hiddenNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A (const) pointer to the array containing the current values of the hidden nodes.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const float * getOutputNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{outputNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A (const) pointer to the array containing the current values of the output nodes.
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -693,26 +851,36 @@ Setter for \lstinline{momentum}
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \textbf{Signature:} \begin{lstlisting}
-
+Network_L *loadNetwork(std::string filename);
 \end{lstlisting}
 
 \textbf{Description: }
+Reads the network configuration found in the file \lstinline{filename}, and initialises a new \lstinline{Network_L} with the configuration.
 
 \textbf{Parameters: } 
 
+\lstinline{filename} The filename of the configuration file to load. 
+
 \textbf{Returns: }
+A pointer to the newly initialised \lstinline{Network_L}. If \lstinline{filename} is not a valid configuration file, the function will return \lstinline{Null}
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \textbf{Signature:} \begin{lstlisting}
-
+int saveNetwork(std::string filename, Network_L *network);
 \end{lstlisting}
 
 \textbf{Description: }
+Saves the given network's configuration to the given file, if necessary overwriting the existing contents of the file. 
 
 \textbf{Parameters: } 
+ 
+\lstinline{filename} The file to save the configuration to. If the file exists, it will be overwritten.
+
+\lstinline{*network} The network to save the configuration of. 
 
 \textbf{Returns: }
+0 on success, or 1 if file saving was unsuccessful.
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
