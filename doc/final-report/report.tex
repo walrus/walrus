@@ -265,7 +265,7 @@ I will be creating a C++ class-based library to facilitate the implementation of
 
 The library is designed to enable a network to be trained on a (more powerful) desktop system, and then uploaded to the embedded system for use.
 
-Because of this, there are two core Network classes: \lstinline{Network_L} (which can be found in the file \lstinline{network-linux.hpp}) supports training and makes more extensive use of RAM, while \lstinline{Network_A} (found in the file \lstinline{network-arduino.hpp} cannot be trained and is designed to minimise RAM usage, instead storing as much data as possible in Program Memory.
+Because of this, there are two core Network classes: \lstinline{Network_L} (which can be found in the file \lstinline{network-linux.hpp}) supports training and makes more extensive use of RAM, while \lstinline{Network_A} (found in the file \lstinline{network-arduino.hpp} cannot be trained and is designed to minimise RAM usage, instead storing as much data as possible in Program Memory. If the network is small enough, and an implementation of the STL is available, \lstinline{Network_L} can be run on a microcontroller.
 
 Functions for writing and reading network configurations to and from disk can be found in the file \lstinline{network-saveload-linux.hpp}
 
@@ -275,9 +275,446 @@ All three files are written to conform to the C++11 standard\cite{nnref0}. The t
 
 The Arduino file lacks the dependency on the STL, but itself depends on the \textit{pgmspace} library.\cite{nnref1}
 
-\subsection{API}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{API Reference}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{List public methods}
+\subsubsection{Network\_L API}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting} 
+Network_L(int numInputNodes,
+          int numHiddenNodes,
+          int numOutputNodes,
+          float learningRate,
+          float momentum,
+          float initialWeightMax,
+          long trainingCycle);
+\end{lstlisting}
+
+\textbf{Description: }
+Constructs a new instance of \lstinline{Network_L} in memory, initialising all nodes to zero and all weights to \lstinline{|weight| < initialWeightMax}
+
+\textbf{Parameters: }
+
+\lstinline{numInputNodes} The number of nodes in the input layer. Cannot be changed after initialisation.
+
+\lstinline{numHiddenNodes} The number of nodes in the hidden layer. Cannot be changed after initialisation.
+
+\lstinline{numOutputNodes} The number of nodes in the output layer. Cannot be changed after initialisation.
+
+\lstinline{learningRate} The factor by which the backpropagated error is multiplied. A lower learning rate results in slower learning, but is less prone to over correction and oscillating weight changes. The learning rate should be in the range \lstinline{0 < learningRate < 1}.
+
+\lstinline{momentum} The momentum term, which helps smooth out weight changes and avoid local minima. Must be in the range \lstinline{0 =< momentum < 1}. Setting momentum to zero is the same as backpropagation without momentum.
+
+\lstinline{initialWeightMax} Defines the maximum absolute value of weights upon initialisation. All weights will be initialised to \lstinline{|weight| < initialWeightMax} 
+
+\textbf{Returns}
+A pointer to the newly initialised \lstinline{Network_L}.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float trainNetwork(std::vector<float> inputs,
+                   std::vector<float> targets);
+\end{lstlisting}
+
+\textbf{Description: }
+Trains the network on the given sets of inputs and targets using backpropagation.
+
+\textbf{Parameters: }
+
+\lstinline{inputs} The set of inputs to the network. Must contain \lstinline{numInputNodes} elements.
+
+\lstinline{targets} The set of targets for the network to compare output to. Must contain \lstinline{numOutputNodes} elements.
+
+\textbf{Returns: }
+The cumulative error of the network before applying backpropagation (the sum of the differences between the outputs and the targets).
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+std::string writeReport();
+\end{lstlisting}
+
+\textbf{Description: }
+Returns information about the current state of the network for display purposes.
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A string which contains the current training cycle and error rate of the network.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+std::vector<float> classify(std::vector<float> inputs);
+\end{lstlisting}
+
+\textbf{Description: }
+Attempts to classify the given set of inputs using the network. Unlike \lstinline{trainNetwork()}, will not modify the state of the network.
+
+\textbf{Parameters: }
+
+\lstinline{inputs} The set of inputs to the network. Must contain \lstinline{numInputNodes} elements.
+
+\textbf{Returns: }
+A vector containing a copy of the values of the output nodes after classification.
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+void loadWeights(std::vector<std::vector<float>> hiddenWeights,
+                 std::vector<std::vector<float>> outputWeights);
+\end{lstlisting}
+
+\textbf{Description: }
+Replaces the network's weights with the values in the given vectors.
+
+\textbf{Parameters: }
+
+\lstinline{hiddenWeights} An \lstinline{m} x \lstinline{n} vector of vectors containing the values to replace the hidden weights with, where \lstinline{m = numInputNodes + 1} and \lstinline{n = numHiddenNodes}.
+
+\lstinline{outputWeights} An \lstinline{m} x \lstinline{n} vector of vectors containing the values to replace the output weights with, where \lstinline{m = numHiddenNodes + 1} and \lstinline{n = numOutputNodes}.
+
+\textbf{Returns: } Void.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+int getNumInputNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{numInputNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The number nodes in the input layer.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+int getNumHiddenNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{numHiddenNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The number nodes in the hidden layer.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+int getNumOutputNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{numOutputNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The number nodes in the output layer.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getLearningRate() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{learningRate}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current network learning rate.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getMomentum() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{momentum}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current network momentum.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getInitialWeightMax() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{initialWeightMax}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The initial weight maximum value.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+long getTrainingCycle() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{trainingCycle}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current training cycle
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getRandomFloat() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{randomFloat}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current value of \lstinline{randomFloat}, which will be in the range \lstinline{-1.0 < randomFloat < 1.0}
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getErrorRate() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{errorRate}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current value of the network error rate.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+float getAccumulatedInput() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{accumulatedInput}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+The current value of the network's accumulated input.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const std::vector<float> getHiddenNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{hiddenNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A \textit{copy} of the current value of the network's hidden nodes.
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const std::vector<float> getOutputNodes() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{outputNodes}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A \textit{copy} of the current value of the network's output nodes.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const std::vector<float> getHiddenNodesDeltas() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{hiddenNodesDeltas}, the magnitude of the difference between the target and the actual outputs for each hidden node.
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A \textit{copy} of the current value of the network's hidden node deltas,
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const std::vector<float> getOutputNodesDeltas() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{outputNodesDeltas}, the magnitude of the difference between the target and the actual outputs for each output node.
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A \textit{copy} of the current value of the network's output node deltas.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const std::vector<std::vector<float>> getHiddenWeights() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{hiddenWeights}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A \textit{copy} of the current value of the network's hidden weights.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const std::vector<std::vector<float>> getOutputWeights() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{outputWeights}
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A \textit{copy} of the current value of the network's output weights.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const std::vector<std::vector<float>> getHiddenWeightsChanges() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{hiddenWeightsChanges}, the change to be applied to each hidden weight to compensate for it's error. Depending on when this function is called, the change may already have been applied.
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A \textit{copy} of the current value of the network's hidden weights changes.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+const std::vector<std::vector<float>> getOutputWeightsChanges() const;
+\end{lstlisting}
+
+\textbf{Description: }
+Getter for \lstinline{outputWeightsChanges}, the change to be applied to each output weight to compensate for it's error. Depending on when this function is called, the change may already have been applied.
+
+\textbf{Parameters: } None
+
+\textbf{Returns: }
+A \textit{copy} of the current value of the network's hidden weights changes.
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+void setLearningRate(float learningRate);
+\end{lstlisting}
+
+\textbf{Description: }
+Setter for \lstinline{learningRate}
+
+\textbf{Parameters: }
+
+\lstinline{learningRate} The new value to set the network's learning rate to.
+
+\textbf{Returns: } Void
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+void setMomentum(float momentum);
+\end{lstlisting}
+
+\textbf{Description: }
+Setter for \lstinline{momentum}
+
+\textbf{Parameters: }
+
+\lstinline{learningRate} The new value to set the network's momentum to.
+
+\textbf{Returns: } Void
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Network\_A API}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+
+\end{lstlisting}
+
+\textbf{Description: }
+
+\textbf{Parameters: } 
+
+\textbf{Returns: }
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+
+\end{lstlisting}
+
+\textbf{Description: }
+
+\textbf{Parameters: } 
+
+\textbf{Returns: }
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Save/Load API}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+
+\end{lstlisting}
+
+\textbf{Description: }
+
+\textbf{Parameters: } 
+
+\textbf{Returns: }
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{Signature:} \begin{lstlisting}
+
+\end{lstlisting}
+
+\textbf{Description: }
+
+\textbf{Parameters: } 
+
+\textbf{Returns: }
+
+\hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Network Configuration File Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
