@@ -928,13 +928,15 @@ Examples of valid configuration files can be found \todo[inline]{in the appendic
 
 The exercise classifier will be a multi-device system that uses a neural network on a microcontroller to classify exercises the user performs, then sends the classification over Bluetooth to a phone for display. The network will be trained on a desktop computer.
 
+\todo[inline]{diagram?}
+
 \subsection{Hardware}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This section details the requirements of the three main pieces of hardware needed to complete the project. It includes both the specifications of the hardware I will use, and the minimum specifications of any alternative hardware.
 
 \subsubsection{Microcontroller}
 
-The requirements of the microcontroller for this project are as follows:
+The requirements of the microcontroller for this project are the most stringent, and are as follows:
 
 \todo[inline]{finish}
 
@@ -960,11 +962,15 @@ For my implementation, I used an \textbf{Arduino 101} board, which contains an I
 \item[Connectivity] USB
 \end{description}
 
+\todo[inline]{picture}
+
 \subsubsection{Microcontroller Attachment}
 
 To attach the microcontroller to the user's body, it will need some form of attachment. For my implementation, I chose to attach the Arduino to a belt with a wide range of possible lengths. This belt was then passed around the wearer's upper torso and secured. 
 
-\todo[inline]{Link to spec which details where it will be (below) PICTURES}
+\todo[inline]{Link to spec which details where it will be (below)}
+
+\todo[inline]{picture}
 
 \subsubsection{Linux Computer}
 
@@ -980,11 +986,15 @@ The requirements of the computer are not onerous, and most of them are standard 
 
 My machine, a 2013 Lenovo IdeaPad running Ubuntu 16.04, fulfills all of the above requirements.
 
+\todo[inline]{picture}
+
 \subsubsection{Android Phone}
 
 Bluetooth Low Energy support was added in Android 4.3 (Jelly Bean MR2), with the Level 18 API.\cite{dsref5} Any phone running Android 4.3 or later, and which supports Bluetooth Low Energy, will suffice for this project.
 
 My phone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
+
+\todo[inline]{picture}
 
 \subsection{Microcontroller Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1211,11 +1221,23 @@ As an Android project, the architecture of the program is relatively complex. Al
 
 \subsection{Data Capture \& Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Data capture and *format specification*. Talk about Curie's IMU, and how to turn the stream of inputs into the desired format for the Neural network}
-
 \subsubsection{Microcontroller Placement}
 
-\todo[inline]{Where to put the microcontroller while recording...}
+In order to ensure that the results are consistent, the microcontroller must always be calibrated and attached in the same way.
+
+Because calibration requires no movement, it is best to place the microcontroller down on a flat surface for calibration, with the top of the board orientated upwards like so
+
+\todo[inline]{picture}
+
+The board must then be attached in the same place for each exercise. This placement can vary as long as it is always the same for the exercise. I chose the following placements:
+
+For the press ups and lunges, on the back between the shoulder blades with the belt tight up under the armpits, and the USB port orientated to the left (the writing on the board is the correct way up). This keeps the microcontroller well out of the way, and prevents the possibility of damaging it while doing press ups.
+
+\todo[inline]{picture}
+
+For the sit ups, because placing it on the back would potentially cause damage, I placed it on the front of the user's torso just below the collarbone, with the belt once again tight up under the armpits and the USB port pointing to the left (as before, the writing should be the correct way up).
+
+\todo[inline]{picture}
 
 \subsubsection{Log File Specification (Supervised)}
 
@@ -1289,10 +1311,6 @@ The network will be trained on \todo{number} examples (\todo{breakdown of number
 
 For information on how the neural network will work, see the section on the neural network library. \todo[inline]{link}
 
-\subsection{Training of Neural Network}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{How to train neural network on computer (and to get the network weights etc back onto the Curie}
-
 \subsection{Classification by the Neural Network}%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Having returned a set of output values from the classifier, the following algorithm will be used to classify the result:
@@ -1309,7 +1327,7 @@ for each value v in vs \{
 return classificationIndex
 \end{lstlisting}
 
-Where index(v,vs) is a function that returns the index of v in the set vs.
+Where \lstinline{index(v,vs)} is a function that returns the index of v in the set vs.
 
 \todo[inline]{include code?}
 
