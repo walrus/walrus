@@ -988,7 +988,7 @@ My phone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
 
 \subsection{Microcontroller Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%
 
-There are four different programs to be run on the microcontroller, each with an accompanying program running on the phone or computer.
+There are four different programs to be run on the microcontroller, each with an accompanying program running on the phone or computer. Each program can be found in a folder of the same name, within the folder \lstinline{curie/src/}.
 
 \subsubsection{logger-supervised}
 
@@ -1048,15 +1048,128 @@ This structure will also implicitly include the implementation file for the netw
 
 When using this program, the accompanying program \lstinline{ble-classifier} must be run on the phone. \todo{link to section}
 
-\todo[inline]{Software architecture \& UML diagrams etc for microcontroller}
-
 \subsection{Linux Computer Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Utility scripts}
+There are a variety of programs for the computer, broadly split into four parts:
 
-\todo[inline]{put some of these (testing) in project management?}
+\begin{itemize}
+\item C++ programs for creating and training networks using the neural network library
+\item Python scripts for logging and normalising data ready for training
+\item Python scripts to compile the C++ programs and all their dependencies easily. These are noted in the entries for their respective programs.
+\item Unit tests, runners and scripts to compile code for unit testing. These are discussed in the Project Management section \todo{link}
+\end{itemize}
 
-\todo[inline]{Software architecture \& UML diagrams etc for computer}
+\subsubsection{new-network}
+
+This program is used to create a new neural network with the configuration specified in the command line arguments, and then save the network configuration to the file with filename specified in the arguments.
+
+The arguments are as follows (in order:
+
+\lstinline{filename} The file in which to store the network configuration. Can be any valid textual file type, but should be a \lstinline{.h} file. If the file already exists, the program will exit without creating the new network configuration.
+
+The other six arguments contain the parameters which control the network configuration, as specified in the \lstinline{Network_L} constructor.
+
+\lstinline{nin} The number of nodes to create in the input layer.
+
+\lstinline{nhn} The number of nodes to create in the hidden layer.
+
+\lstinline{non} The number of nodes to create in the output layer.
+
+\lstinline{lr} The learning rate of the network.
+
+\lstinline{m} The momentum term of the network.
+
+\lstinline{iwm} The initial maximum of the weights in the network
+
+The main code for this program will be contained in the file \lstinline{new-network.cpp}, in the folder \lstinline{linux/src/}. It depends on the two header files \lstinline{network-linux.hpp} and \lstinline{network-saveload-linux.hpp} and implicitly their implementation files \lstinline{network-linux.cpp} and \lstinline{network-saveload-linux.cpp} respectively, all of which are in the folder \lstinline{network/src/}.
+
+Because of these dependencies, the script \lstinline{compile-new-network} in the folder \lstinline{linux/} will be used to compile the new network program into the executable \lstinline{new-network}, for ease of use.
+
+\subsection{train}
+
+This program is used to load a given neural network and then train it on the training data in the given file or directory. The arguments are as follows (in order):
+
+\lstinline{config_filename} The name of the file containing the network configuration. If the file does not exist or is not a valid configuration file, the program will exit.
+
+\lstinline{[-d]} This flag indicates that the program should recursively scan the directory and train the network on every valid normalised log file in the directory. 
+
+\lstinline{dirname|log_filename} If the \lstinline{-d} flag is present, then the third argument is the name of the directory to scan. Otherwise, it is the name of the file containing the data to train on. If the data file is not valid, it will not be used for training.
+
+The main code for this program will be contained in the file \lstinline{train.cpp}, in the folder \lstinline{linux/src/}. It depends on the two header files \lstinline{network-linux.hpp} and \lstinline{network-saveload-linux.hpp} and implicitly their implementation files \lstinline{network-linux.cpp} and \lstinline{network-saveload-linux.cpp} respectively, all of which are in the folder \lstinline{network/src/}. It further depends on the training set library contained in \lstinline{training-set.hpp} and \lstinline{training-set.cpp}, both found in the same folder as the training program, \lstinline{linux/src}
+
+Because of these dependencies, the script \lstinline{compile-train} in the folder \lstinline{linux/} will be used to compile the training program into the executable \lstinline{train}, for ease of use.
+
+\subsubsection{training-set library}
+
+This code, found in the files \lstinline{training-set.hpp} and \lstinline{training-set.cpp} within the folder \lstinline{linux/src/} define the class \lstinline{TrainingSet} and a single function: \lstinline{TrainingSet *loadTrainingSet(std::string filename);}.
+
+This function takes as an argument a filename, which must refer to a properly normalised log file, and returns a pointer to a new \lstinline{TrainingSet}, which is used by the training program to feed inputs and targets to the neural network.
+
+Keeping this functionality separate enables the precise format of the normalised log files to be decoupled from the logic of training the network.
+
+\subsubsection{log-data-supervised}
+
+This script is used to receive accelerometer data over a Serial connection and save it to a given log file, with start and end markings input by the supervisor.
+
+After opening a serial connection to the microcontroller and opening a file to log to, the program writes all the values it is sent to the log file and to screen, along with additional lines on specific key presses by the supervisor, which are as follows:
+
+\begin{description}
+\item[s] \lstinline|Repetition Start\n|
+\item[g] \lstinline|Repetition End\n 1\n|
+\item[h] \lstinline|Repetition End\n 0\n|
+\end{description}
+
+Additionally, on the key press \textbf{x}, the logging script will stop logging and close the file.
+
+The single argument is as follows:
+
+\lstinline{filename} The name of the log file to write to, without the \lstinline{.txt} suffix which will be added by the script. If it already exists, the file will be appended to rather than replaced.
+
+This script is entirely contained in the file \lstinline{log-data-supervised} in the project root directory, and has no dependencies on other project code.
+
+It should be run in conjunction with the \lstinline{logger-supervised} program on the microcontroller.
+
+\subsubsection{log-data-unsupervised}
+
+This script is used to receive accelerometer data over a Serial connection and save it to a given log file, with start and end markings input by the microcontroller.
+
+After opening a serial connection to the microcontroller and opening a file to log to, the program writes all the values it is sent to the log file and to screen, and will exit on any key press.
+
+The single argument is as follows:
+
+\lstinline{filename} The name of the log file to write to, without the \lstinline{.txt} suffix which will be added by the script. If it already exists, the file will be appended to rather than replaced.
+
+This script is entirely contained in the file \lstinline{log-data-unsupervised} in the project root directory, and has no dependencies on other project code.
+
+It should be run in conjunction with the \lstinline{logger-unsupervised} program on the microcontroller.
+
+\subsubsection{normalise-data}
+
+This program is used to transform the 'raw' log files saved by \lstinline{log-data-supervised} and \lstinline{log-data-unsupervised} into a normalised format suitable for training the neural network on. 
+
+It duplicates or removes log entries as necessary until each exercise has the same number of entries as there are nodes in the given input layer, and then saves the sum of the raw values to the normalised log file, along with the exercise delimiters.
+
+A log file with the filename \lstinline{name.txt} will receive the corresponding normalised log file \lstinline{name_normalised.txt}.
+
+The arguments are as follows:
+
+\lstinline{[-d | -r]} If the \lstinline{-d} flag is included, then the given directory should be normalised, while if the \lstinline{-r} is included the given directory and all it's subdirectories should be normalised. Only \lstinline{.txt} files, which don't include the suffix \lstinline{_normalised.txt} in their filename will be normalised.
+
+\lstinline{filename | dirname} If either of the two flags are present then this argument contains the name of the directory to scan, otherwise it contains the name of the file to normalise. If the file is not a \lstinline{.txt} file or the filename contains the \lstinline{_normalised.txt} suffix then it will not be normalised.
+
+\lstinline{readings} The number of readings to normalise to, which must be equal to the number of nodes in the input layer of the network being normalised for.
+
+\lstinline{target} The zero indexed index of the desired target in the output layer of the network being normalised for. 
+
+For example, if the network has three output nodes representing A, B and C respectively, then a value of 1 would write the targets as 010, when normalising a 'good rep', while a value of 2 would write them as 001.
+
+This script is entirely contained in the file \lstinline{normalise-data} in the project root directory, and has no dependencies on other project code.
+
+It should be run on files created by the \lstinline{log-data-supervised} and \lstinline{log-data-unsupervised} scripts.
+
+\subsubsection{monitor}
+
+This program simply opens a Serial connection and prints any input over said connection to the screen. It will exit on any key press.
 
 \subsection{Android Phone Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%%
 
