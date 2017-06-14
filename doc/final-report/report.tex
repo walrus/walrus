@@ -1083,6 +1083,8 @@ The other six arguments contain the parameters which control the network configu
 
 The main code for this program will be contained in the file \lstinline{new-network.cpp}, in the folder \lstinline{linux/src/}. It depends on the two header files \lstinline{network-linux.hpp} and \lstinline{network-saveload-linux.hpp} and implicitly their implementation files \lstinline{network-linux.cpp} and \lstinline{network-saveload-linux.cpp} respectively, all of which are in the folder \lstinline{network/src/}.
 
+\todo[inline]{UML diagram/dependency diagram}
+
 Because of these dependencies, the script \lstinline{compile-new-network} in the folder \lstinline{linux/} will be used to compile the new network program into the executable \lstinline{new-network}, for ease of use.
 
 \subsection{train}
@@ -1096,6 +1098,8 @@ This program is used to load a given neural network and then train it on the tra
 \lstinline{dirname|log_filename} If the \lstinline{-d} flag is present, then the third argument is the name of the directory to scan. Otherwise, it is the name of the file containing the data to train on. If the data file is not valid, it will not be used for training.
 
 The main code for this program will be contained in the file \lstinline{train.cpp}, in the folder \lstinline{linux/src/}. It depends on the two header files \lstinline{network-linux.hpp} and \lstinline{network-saveload-linux.hpp} and implicitly their implementation files \lstinline{network-linux.cpp} and \lstinline{network-saveload-linux.cpp} respectively, all of which are in the folder \lstinline{network/src/}. It further depends on the training set library contained in \lstinline{training-set.hpp} and \lstinline{training-set.cpp}, both found in the same folder as the training program, \lstinline{linux/src}
+
+\todo[inline]{UML diagram/dependency diagram}
 
 Because of these dependencies, the script \lstinline{compile-train} in the folder \lstinline{linux/} will be used to compile the training program into the executable \lstinline{train}, for ease of use.
 
@@ -1173,7 +1177,37 @@ This program simply opens a Serial connection and prints any input over said con
 
 \subsection{Android Phone Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Software architecture \& UML diagrams etc for Android phone}
+There are only two programs for the phone, both connecting over Bluetooth to the microcontroller.
+
+\subsubsection{BLE-Classifier}
+
+This program displays the classifications made by the microcontroller, and keeps a tally of the number of exercised performed, which is the final 'end user' application of the project.
+
+After connecting to the microcontroller over a Bluetooth Low Energy connection, the program will display the data in the format defined in the section \todo[inline]{Data Display}
+
+As an Android project, the architecture of the program is relatively complex. All of the code for the program resides in the folder \lstinline{android/ble-classifier}. 
+
+\todo[inline]{Sanitise folder and update section. Do diagram}
+
+\subsubsection{BLE-Logger}
+
+This program receives logging data and writes it to a log file along with markers input by the supervisor, in a similar manner to the \lstinline{log-data-supervised} script for computer.
+
+After connecting to the microcontroller over a Bluetooth Low Energy connection, the program will display the the logging data. When the \lstinline{Start Logging} button is pressed, it will begin writing to file, adding the following additional lines on the given button presses:
+
+\begin{description}
+\item[Start Repetition] \lstinline|Repetition Start\n|
+\item[Finish Repetition (good)] \lstinline|Repetition End\n 1\n|
+\item[Finish Repetition (bad)] \lstinline|Repetition End\n 0\n|
+\end{description}
+
+The program will finish logging when the \lstinline{Stop Logging} button is pressed.
+
+The filename of the log file will be entered by the user prior to beginning logging.
+
+As an Android project, the architecture of the program is relatively complex. All of the code for the program resides in the folder \lstinline{android/ble-logger}. 
+
+\todo[inline]{Sanitise folder and update section. Do diagram}
 
 \subsection{Data Capture \& Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1181,7 +1215,7 @@ This program simply opens a Serial connection and prints any input over said con
 
 \subsubsection{Microcontroller Placement}
 
-\todo[inline]{Where to pt the microcontroller while recording...}
+\todo[inline]{Where to put the microcontroller while recording...}
 
 \subsubsection{Log File Specification (Supervised)}
 
