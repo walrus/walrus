@@ -886,18 +886,51 @@ Saves the given network's configuration to the given file, if necessary overwrit
 
 \subsection{Network Configuration File Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Specify network config file format. Include link to examples}
+Network configurations will be laid out in such a way that the configuration files are valid C++ header files and can be stored in Arduino program memory through the \lstinline{#include} directive.
+
+To that end, configuration files will be stored as \lstinline{.h} files.
+
+The specification for the configuration file format is as follows:
+
+\begin{itemize}
+\item One line containing the text \lstinline{#ifndef ARDUINO_CONFIG_H}
+\item One line containing the text \lstinline{#define ARDUINO_CONFIG_H}
+\item One blank line
+\item One line containing the text \lstinline{#include "avr/pgmspace.h"}
+\item One blank line
+\item One line containing the text \lstinline{const int numInputNodes = }, followed by the number of input nodes and a semicolon
+\item One line containing the text \lstinline{const int numHiddenNodes = }, followed by the number of hidden nodes and a semicolon
+\item One line containing the text \lstinline{const int numOutputNodes = }, followed by the number of output nodes and a semicolon
+\item One line containing the text \lstinline{const float learningRate = }, followed by the learning rate and a semicolon
+\item One line containing the text \lstinline{const float momentum = }, followed by the momentum and a semicolon
+\item One line containing the text \lstinline{const float initialWeightMax = }, followed by the initial maximum weight and a semicolon
+\item One blank line
+\item One line containing the text \lstinline{// TrainingCycle (not needed on Arduino): }, followed by the training cycle and a semicolon
+\item One blank line
+\item One line containing the text \lstinline|const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {|
+\item \lstinline{numInputNodes + 1} lines, each containing \lstinline{numHiddenNodes} weight values, comma separated, enclosed by curly brackets and followed by a comma.
+\item One line containing the text \lstinline|};|
+\item One blank line
+\item One line containing the text \lstinline|const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {|
+\item \lstinline{numHiddenNodes + 1} lines, each containing \lstinline{numOutputNodes} weight values, comma separated, enclosed by curly brackets and followed by a comma.
+\item One line containing the text \lstinline|;|
+\item One blank line
+\item One line containing the text \lstinline{#endif // ARDUINO_CONFIG_H}
+\item One blank line
+\end{itemize}
+
+Examples of valid configuration files can be found \todo[inline]{in the appendices (link)}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Design \& Specification - Exercise Classifier}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Overall design. Note different versions, and throughout note differences due to different versions. This is basically a specification}
+The exercise classifier will be a multi-device system that uses a neural network on a microcontroller to classify exercises the user performs, then sends the classification over Bluetooth to a phone for display. The network will be trained on a desktop computer.
 
 \subsection{Hardware}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Overview of hardware used and specifications for alternative}
+This section details the requirements of the three main pieces of hardware needed to complete the project. It includes both the specifications of the hardware I will use, and the minimum specifications of any alternative hardware.
 
 \subsubsection{Microcontroller}
 
@@ -912,6 +945,7 @@ The requirements of the microcontroller for this project are as follows:
 \item[Accelerometer] The microcontroller needs to be capable of measuring acceleration on three axes through an IMU or accelerator, either onboard or via a shield.
 \item[Bluetooth] The microcontroller needs to be capable of connecting over a Bluetooth Low Energy connection, either onboard or via a shield.
 \item[Battery] A battery capable of providing enough current for the chosen microcontroller. The Arduino 101 draws around 70 mA when processing reasonably intensely.\cite{dsref3}
+\item[Connectivity] The microcontroller must have some way of connecting to the computer, either over Bluetooth or some form of Serial connnection.
 \end{description}
 
 For my implementation, I used an \textbf{Arduino 101} board, which contains an Intel Curie module. It has the following specifications:\cite{dsref4}
@@ -923,7 +957,14 @@ For my implementation, I used an \textbf{Arduino 101} board, which contains an I
 \item[Accelerometer] 6-axis IMU
 \item[Bluetooth] Integrated BLE 
 \item[Battery] A standard 9V battery
+\item[Connectivity] USB
 \end{description}
+
+\subsubsection{Microcontroller Attachment}
+
+To attach the microcontroller to the user's body, it will need some form of attachment. For my implementation, I chose to attach the Arduino to a belt with a wide range of possible lengths. This belt was then passed around the wearer's upper torso and secured. 
+
+\todo[inline]{Link to spec which details where it will be (below) PICTURES}
 
 \subsubsection{Linux Computer}
 
@@ -947,9 +988,73 @@ My phone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
 
 \subsection{Microcontroller Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%
 
+There are four different programs to be run on the microcontroller, each with an accompanying program running on the phone or computer.
+
+\subsubsection{logger-supervised}
+
+This program will be used to log example exercises for training when someone is available to supervise. Because of this, the microcontroller program is simple.
+
+After calibration and connecting to the computer over a Serial connection, the microcontroller will sample the data from the accelerometer at 75ms intervals and transmit the raw values over Serial as a space separated, newline terminated string as follows:
+\lstinline|xvalue yvalue zvalue\n|
+
+While sending data, the microcontroller will blink an LED to indicate activity.
+
+Because of the simplicity of the program, the entirety of the code will be contained in one file called \lstinline{logger-supervised.ino}
+
+When using this program, the accompanying program \lstinline{log-data-supervised} must be run on the computer.\todo{link to section}
+
+\subsubsection{logger-unsupervised}
+
+This program will be used to log example exercises for training when no one is available to supervise. Because of this, the microcontroller program is slightly more complex than the supervised logger, as it will need to recognise the start and end of movements.
+
+After calibration and connecting to the computer over a Serial connection, the microcontroller will detect when movement begins and send a message over Serial with the following contents: \lstinline{Motion detected after X milliseconds. Logging...} where \lstinline{X} is the elapsed time since the end of the last period of motion or the start of the program.
+
+Once motion is detected, the program will sample the data from the accelerometer at 75ms intervals and transmit the raw values over Serial as a space separated, newline terminated string as follows:
+\lstinline|xvalue yvalue zvalue\n|
+
+It will continue to do this until the end of the motion is detected, at which point it will cease sampling and send another message over Serial, this time with the contents \lstinline{Motion ended after Y milliseconds. Logging...} where Y is the elapsed time in milliseconds since motion started.
+
+Because of the simplicity of the program, the entirety of the code will be contained in one file called \lstinline{logger-unsupervised.ino}
+
+When using this program, the accompanying program \lstinline{log-data-unsupervised} must be run on the computer. \todo{link to section}
+
+\subsubsection{classifier-serial}
+
+This program will be used to test the classifier without relying on a Bluetooth connection. The use of a Serial connection also allows for the values of the output nodes to be returned for analysis, rather than just the classification.
+
+After calibration and connecting to the computer over a Serial connection, the microcontroller will detect when movement begins, begin sampling from the accelerometer every 75ms and then save the sum of the raw values to a buffer. When movement ends, or the buffer is full, it will then normalise the data and attempt a classification. After classification, it will send the values of the output nodes over Serial as a space separated, newline terminated list.
+
+Because this program relies on the neural network library, it will be structured as follows:
+
+The main program will reside in \lstinline{classifier-serial.ino}. This will \lstinline{#include} the file \lstinline{network-arduino.hpp}, which will in turn \lstinline{#include} the configuration stored in \lstinline{arduino_config.h}. 
+This structure will also implicitly include the implementation file for the network, \lstinline{network-arduino.cpp}.
+
+\todo[inline]{diagram of includes}
+
+When using this program, the accompanying program \lstinline{analyse-classifications} must be run on the computer. \todo{link to section}
+
+\subsubsection{classifier-ble}
+
+This program will be used to perform classifications and send the results to a phone for display, which is the final 'end user' application of the project.
+
+After calibration and connecting to the phone over a Bluetooth Low Energy connection, the microcontroller will detect when movement begins, begin sampling from the accelerometer every 75ms and then save the sum of the raw values to a buffer. When movement ends, or the buffer is full, it will then normalise the data and attempt a classification. After classification, it will send the classification as an integer over BLE to the phone.
+
+Because this program relies on the neural network library, it will be structured as follows:
+
+The main program will reside in \lstinline{classifier-ble.ino}. This will \lstinline{#include} the file \lstinline{network-arduino.hpp}, which will in turn \lstinline{#include} the configuration stored in \lstinline{arduino_config.h}. 
+This structure will also implicitly include the implementation file for the network, \lstinline{network-arduino.cpp}.
+
+\todo[inline]{diagram of includes}
+
+When using this program, the accompanying program \lstinline{ble-classifier} must be run on the phone. \todo{link to section}
+
 \todo[inline]{Software architecture \& UML diagrams etc for microcontroller}
 
 \subsection{Linux Computer Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Utility scripts}
+
+\todo[inline]{put some of these (testing) in project management?}
 
 \todo[inline]{Software architecture \& UML diagrams etc for computer}
 
