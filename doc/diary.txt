@@ -243,3 +243,6 @@ Individual project 'diary'
 
 13/6/17
     Write NN library API and finish NN spec
+
+14/6/17
+    Finish design + spec section
