@@ -1485,22 +1485,92 @@ I used version 1.8.2, but any version since 1.6.6 would have worked just as well
 \section{Evaluation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Contribution/Deliverable Progress \& Completion}%%%%%%%%%%%%%%
+My project was broadly split into two major contributions: the implementation of a C++ neural network library, and the implementation of an exercise classifier using the library. For both of these contributions, I managed to complete a complete (if not fully featured) implementation.
 
-\todo[inline]{Better name? Which deliverables did I actually deliver}
+Reviewing the project contributions (as defined in the Introduction \todo{link}), the more specific list of individual contributions is as follows:
 
-\subsection{Project Management}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{itemize}
+\item Neural Network Library 
+  \begin{itemize}
+  \item Implementation of a neural network capable of running on  both desktop and microcontroller
+    \item Storage and retrieval of network configurations
+  \end{itemize}
+\item Exercise Classifier
+  \begin{itemize}
+  \item Programs to acquire training data
+    \item A trained network capable of reliably classifying the three chosen exercises
+    \item An implementation of a classifier using the above network, running on a microcontroller
+  \end{itemize}
+\item A data set to train the exercise classifier on
+\end{itemize}
 
-\todo[inline]{How well did my project management go, were the tools adequate, etc}
-\todo[inline]{Remember to include diary in appendices and link to it}
+\subsection{Neural Network Library Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Implementation of a neural network capable of running on  both desktop and microcontroller}
+
+The original design for the neural network library called for a a single header and implementation that could be included on either a desktop or embedded system. The library worked well on desktop and with the inclusion of an Arduino port of of C++ STL\cite{evref1} I managed to get the library to run on the Arduino. 
+
+Unfortunately despite the theoretical memory usage of the network being less than the RAM available on my Arduino system, I was unable to instantiate a network of the size required due to memory fragmentation. 
+
+To solve this I renamed the original \lstinline{Network} class \lstinline{Network_L} and created a second, stripped down, class called \lstinline{Network_A} that would be much less memory intensive.
+
+I achieved this by removing the training functionality. This allowed me not only to remove all those vectors and code used solely in the training process, but enabled me to make the weights and parameters \lstinline{const} and store them in the Arduino's program memory instead of RAM. 
+
+The lack of training functionality, while not much of a problem in practice, is a major blow because it is a key piece of functionality.The switch to separate 'desktop' and 'microcontroller' versions of the same library also makes maintaining the library more difficult.
+
+Approaches to solving these problems are discussed in the Future Work section \todo{link}.
+
+\subsubsection{Storage and retrieval of network configurations}
+
+The original plan for storage and retrieval of network configurations called for a \lstinline{.txt} file which could be read simply on both the embedded and desktop systems. The changing of the design into two separate classes did little to change this.
+
+The issues with the Arduino implementation of the neural network (see above) made the completion of this contribution easier rather than harder. With the requirement that training on the Arduino be possible removed, it became possible to store the network parameters and weights in program memory by writing them as constants into a header file and including it at compile time. 
+
+This did increase the complexity of the parser for loading configurations on desktop, but only slightly, and did not affect the functionality of the desktop neural network at all.
+
+The main downsides of this approach are that it restricts the microcontroller to running only a single neural network at a time, and that the library code is very tightly coupled to the configuration file (indeed it will not compile without it). While the former is unlikely to be much of an issue in practice, it is disappointing not to have made a more general approach work.
+The latter is an issue not because it compromises any of the functionality, but because it will make it much more difficult to change the behaviour of the library in future. 
+
+Approaches to solving these problems are discussed in the Future Work section \todo{link}.
+
+\subsection{Exercise Classifier Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Programs to acquire training data}
+
+The original design called for three programs to help record training data:
+
+\todo[inline]{link back to design section?}
+
+\begin{description}
+\item[logger-supervised] For data collection when another person was available to manually delimit and mark exercises
+\item[logger-unsupervised] To automatically delimit and record exercises when no one was available to supervise
+\item[logger-ble] For data collection without needing to be physically connected to a desktop computer
+\end{description}
+
+\textbf{logger-unsupervised} presented something of a chicken and egg problem - how do you detect when an exercise starts and ends without knowing what an exercise looks like?
+
+My approach made use of the motion detection features in the Curie IMU - 
+While this mostly worked well, it imposed a fairly restrictive style of recording on the user (fast movements so as to ensure that the sensor did not detect zero motion before the exercise was finished, and long pauses in between repetitions to ensure that zero motion was detected after completion of a repetition, along with the necessity of watching the computer screen to check that the repetitions were being recorded accurately and frequent breaks to note which repetitions of a set should be marked 'good' or not) which made it very frustrating to try and record large volumes of data.
+
+To deal with this problem, I decided to implement a second logger that made use of a person watching the user and marking their exercises in real time.
+
+\textbf{logger-supervised} was successfully implemented soon after the problems with \lstinline{logger-unsupervised} became apparent, I switched to almost exclusively using the supervised logger and I continued to use it to record data right up until the end of the project. As a simple program, it performed well and did everything I needed it to do.
+
+The only real issue with this program was that it relied on a Serial (USB) connection to my computer, limiting mobility. To address this issue, I decided to implement a third logger that would send the logging data over a Bluetooth Low Energy connection to a phone, allowing me to log data without being tethered to a laptop.
+
+\textbf{logger-ble} was my attempt to solve the issue of being tethered to a laptop when recording data. I attempted an implementation, but was unable to get even a rudimentary version working in time to record any data with it.
+
+The issue was with the BLE Notification system on Android - I was unable to enable notifications, and as such was unable to properly receive new accelerometer values for logging (note that I later fixed this issue enough to implement the BLE classifier).
+
+Although not itself a core contribution, this failure to deliver a working system (the only outright failure to deliver a contribution in this project) had a negative impact on the quantity of data I was able to collect, as discussed in the Data Collection section. \todo{link}
+
+\subsection{A trained network capable of reliably classifying the three chosen exercises}
+
+\subsubsection{An implementation of a classifier using the above network, running on a microcontroller}
 
 \subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \todo[inline]{All the normal classification measures. Will probably need numbers for all the versions}
-
-\subsection{Network Limitations}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todo[inline]{No training on Arduino is a blow}
 
 \subsection{Energy Consumption}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1509,6 +1579,15 @@ I used version 1.8.2, but any version since 1.6.6 would have worked just as well
 \subsection{Stability \& Ease of Use}%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \todo[inline]{Does it crash? Is it easy to install and use?}
+
+\subsection{Data Set Contribution}
+
+\todo[inline]{What data, what prevented me from collecting more}
+
+\subsection{Project Management}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{How well did my project management go, were the tools adequate, etc}
+\todo[inline]{Remember to include diary in appendices and link to it}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2123,6 +2202,12 @@ Arduino main software page
 \\\textit{Accessed 8/6/17}
 
 % Evaluation references (evref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibitem{evref1}
+\url{https://github.com/mike-matera/ArduinoSTL}
+\textbf{M. Matera ('mike-matera')}
+ArduinoSTL repository root
+\\\textit{Accessed 15/6/17}
 
 \bibitem{}
 \url{}
