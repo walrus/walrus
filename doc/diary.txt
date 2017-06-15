@@ -246,3 +246,7 @@ Individual project 'diary'
 
 14/6/17
     Finish design + spec section
+
+15/6/17
+    Write contributrions + evaluation metrics in introduction
+    Write evaluation (minus classifier performance)
