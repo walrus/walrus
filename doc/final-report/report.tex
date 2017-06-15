@@ -1097,7 +1097,7 @@ The main code for this program will be contained in the file \lstinline{new-netw
 
 Because of these dependencies, the script \lstinline{compile-new-network} in the folder \lstinline{linux/} will be used to compile the new network program into the executable \lstinline{new-network}, for ease of use.
 
-\subsection{train}
+\subsubsection{train}
 
 This program is used to load a given neural network and then train it on the training data in the given file or directory. The arguments are as follows (in order):
 
@@ -1470,7 +1470,7 @@ All versions of the Gnu Compiler Collection (GCC) since GCC 4.8.1 have supported
 
 \subsubsection{AVR-GCC}
 
-To compile C/C++ code for the Arduino requires the AVR-GCC compiler. This comes bundled with the Arduino IDE\cite{ppref8} (see below).
+To compile C/C++ code for the Arduino requires the AVR-GCC compiler. This comes bundled with the Arduino IDE\cite{ppref18} (see below).
 
 All versions of the Arduino IDE since 1.6.6 have enabled C++11 by default.
 
@@ -1479,6 +1479,14 @@ All versions of the Arduino IDE since 1.6.6 have enabled C++11 by default.
 Aside from allowing the user to edit code, the Arduino IDE\cite{ppref18} manages compilation and upload of programs to a connected Arduino.
 
 I used version 1.8.2, but any version since 1.6.6 would have worked just as well.
+
+\subsubsection{CLion}
+
+I did most of my programming in the CLion\cite{ppref19} IDE. I used version 2016.3.1 
+
+\subsection{Android Studio}
+
+I used Android Studio\cite{ppref20} to edit my Java code, and to manage compilation and upload of the Android code. I used version 2.3.2.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1500,6 +1508,7 @@ Reviewing the project contributions (as defined in the Introduction \todo{link})
   \item Programs to acquire training data
     \item A trained network capable of reliably classifying the three chosen exercises
     \item An implementation of a classifier using the above network, running on a microcontroller
+    \item An implementation of the exercise classifier making use of more than one microcontroller (extension)
   \end{itemize}
 \item A data set to train the exercise classifier on
 \end{itemize}
@@ -1564,9 +1573,22 @@ The issue was with the BLE Notification system on Android - I was unable to enab
 
 Although not itself a core contribution, this failure to deliver a working system (the only outright failure to deliver a contribution in this project) had a negative impact on the quantity of data I was able to collect, as discussed in the Data Collection section. \todo{link}
 
-\subsection{A trained network capable of reliably classifying the three chosen exercises}
+\subsubsection{A trained network capable of reliably classifying the three chosen exercises}
+
+Using the training data that I was able to collect and the neural network library, I determined the optimal parameters for the network and trained it on the data.
+
+An in depth look at the performance of this network can be found in the Classifier Performance section of the evaluation\todo{link}, while the process of finding the optimal parameters is detailed 
 
 \subsubsection{An implementation of a classifier using the above network, running on a microcontroller}
+
+I implemented two versions of the microcontroller-based classifier: \lstinline{classifier-serial}, which connects over Serial and I mainly used for testing the classifier, and \lstinline{classifier-ble}, the 'full' version sending data over a BLE connection to a phone.
+
+\textbf{classifier-serial} was fairly simple to implement, drawing on the motion detection that I tested in the \lstinline{logger-unsupervised} program and the neural network library.
+
+The motion detection still retains the flaws detailed earlier\todo{link} - motion detection is temperamental and can force the user to be quite robotic in their movements.
+
+\textbf{classifier-ble} was much more difficult to make work, mostly because of the difficulties presented by the Android BLE Notification system noted earlier\todo{link}. 
+I was surprised to find that working with BLE on the Arduino was much simpler than working with it on Android. Having got this working, the rest of the system was a simple UI for display, which works well. 
 
 \subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1576,18 +1598,160 @@ Although not itself a core contribution, this failure to deliver a working syste
 
 \todo[inline]{How long did the battery last? Is this practicable for the smaller form factor Curie etc}
 
-\subsection{Stability \& Ease of Use}%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Ease of Use}%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Does it crash? Is it easy to install and use?}
+\subsubsection{Neural Network Library}
+
+Using the neural network library is quite simple. The programmer simply needs to download the source files and include them in their project wherever needed. This should be familiar to just about all programmers.
+
+Where the library becomes slightly more difficult is using it on the microcontroller. The library is very tightly coupled to the configuration file and so must be used in precisely the right way in order to work. Attempting to use the library in unexpected ways may therefore prove more difficult than expected.
+
+\subsubsection{Exercise Classifier}
+
+There are two potential cases to look at as far as ease of use is concerned. The first is the person who set up the classifier and prepares it for classification. The second is the person who actually performs the exercises and uses the classifier. These may be the same person, but this is not required.
+
+Setting up the classifier requires the following steps:
+
+\begin{itemize}
+\item Download the repository from Github
+\item Open the Arduino IDE and open the \lstinline{classifier-ble} file
+\item Connect the Arduino and upload
+\item Open Android Studio and open the \lstinline{ble-classifier} project
+\item Connect the phone and upload
+\end{itemize}
+
+Since the person setting up the classifier is likely to be a developer of some description, this seems reasonably easy. In order for the classifier to be used more widely it would be necessary to simplify this process, but as it stands this is not an issue.
+
+Using the classifier is conceptually simple; the steps are as follows:
+
+\begin{itemize}
+\item With the classifier running on the Arduino, open the application on the phone
+\item Connect to the device
+\item Do exercises, and the classifications should appear
+\end{itemize}
+
+In practice there are two problems with this. Firstly, the BLE notifications don't always work and so it may be necessary to manually enable them (as discussed in the section???\todo{link}).
+
+The second issue is the unreliable motion detection, which can force the user to do their exercises in a somewhat robotic manner. 
+
+Ideas for how to fix these two issues are discussed in the Future Work section. \todo{link}
 
 \subsection{Data Set Contribution}
 
-\todo[inline]{What data, what prevented me from collecting more}
+It is more or less axiomatic that in the world of machine learning, you can never have too much data. My aim was to record between 500 and 1000 examples of each of the three exercises, with a roughly 3:1 ratio between positive and negative examples, for a total of 3000 example repetitions. This meant that the total number of examples would be equal for each of the four classifications (Press Up, Sit Up, Lunge \& None)
+
+My results were as follows:
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|}
+      \hline
+      Exercise & Target & Actual & Percentage \\
+      \hline
+      Press Up + & 750 & & \\
+      \hline
+      Press Up - & 250 & & \\
+      \hline
+      Sit Up + & 750 & & \\
+      \hline
+      Sit Up - & 250 & & \\
+      \hline
+      Lunge + & 750 & & \\
+      \hline
+      Lunge - & 250 & & \\
+      \hline
+      Total & 3000 & & \\
+      \hline
+      \end{tabular}
+\end{center}
+
+It is obvious from the above table that I struggled to get the amount of data that I wanted. Fortunately, the data I did manage to gather seems to have been sufficient (see the section above on Classifier Performance)\todo[inline]{link. Change this if performance was unsatisfactory}
+
+Nonetheless, it is still worthwhile asking why I failed to record as much data as I originally intended. 
+
+The primary reason that I recorded less data than intended is that press ups, sit ups and lunges are physically taxing.\cite{evref2} This limited me to recording around 50 exercises on any given day, even without other forms of exercise, and putting a hard limit of around 2700 on how many exercises I was able to record.\cite{evref3} 
+Naturally, recording hundreds of examples of exercises made me fitter and so towards the end of the project I was able to record more examples per day, particularly when I was recording multiple different exercises together rather than one type, but this increase was more than balanced out by the fact that I was only able to record data four\todo{correct?} times a week on average.
+
+To increase the quantity of data collected, and to prevent the network from overfitting to my actions, I attempted to gather data from other people. 
+
+Firstly I recorded some data from friends and family, in total recording X examples \todo{input number}. This helped somewhat, but was never going to allow me to collect hundreds of examples in a day, so I decided to try and collect data from a larger group.
+
+Initially, I went to the Department of Computing labs and tried to bribe DoC students to do press ups with sweets. This went about as well as expected, and resulted in no additional data. 
+
+My other solution was to bring the Arduino to a rugby training session and borrow my teammates for a few minutes each to record exercises for me. Unfortunately this idea was thwarted by my inability to make the BLE logger work (see section on contributions\todo{link}), but I am confident that this would have solved my remaining data collection issues.
 
 \subsection{Project Management}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{How well did my project management go, were the tools adequate, etc}
-\todo[inline]{Remember to include diary in appendices and link to it}
+Overall, my project management during the project was more of a help than a hindrance. My choices of version control systems, languages and tools caused me very little in the way of real issues, while the inclusion of slippage time in my timetable meant that I was able to deliver the core contributions despite my overrunning on them.
+
+\subsubsection{Timetable}
+
+My timetabling was the weakest part of my project management. The table below details my estimated and actual finish dates for each milestone, along with my estimated and actual time taken to complete each milestone and the percentages of that time.
+
+\begin{center}
+  \begin{tabular}{|c|c|c|c|c|c|}
+      \hline
+      Milestone & Estimated Finish & Actual Finish & Estimated Time & Actual Time & \% \\
+      \hline
+      Logging functionality & 14/4 & 14/4 & 10 & 10 & 100 \\
+      \hline
+      Neural network library & 28/4 & 5/5 & 14 & 21 & 150 \\
+      \hline
+      Classifier & 5/5 & 26/5 & 7 & 21 & 300 \\
+      \hline
+      BLE functionality & 19/5 & 5/6 & 14 & 8 & 57\\
+      \hline
+      Extension & 2/6 & - & 14 & - & - \\
+      \hline
+      Report submission & 19/6 & 19/6 & 16 & 12 & 75\\
+      \hline
+      \end{tabular}
+\end{center}
+
+From the table, it's I took longer than expected to reach my milestones and as a result had to cut my extension tasks in order to hand in the report on time.
+
+The reasons for this vary on a case by case basis but a common theme is thinking that tasks would be easier than they were, caused by my lack of experience working with embedded systems.
+
+The initial milestone (logging functionality) went exactly to time, but this result hides the fact that I later had to spend time implementing a different logger (see section on contributions for more information \todo{link}), which was only finished on the 26/4 and so took time away from the neural network library.
+
+The second milestone also started well; it took only two days to create a C++ library from the ArduinoANN code, and the rest of the week to finish writing and testing the core network library. The save/load functionality progressed slowly but steadily, and by the end of the milestone I was apparently only a week behind schedule.
+
+This illusion was comprehensively shattered when implementing the classifier. Although I had tested the network code extensively on my Linux machine, I hadn't tested it on the Arduino and it would not compile.
+
+Initially I misdiagnosed the error as being due to the difference between certain constructs in C++11 and previous versions of C++, and spend two days trying to fix this before realising that the implementation of the C++ STL available on the Arduino didn't include key necessary features (\lstinline{std::vector, std::random_device} and \lstinline{std::string}. I managed to overcome this problem with an external library, and by the 12/5 had managed to make the network run on the classifier, if not work properly.
+
+It was at this point that I encountered the lack of memory problem, and decided that I needed two versions of the network library. Rewriting the network library took until the 23/5, at which point the classifier itself took only three days. 
+
+From the above it's clear that my estimate for the amount of work to implement the classifier was relatively accurate, but that said estimate relied on a working library which I did not have. My mistakes implementing the neural network library put me three weeks behind schedule, and it was at this point that I decided to abandon the extension completely and get a minimum viable implementation of the BLE classifer running, giving myself until 6/6 to do so.
+
+In actuality, the implementation of the BLE functionality on the microcontroller took less than a day, and most of the time was spent wrestling with the Android portion of the program. I managed to get the minimum viable implementation running on the 5/6, and started work on the report on the 7/6, only four days behind schedule.
+
+\todo[inline]{Finish writing this section when report is almost done}
+
+Overall, while my naivety regarding the complexities of implementing embedded software caused most of my project to overrun, my inclusion of a two week extension/buffer at the end meant that I was able to complete the core contributions of my project successfully. 
+
+For future projects I will be careful to factor in time taken to debug things that are harder than they seem, and make sure that I continue to include a buffer at the end of the project.
+
+\subsubsection{Version Control}
+
+In general my use of git and Gitflow worked extremely well. It helped me keep the various aspects of the project separate and at no point did I lose data or have non working code on the \lstinline{development} or \lstinline{master} branches. 
+
+I did notice that I had to manually sync my \lstinline{.gitignore} files across branches, as work done on one branch often added code that needed ignoring in others, but this was problem consumed a couple of minutes a week and never lead to missing data.
+
+\subsubsection{Languages \& Libraries Used}
+
+Most of the language choices in the project were made for me - Arduino programming must be done in Arduino C/C++ and Android programming is almost exclusively in Java. 
+
+With that said, I am of the opinion that C/C++ was a good choice of language to program the neural network in. C++11 gives access to useful features (most notably vectors), while the language still retains access to lower level functionality that proved vital on the Arduino (most notably the PROGMEM attribute).
+
+The choice of Catch to unit test my code proved a good one. I ended up with 464 test assertions across my codebase, and this undoubtedly saved me a large amount of debugging time. Catch allowed for easy writing of unit tests, and only once did it not have a feature I required (assertions cannot be made against numbers defined using the \lstinline{#define} macro).
+
+I feel that my choice of Python to do my scripting in (rather than Bash or another option) was the correct one. Python is powerful and easy to use - it enabled me to quickly write scripts to do many of the mundane tasks required and so concentrate on the more difficult aspects of my project. 
+
+\subsubsection{Tools Used}
+
+I had no real issues with GCC (at one point I thought I was getting errors due to the version, but this was proved false), likewise with AVR-GCC.
+
+The Arduino IDE managed the upload of files well, but I found the editing side to be lacking in features. Of particular annoyance was the fact that it doesn't track changes to files on disk, which caused some issues when switching branches with the IDE still open. Whenever possible, I wrote code in CLion instead.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1828,9 +1992,8 @@ const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Bibliography
-\newpage
-\addcontentsline{toc}{section}{Bibliography}
+\section{Bibliography}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{thebibliography}{9}
 
@@ -2103,7 +2266,6 @@ Arduino Language Reference
 Arduino Build Process
 \\\textit{Accessed 8/6/17}
 
-
 \bibitem{ppref9}
 \url{http://www.arduinolibraries.info/types/official}
 \textbf{Arduino Library List}
@@ -2165,41 +2327,16 @@ Arduino main software page
 \\\textit{Accessed 8/6/17}
 
 \bibitem{ppref19}
-\url{}
-\textbf{}
-\\\textit{Accessed 8/6/17}
+\url{https://www.jetbrains.com/clion/}
+\textbf{Jetbrains}
+CLion: A cross platform IDE for C and C++
+\\\textit{Accessed 15/6/17}
 
 \bibitem{ppref20}
-\url{}
-\textbf{}
-\\\textit{Accessed 8/6/17}
-
-\bibitem{ppref21}
-\url{}
-\textbf{}
-\\\textit{Accessed 8/6/17}
-
-
-\bibitem{ppref22}
-\url{}
-\textbf{}
-\\\textit{Accessed 8/6/17}
-
-\bibitem{ppref23}
-\url{}
-\textbf{}
-\\\textit{Accessed 8/6/17}
-
-
-\bibitem{ppref24}
-\url{}
-\textbf{}
-\\\textit{Accessed 8/6/17}
-
-\bibitem{}
-\url{}
-\textbf{}
-\\\textit{Accessed 8/6/17}
+\url{https://developer.android.com/studio/index.html}
+\textbf{Google}
+Android Studio home
+\\\textit{Accessed 15/6/17}
 
 % Evaluation references (evref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2209,10 +2346,13 @@ Arduino main software page
 ArduinoSTL repository root
 \\\textit{Accessed 15/6/17}
 
-\bibitem{}
-\url{}
-\textbf{}
+\bibitem{evref2}
+\textbf{D. Clay}
+I should know, I've just done X of them. \todo{number}
 
+\bibitem{evref3}
+\textbf{D. Clay}
+There are 54 days between the 26th of April, when I finished the supervised logging program, and the 19th of June, when the report is due. At 50 exercises per day, every day, that equates to 2700 exercises.
 
 % Conclusions and future work references (fwref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
