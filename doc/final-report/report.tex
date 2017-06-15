@@ -108,7 +108,89 @@ With advances in technology, more and more of the tasks which personal trainers 
 
 \subsection{Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{As it says on the tin. List all the deliverables}
+My contributions for this project will be split broadly into two areas: a neural network library, and an exercise classifier using the library.
+
+A more specific breakdown of the contributions is as follows:
+
+\begin{itemize}
+\item Neural Network Library 
+  \begin{itemize}
+  \item Implementation of a neural network capable of running on  both desktop and microcontroller
+    \item Storage and retrieval of network configurations
+  \end{itemize}
+\item Exercise Classifier
+  \begin{itemize}
+  \item Programs to acquire training data
+    \item A trained network capable of reliably classifying the three chosen exercises
+    \item An implementation of a classifier using the above network, running on a microcontroller
+    \item An implementation of the exercise classifier making use of more than one microcontroller (extension)
+  \end{itemize}
+\item A data set to train the exercise classifier on
+\end{itemize}
+
+In addition to checking the completion of each contribution, the success of the project can be measured in terms of how \textit{capable} and \textit{efficient} the resulting contributions are. 
+
+Capability is the measure of how many different tasks a system can perform.
+Efficiency is the measure of how well the system performs the tasks of which it is capable. 
+
+The success of the various contributions can be judged by how well they help the project to meet these criteria.
+
+\subsubsection{Neural Network Evaluation Metrics}
+
+For the library, capability means that it must be able to do the following:
+
+\begin{itemize}
+\item Create an arbitrarily sized network (with one hidden layer)
+\item Run on both desktop and embedded systems
+\item Be capable of storing and retrieving configurations from disk
+\item Be capable of implementing all the functionality of ArduinoANN
+\end{itemize}
+
+For the library, efficiency means the following:
+
+\begin{itemize}
+\item It must use as little memory as possible
+\item It must use as little processing power as possible
+\item It must be as easy to use as possible
+\item It must have as few dependencies as possible
+\end{itemize}
+
+\subsubsection{Exercise Classifier Evaluation Metrics}
+
+For the classifier, capability means that it must be able to do the following:
+
+\begin{itemize}
+\item Classify the user's movements \textit{in real time}, or close to it
+\item Connect over Bluetooth to a phone
+\item Display the classifications
+\end{itemize}
+
+For the classifier, efficiency means the following:
+
+\begin{itemize}
+\item It must classify the movements reliably and correctly
+\item It must use as little memory as possible
+\item It must use as little processing power as possible
+\item It must be as easy to use as possible
+\end{itemize}
+
+\subsubsection{Data Set Evaluation Metrics}
+
+For the data set, capability means that it must have the following:
+
+\begin{itemize}
+\item Correctly labelled data for all of the classifications
+\item Data of the correct format for consumption by the neural network
+\end{itemize}
+
+For the data set, efficiency means the following:
+
+\begin{itemize}
+\item It must have as little noise as possible
+\item It must have as few misclassified examples as possible
+\item It must have the correct balance of examples so as to maximise the efficiency of the classifier
+\item It must have enough examples to train the classifier effectively
+\end{itemize}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1495,7 +1577,7 @@ I used Android Studio\cite{ppref20} to edit my Java code, and to manage compilat
 
 My project was broadly split into two major contributions: the implementation of a C++ neural network library, and the implementation of an exercise classifier using the library. For both of these contributions, I managed to complete a complete (if not fully featured) implementation.
 
-Reviewing the project contributions (as defined in the Introduction \todo{link}), the more specific list of individual contributions is as follows:
+Reviewing the project contributions (as defined in the Introduction \todo{link}), the specific list of individual contributions is as follows:
 
 \begin{itemize}
 \item Neural Network Library 
@@ -1541,6 +1623,42 @@ The main downsides of this approach are that it restricts the microcontroller to
 The latter is an issue not because it compromises any of the functionality, but because it will make it much more difficult to change the behaviour of the library in future. 
 
 Approaches to solving these problems are discussed in the Future Work section \todo{link}.
+
+\subsubsection{Neural Network Evaluation Metrics}
+
+In the introduction\todo{link}, I defined some evaluation metrics for the neural network as follows:
+
+The library must be able to do the following:
+
+\begin{itemize}
+\item Create an arbitrarily sized network (with one hidden layer)
+\item Run on both desktop and embedded systems
+\item Be capable of storing and retrieving configurations from disk
+\item Be capable of implementing all the functionality of ArduinoANN
+\end{itemize}
+
+From the above, all of the capability metrics have been met, with the partial exception of the second metric (run on both desktop and embedded systems).
+
+As discussed above, the library can run on both desktop and embedded systems, but it does so via two versions of the library code, and can only train the network in one of them.
+
+If the library is efficiently implemented, it will:
+
+\begin{itemize}
+\item It must use as little memory as possible
+\item It must use as little processing power as possible
+\item It must be as easy to use as possible
+\item It must have as few dependencies as possible
+\end{itemize}
+
+For the above efficiency metrics, once again they have been met to a reasonable degree. 
+
+The memory usage is very low, mainly because of the lack of training capability. This means that only the values of the nodes must be kept in memory, using X \todo{input actual number}B for my exercise classifier example with 20 input nodes, 10 hidden nodes and one output node. 
+
+Processing power is also very low - my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. 
+
+The ease of use is discussed at length in combination with the ease of use for the exercise classifer later in the evaluation.\todo{link}
+
+The library really only depends on the version of C++ (C++11 or greater) and the C++ STL, both of which are widely available. 
 
 \subsection{Exercise Classifier Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1589,6 +1707,35 @@ The motion detection still retains the flaws detailed earlier\todo{link} - motio
 
 \textbf{classifier-ble} was much more difficult to make work, mostly because of the difficulties presented by the Android BLE Notification system noted earlier\todo{link}. 
 I was surprised to find that working with BLE on the Arduino was much simpler than working with it on Android. Having got this working, the rest of the system was a simple UI for display, which works well. 
+
+\subsubsection{Exercise Classifier Evaluation Metrics}
+
+In the introduction\todo{link}, I defined some evaluation metrics for the exercise classifier as follows:
+
+The classifier must be able to do the following:
+
+\begin{itemize}
+\item Classify the user's movements \textit{in real time}, or close to it
+\item Connect over Bluetooth to a phone
+\item Display the classifications
+\end{itemize}
+
+All three of these metrics have been met. The classifier takes on average 658 microseconds\cite{dsref0} to perform a classification, and the Arduino reliably connects to the phone and displays classifications.
+
+If the classifier is efficiently implemented, it will:
+
+\begin{itemize}
+\item It must classify the movements reliably and correctly
+\item It must use as little memory as possible
+\item It must use as little processing power as possible
+\item It must be as easy to use as possible
+\end{itemize}
+
+Classifier performance is discussed at length in the section below (Classifier Performance\todo{link}), while ease of use is discussed together with the library in the section Ease of Use \todo{link}.
+
+The memory usage is very low because the library stores the weights in program memory. This means that only the values of the nodes must be kept in RAM, using X \todo{input actual number}B for the network and Y B \todo{actual number} overall when running (the rest of the memory being used for the BLE functionality).
+
+Processing power is also very low - as previously stated, my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. 
 
 \subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1678,6 +1825,36 @@ Firstly I recorded some data from friends and family, in total recording X examp
 Initially, I went to the Department of Computing labs and tried to bribe DoC students to do press ups with sweets. This went about as well as expected, and resulted in no additional data. 
 
 My other solution was to bring the Arduino to a rugby training session and borrow my teammates for a few minutes each to record exercises for me. Unfortunately this idea was thwarted by my inability to make the BLE logger work (see section on contributions\todo{link}), but I am confident that this would have solved my remaining data collection issues.
+
+\subsubsection{Data Set Evaluation Metrics}
+
+In the introduction\todo{link}, I defined some evaluation metrics for the exercise classifier as follows:
+
+The data set must have the following:
+
+\begin{itemize}
+\item Correctly labelled data for all of the classifications
+\item Data of the correct format for consumption by the neural network
+\end{itemize}
+
+Both of these metrics have been met. I met the first by using supervised learning and manually checking that the targets for each repetition were correct.
+
+The second was achieved through my normalising script, which ensured that each repetition had the same number of data points as the number of input nodes.
+
+If the data set is efficient, it will:
+
+\begin{itemize}
+\item It must have as little noise as possible
+\item It must have as few misclassified examples as possible
+\item It must have the correct balance of examples so as to maximise the efficiency of the classifier
+\item It must have enough examples to train the classifier effectively
+\end{itemize}
+
+The amount of noise in the dataset is difficult to evaluate. Certainly my normalising approach (dropping or duplicating data points at random) increased the noise, but the calibration methods and consistency of data collection have reduced the noise as far as practicable.
+
+I believe that my reliance on supervised exercises using the \lstinline{logger-supervised} program, rather than my unsupervised version has kept the number of misclassified examples low, although this is of course difficult to enumerate.
+
+The final two metrics are discussed in the section Classifier Performance\todo{link}.
 
 \subsection{Project Management}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
