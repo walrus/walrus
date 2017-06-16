@@ -4,7 +4,7 @@
 #include <vector>
 #include <random>
 
-enum class ActivationFunction {Sigmoid, Linear, ReLu};
+enum class ActivationFunction {Sigmoid, ReLu};
 
 class Network_L {
 private:
@@ -20,7 +20,7 @@ private:
     float errorRate;                                        // AKA 'Error' in the original code
     float accumulatedInput;                                 // AKA 'Accum' in the original code
 
-    ActivationFunction activation;                          // Activation function. Original code used Sigmoid
+    ActivationFunction activationFunction;                  // Activation function. Original code used Sigmoid
 
     std::vector<float> hiddenNodes;                         // AKA 'Hidden' in the original code
     std::vector<float> outputNodes;                         // AKA 'Output' in the original code
@@ -39,6 +39,7 @@ private:
     float computeActivation(float accumulatedInput);
     void computeHiddenLayerActivations(std::vector<float> inputs);
     void computeOutputLayerActivations();
+    float computeDelta(float target, float output);
     void computeErrors(std::vector<float> targets);
     void backpropagateErrors();
     void updateHiddenWeights(std::vector<float> inputs);
@@ -71,6 +72,7 @@ public:
     float getRandomFloat() const;
     float getErrorRate() const;
     float getAccumulatedInput() const;
+    ActivationFunction getActivationFunction() const;
     const std::vector<float> getHiddenNodes() const;
     const std::vector<float> getOutputNodes() const;
     const std::vector<float> getHiddenNodesDeltas() const;
@@ -82,6 +84,7 @@ public:
     void setLearningRate(float learningRate);
     void setMomentum(float momentum);
     void setInitialWeightMax(float initialWeightMax);
+    void setActivationFunction(ActivationFunction activationFunction);
 };
 
 #endif // NETWORK_L_H

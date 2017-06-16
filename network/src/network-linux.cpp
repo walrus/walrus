@@ -31,7 +31,7 @@ Network_L::Network_L(int numInputNodes,
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
-    activation = ActivationFunction::Sigmoid;
+    activationFunction = ActivationFunction::Sigmoid;
 
     hiddenNodes.resize(numHiddenNodes);
     outputNodes.resize(numOutputNodes);
@@ -109,10 +109,13 @@ float Network_L::trainNetwork(std::vector<float> inputs, std::vector<float> targ
  */
 
 float Network_L::computeActivation(float accumulatedInput) {
-    if (activation == ActivationFunction::Sigmoid) {
+    if (activationFunction == ActivationFunction::Sigmoid) {
         return float(1.0/(1.0 + exp(-accumulatedInput))) ;
+    }else if (activationFunction == ActivationFunction::ReLu) {
+        return std::max(0.0f, accumulatedInput);
     } else {
-        return 0;
+        // Default to linear if for some reason activation is not specified
+        return accumulatedInput;
     }
 }
 
@@ -145,9 +148,24 @@ void Network_L::computeOutputLayerActivations() {
 }
 
 
+/*
+ *  Compute the delta for a single output node
+ */
+
+float Network_L::computeDelta(float target, float output) {
+    if (activationFunction == ActivationFunction::Sigmoid) {
+        return (target - output) * output * (1.0f - output);
+    } else if (activationFunction == ActivationFunction::ReLu) {
+        return target - output;
+    }
+}
+
+/*
+ *  Compute the errors for the output layer
+ */
 void Network_L::computeErrors(std::vector<float> targets) {
     for(int i = 0 ; i < numOutputNodes ; i++ ) {
-        outputNodesDeltas[i] = (targets[i] - outputNodes[i]) * outputNodes[i] * (1.0f - outputNodes[i]);
+        outputNodesDeltas[i] = computeDelta(targets[i], outputNodes[i]);
         errorRate += 0.5 * (targets[i] - outputNodes[i]) * (targets[i] - outputNodes[i]);
     }
 }
@@ -276,6 +294,10 @@ float Network_L::getAccumulatedInput() const {
 }
 
 
+ActivationFunction Network_L::getActivationFunction() const {
+    return activationFunction;
+}
+
 const std::vector<float> Network_L::getHiddenNodes() const {
     return hiddenNodes;
 }
@@ -330,6 +352,9 @@ void Network_L::setInitialWeightMax(float initialWeightMax) {
     Network_L::initialWeightMax = initialWeightMax;
 }
 
+void Network_L::setActivationFunction(ActivationFunction activationFunction) {
+    Network_L::activationFunction = activationFunction;
+}
 
 void Network_L::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) {
     Network_L::hiddenWeights = hiddenWeights;

@@ -233,6 +233,7 @@ TEST_CASE("The core network functionality is all correct") {
             REQUIRE(trained_error > 0.0f);
         }
     }
+
     GIVEN("A network with very few neurons and edge case parameters") {
 
         nin = 2;
@@ -257,6 +258,62 @@ TEST_CASE("The core network functionality is all correct") {
                 REQUIRE(output[i] > -1.0f);
                 REQUIRE(output[i] < 1.0f);
             }
+        }
+        THEN("It can be trained") {
+            std::vector<float> input;
+            input.resize(nin);
+            std::vector<float> output;
+            output.resize(non);
+
+            for (int i = 0; i < nin; i++) {
+                input[i] = test_dist(m_mt);
+            }
+
+            for (int i = 0; i < non; i++) {
+                output[i] = test_dist(m_mt);
+            }
+
+            //This is a bit messy, but will work until I replace all the arrays with vectors
+            float error = network.trainNetwork(input, output);
+
+            REQUIRE(error > 0.0f);
+        }
+        THEN("Training reduces the error") {
+            std::vector<float> input;
+            input.resize(nin);
+            std::vector<float> output;
+            output.resize(non);
+
+            for (int i = 0; i < nin; i++) {
+                input[i] = test_dist(m_mt);
+            }
+
+            for (int i = 0;  i < non; i++) {
+                output[i] = test_dist(m_mt);
+            }
+
+            float untrained_error = network.trainNetwork(input, output);
+
+            REQUIRE(untrained_error > 0.0f);
+
+            for (int i =0; i < 9; i++) {
+                network.trainNetwork(input, output);
+            }
+
+            float trained_error = network.trainNetwork(input, output);
+
+            REQUIRE(trained_error < untrained_error);
+            REQUIRE(trained_error > 0.0f);
+        }
+    }
+
+    GIVEN("A network using the ReLu activation function") {
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+
+        network.setActivationFunction(ActivationFunction::ReLu);
+
+        THEN("The activation function is set properly") {
+            REQUIRE(network.getActivationFunction() == ActivationFunction::ReLu);
         }
         THEN("It can be trained") {
             std::vector<float> input;
