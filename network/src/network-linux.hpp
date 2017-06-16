@@ -4,6 +4,8 @@
 #include <vector>
 #include <random>
 
+enum class ActivationFunction {Sigmoid, Linear, ReLu};
+
 class Network_L {
 private:
     const int numInputNodes;                                // AKA 'InputNodes' in the original code
@@ -17,6 +19,8 @@ private:
     float randomFloat;                                      // AKA 'Rando' in the original code
     float errorRate;                                        // AKA 'Error' in the original code
     float accumulatedInput;                                 // AKA 'Accum' in the original code
+
+    ActivationFunction activation;                          // Activation function. Original code used Sigmoid
 
     std::vector<float> hiddenNodes;                         // AKA 'Hidden' in the original code
     std::vector<float> outputNodes;                         // AKA 'Output' in the original code
@@ -32,6 +36,7 @@ private:
 
     void initialiseHiddenWeights();
     void initialiseOutputWeights();
+    float computeActivation(float accumulatedInput);
     void computeHiddenLayerActivations(std::vector<float> inputs);
     void computeOutputLayerActivations();
     void computeErrors(std::vector<float> targets);

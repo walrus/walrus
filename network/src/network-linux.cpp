@@ -31,6 +31,8 @@ Network_L::Network_L(int numInputNodes,
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
+    activation = ActivationFunction::Sigmoid;
+
     hiddenNodes.resize(numHiddenNodes);
     outputNodes.resize(numOutputNodes);
 
@@ -103,6 +105,18 @@ float Network_L::trainNetwork(std::vector<float> inputs, std::vector<float> targ
 
 
 /*
+ * Compute the activation for a single node using the selected activation function
+ */
+
+float Network_L::computeActivation(float accumulatedInput) {
+    if (activation == ActivationFunction::Sigmoid) {
+        return float(1.0/(1.0 + exp(-accumulatedInput))) ;
+    } else {
+        return 0;
+    }
+}
+
+/*
  * Compute the activations of the hidden layer nodes from the given inputs
  */
 void Network_L::computeHiddenLayerActivations(std::vector<float> inputs) {
@@ -111,7 +125,7 @@ void Network_L::computeHiddenLayerActivations(std::vector<float> inputs) {
         for(int j = 0 ; j < numInputNodes; j++ ) {
             accumulatedInput += inputs[j] * hiddenWeights[j][i] ;
         }
-        hiddenNodes[i] = float(1.0/(1.0 + exp(-accumulatedInput))) ;
+        hiddenNodes[i] = computeActivation(accumulatedInput);
     }
 }
 
