@@ -1739,7 +1739,7 @@ Processing power is also very low - as previously stated, my exercise classifier
 
 \subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{All the normal classification measures. Will probably need numbers for all the versions}
+\todo[inline]{All the normal classification measures. Will probably need numbers for all the versions. Note how library constrained performance too (IE wrong error/activation functions)}
 
 \subsection{Energy Consumption}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1937,11 +1937,102 @@ The Arduino IDE managed the upload of files well, but I found the editing side t
 
 \subsection{Conclusion}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{What has *humanity* learned? What worked and what didn't, etc}
+The twin goals of this project were to develop a neural network library for embedded systems, and then to implement an exercise classifier using the library. Both of these goals have been met, albeit with some caveats, so I consider the project to be a qualified success.
+
+I implemented the neural network library as a C++ class, allowing it to be easily included in projects. The biggest challenge was overcoming the lack of RAM in embedded systems, which I (partially) overcame through the use of program memory instead. 
+
+I implemented the exercise classifier as an Arduino C++ program running on the Arduino 101, and communicating over a Bluetooth Low Energy connection with an Android application written in Java. 
+Surprisingly, the biggest challenge for this implementation was the BLE connection; the library made the machine learning section of the implementation very simple.
+Unfortunately the difficulties encountered during implementation of the neural network library made it impossible for me to complete my extension work using multiple Arduino 101s.
+
+Through the implementations above I proved that it is possible to run artificial neural networks on microcontrollers, and made it easier for others to do so.
 
 \subsection{Future Work}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{Where can the technology go from here?}
+While I have completed what I believe to be minimal viable implementations for both of these contributions, there are many things that could be done to make them more useful.
+
+\subsubsection{Fixing Project Deficiencies}
+
+Over the course of the project I encountered several issues that made my implementations of the library and classifier less capable than I would wish. The first thing to do as part of any future work would be to fix these issues.
+
+The only major issue with the neural network library is that it cannot be trained on any system that does not have enough RAM to hold the entire network, and as such the network must exist at compile time.
+
+The simplest solution is of course to acquire more RAM. The standalone Curie module comes with 80KB of SRAM\cite{fwref2}, which is considerably more than the 24KB of the Arduino 101. This approach is effective, but is liable to be more expensive and is not always an option.
+
+Another solution to this would be to store those parts of the network related to training (weights, and the deltas of those weights) in program memory, of which there is often more than RAM, and rewrite them as necessary. This is possible using the \lstinline{avr/boot.h} library, but requires writing whole pages at a time and writing to program memory is frowned upon to say the least.\cite{fwref0}
+
+The Arduino PROGMEM library also does not support the storage of vectors in program memory, probably because vectors are not part of the Arduino standard libraries.
+
+A better solution would be to store data in EEPROM, which is much easier to do and has none of the potential issues of writing to program memory.\cite{fwref1} Unfortunately, the Arduino 101 has only 1KB of EEPROM and so external EEPROM (or a different embedded system) would be necessary.
+
+Writing to external EEPROM is more work than writing to internal EEPROM or RAM because the two main interfaces, SPI and I2C won't handle reading and writing objects, so the programmer must handle this themselves. Nonetheless, this solution almost completely solves the issue of lack of memory, and additionally provides non volatile storage of the network configuration.
+
+Both the additional RAM and EEPROM solutions also mean that the network can be constructed using vectors rather than arrays, which makes it much easier to create networks whose dimensions are not known at compile time. 
+
+Another problem caused by the lack of memory of microcontrollers, is the splitting of the library into two implementations. While the non-RAM solutions above would mean that the two implementations of the library would have the same capabilities, it would still require two implementations.
+
+Solving this issue is only possible if the library can either keep everything in RAM and have a 'bolt on' module for non volatile storage (the same function that the separate file \lstinline{network-saveload-linux} performs) or the library can detect which platform it is being run on and adjust where it puts the data accordingly. 
+
+A major usability issue with the current exercise classifier is the motion detection's unreliability. The most straightforward approach to this would be to make the motion detection more intelligent. 
+
+As an example, when doing press ups the person will often briefly stop moving at the bottom of the repetition, before pushing themselves back up. With naive motion detection, the this is often registered as the end of the movement, and so classification is attempted on the first half of the move and subsequently returns a negative result.
+If the zero motion detection is sufficiently insensitive to skip this brief period of immobility, then the user must stay motionless for longer at the end of the movement before this lack of motion is registered.
+
+\todo[inline]{Picture explaining problem}
+
+A more intelligent motion detection method might recognise the zero motion at the bottom of the move and attempt classification, but continue logging from the start of the move and attempt classification of the whole move (that is, both the up and down movements) after the user returns to the up position.
+
+\todo[inline]{picture explaining solution}
+
+However, this approach still suffers from the fundamental chicken and egg problem of not knowing what to attempt classification on.
+
+Another way to combat this issue would be to maintain a queue of the last 30 or so readings and attempt classification every time a new reading (or if this proves too computationally expensive, several readings) is added. 
+This would return a lot of negative classifications, but would mean that no valid exercises were missed, and would stop the user from having to adapt their movements to suit the motion detector. This would have the drawback of using more power, but would mean that the only thing attempting to decide what is and isn't an exercise is the neural network rather than a more primitive system.
+
+\todo[inline]{This figure shows a simplified 10-second sample containing two exercises (marked in green). In this period there would be several negative classifications (marked in red).}
+
+\subsubsection{Neural Network Library}
+
+The implementation of the neural network library is fairly limited in it's capabilities. Once the training issues have been fixed, there are several fairly obvious improvements that could be made.
+
+One of the simplest changes would be to implement different activation functions. Currently the library uses the sigmoid function, but it would be simple or even trivial to implement alternatives such as the linear, hyperbolic tangent and SoftMax functions.
+
+Similarly, the network uses the Sum Squared error function, and it would be simple to implement alternatives such as the Cross-Entropy function or Exponential function. These additional error functions would be necessary in order to use some of the different activation functions. 
+
+A bigger change would be support for an arbitrary number of hidden layers. The current implementation is hard coded to a single hidden layer, and while this is sufficient most of the time, it would be useful to support as many layers as is necessary. 
+This would be a substantial change in the internal workings of the library, but would mean little change to the API.
+
+Likewise, other architecture changes, such as partial connectivity and convolutional networks would be possible to implement, and given the dominance of the weights in memory usage (the number of weights in a fully connected network being roughly the square of the number of nodes) would be useful to keep the number of weights and therefore memory usage down.
+
+While the library does support changing the momentum and learning rate, it currently has no way of easily configuring these to change (for example, to halve the learning rate every \textit{N} epochs). This is more of an ease of use change than a missing feature, but it would be good to add.
+
+The library currently uses the on-line backpropagation algorithm, wherein weights are updated after every example. It would be trivial to implement batch learning (where the weights are updated after several examples). 
+
+The library currently lacks any mechanism for regularisation. Dropout, a popular mechanism, would be difficult to implement as it would require changing weights and the number of neurons mid execution, but other techniques such as L1 and L2 regularisation perform much the same function without modifying the network topology. It is worth noting though that dropout reduces the size of the network, which can only be a good thing on an embedded system.
+
+Finally, alternatives to backpropagation for gradient descent could be considered. This would be a fairly major change, and is not one I feel qualified to talk intelligently about.
+
+In principle, any existing training technique is a potential candidate for addition to the library; what separates good candidates from bad candidates is firstly how useful they would be, and secondly how much more or less efficient they would make the library - given that the main constraint on the network is memory rather than processor speed, things that decrease training time are comparatively less important.
+
+With this in mind, I would prioritise adding the different activation and error functions, as they would be easy to implement, make the library usable across several different classes of problem and would not have a noticeable effect on the efficiency of the library.
+
+I would then implement the functionality for arbitrary numbers of layers. Although I cannot see most neural networks for embedded systems having more than two or possibly three hidden layers, being limited to one hidden layer is a major drawback of the current library. 
+
+After that, I would consider implementing regularisation as it is the other major missing feature. Batch learning would also be a good candidate for inclusion, given it's simplicity, but is less important.
+
+\subsubsection{Exercise Classifier}
+
+One of the main incentives for using the Curie module, and the focus of my extension milestone that I did not manage to undertake, was the idea of using multiple Curies to send much more detailed IMU data for classification.
+
+The Curie module is available as a button sized (11x8mm)system on a chip.\cite{fwref2} With several of these placed at strategic locations on the body, extremely accurate IMU data could be used not only to classify motions, but to analyse them and provide detailed feedback.
+
+As an example, a system with a Curie between the shoulder blades, on one knee and on a buttock could not only tell you if you had done a press up, but tell you if your core was properly rigid or if your knees were sagging during the exercise. Likewise, the addition of a curie on the elbow could tell you if you were keeping your arms close in to your body or splaying them.
+
+This would shift the burden of classification from the modules themselves onto the system linking them together (such as a phone), but the modules could do some of the computation for themselves - they could do the 'dead reckoning' to turn their raw IMU readings into a movement and send the result to the overall classifier.
+
+This technology would be useful for any application wherein a very precise knowledge of \textit{how} a person (or other object) has moved and the forces they have undergone is desired.
+
+To pick an example close to my own interests, rugby players could use such a system (with modules embedded in a scrum cap and shirt) to flag up potential concussions and notify match officials that they may need treatment or to leave the field.
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2181,8 +2272,6 @@ const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
 \textbf{Public Health England / UK Government}
 UK and Ireland obesity prevalence and trends
 \\\textit{Accessed 7/6/2017}
-
-
 
 % Background references (bgref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2533,10 +2622,23 @@ There are 54 days between the 26th of April, when I finished the supervised logg
 
 % Conclusions and future work references (fwref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\bibitem{}
-\url{}
-\textbf{}
-\\\textit{}
+\bibitem{fwref0}
+\url{http://www.nongnu.org/avr-libc/user-manual/group__avr__boot.html}
+\textbf{Free Software Foundation}
+AVR Bootloader Support Utilities
+\\\textit{Accessed 16/6/17}
+
+\bibitem{fwref1}
+\url{https://www.arduino.cc/en/Reference/EEPROM}
+\textbf{Arduino AG}
+EEProm Library home
+\\\textit{Accessed 16/6/17}
+
+\bibitem{fwref2}
+\url{https://www.intel.co.uk/content/www/uk/en/products/boards-kits/curie/module.html}
+\textbf{Intel}
+Intel Curie Module
+\\\textit{Accessed 16/6/17}
 
 \end{thebibliography}
 
