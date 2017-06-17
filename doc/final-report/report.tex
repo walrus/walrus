@@ -63,14 +63,23 @@ Daniel Clay\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Abstract}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:ab}
 
 \todo[inline]{Abstract: do this last, goes the advice}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgements}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:ak}
 
-\todo[inline]{Acknowledgements: Dr Heinis et al}
+I would like to thank:
+
+\begin{itemize}
+\item Dr Thomas Heinis, for his supervision
+\item Hilary, for her help recording data and proof reading my report
+\item Jack, for his help recording data
+\item My father, Graham, for his advice on embedded systems and proof reading my report
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -86,8 +95,10 @@ Daniel Clay\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:in}
 
 \subsection{Motivation}%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:motivation}
 
 As the growths of machine learning and the Internet of Things continue apace, the overlap between the two is driving the demand for smart devices. While the standard way to provide intelligent functionality of embedded systems is to connect them to more computational power via the cloud, this is not always an option.
 
@@ -96,6 +107,7 @@ With the growth in power of embedded systems, it is becoming more and more feasi
 To solve this problem, what is necessary are a new class of cross-platform machine learning frameworks to facilitate machine learning on embedded systems.
 
 \subsection{Issues}%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:issues}
 
 The main issue making implementation of machine learning applications on embedded systems is their lack of resources. Neural networks and similar programs typically use a large number of neurons and connections, trained on a large amount of data.
 
@@ -104,6 +116,7 @@ Likewise, much of the currently favoured machine learning algorithms are extreme
 In order to work, a neural network running on an embedded system will have to make do with far fewer neurons and much simpler algorithms for training. The challenge is not so much whether this can be done, but whether this can be done and still remain effective.
 
 \subsection{Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:cs}
 
 My contributions for this project will be split broadly into two areas: a neural network library designed specifically to run on embedded systems, and an exercise classifier implemented using the library as an example of the system in use.
 
@@ -133,6 +146,7 @@ Efficiency is the measure of how well the system performs the tasks of which it 
 The success of the various contributions can be judged by how well they help the project to meet these criteria.
 
 \subsubsection{Neural Network Evaluation Metrics}
+\label{subsubsec:in_cs_nnmetrics}
 
 For the library, capability means that it must be able to do the following:
 
@@ -140,7 +154,7 @@ For the library, capability means that it must be able to do the following:
 \item Create an arbitrarily sized network (with one hidden layer)
 \item Run on both desktop and embedded systems
 \item Be capable of storing and retrieving configurations from non volatile memory
-\item Be capable of implementing all the functionality of ArduinoANN\todo{link}
+\item Be capable of implementing all the functionality of \hyperref[subsec:bg_arduinoann]{ArduinoANN}
 \end{itemize}
 
 For the library, efficiency means the following:
@@ -153,6 +167,7 @@ For the library, efficiency means the following:
 \end{itemize}
 
 \subsubsection{Exercise Classifier Evaluation Metrics}
+\label{subsubsec:in_cs_ecmetrics}
 
 For the classifier, capability means that it must be able to do the following:
 
@@ -173,6 +188,7 @@ For the classifier, efficiency means the following:
 \end{itemize}
 
 \subsubsection{Data Set Evaluation Metrics}
+\label{subsubsec:in_cs_dsmetrics}
 
 For the data set, capability means that it must have the following:
 
@@ -195,8 +211,10 @@ For the data set, efficiency means the following:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:bg}
 
 \subsection{Neural Networks}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:bg_neuralnetworks}
 
 Neural networks are currently the focus of a lot of research in academia, and also the focus of a lot of commercial work to realise their potential - virtually all of the major tech companies make use of the technology, or are experimenting with it.
 
@@ -209,12 +227,14 @@ As well as the course notes, the lecturers have recommended several other resour
 Another useful reference has been \textit{Neural Networks - Algorithms and Applications}\cite{bgref2}. This contains lots of practical information of direct relevance to the implementation of neural networks.
 
 \subsection{ArduinoANN}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:bg_arduinoann}
 
 My neural network implementation is based on \textit{ArduinoANN}\cite{bgref3}, a C implementation of a two layer feed-forward backpropagation network. 
 
 ArduinoANN itself draws heavily on \textit{John Bullinaria's Step by Step Guide to Implementing a Neural Network in C}\cite{bgref4}.
 
 \subsection{Embedded Systems \& The Intel Curie}%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:bg_embeddedsystems}
 
 \subsubsection{Embedded Systems}
 
@@ -226,7 +246,7 @@ As embedded systems become more powerful and more widespread, machine learning p
 
 The Intel Curie is a System-On-a-Chip (SOC) with an integrated six-axis accelerometer/gyroscope and an integrated 128-neuron neural network that operates on the data from the sensors.
 
-Despite the presence of the neural network, which Intel call the \textit{Curie Pattern Matching Engine}\cite{bgref6}, I will be implementing a separate neural network. This decision is explained in another section. \todo[inline]{link when written}
+Despite the presence of the neural network, which Intel call the \textit{Curie Pattern Matching Engine}\cite{bgref6}, I will be implementing a separate neural network. This decision is due to the limited functionality of the Pattern Matching Engine, which can only perform classification using the K-Nearest Neighbour and Radial Basis Function algorithms.
 
 The module is currently available on an Arduino 101 board (known as the Genuino 101 outside the US), or an Intel Quark microcontroller - I will be developing using the Arduino board.
 
@@ -234,13 +254,15 @@ The Arduino/Genuino 101 provides a set of I/O pins, power supply, and Bluetooth 
 
 More information can be found at Intel's homepage for the Curie\cite{bgref6}.
 
-Information on software dependencies can be found here. \todo[inline]{link when done}
+Information on software dependencies can be found \hyperref[subsec:dn_language]{in the Design \& Specification section}
 
 \subsection{Bluetooth / Bluetooth Low Energy (BLE)}%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:bg_ble}
 
 Bluetooth Low Energy\cite{bgref7} is a low power version of the Bluetooth standard designed to allow devices to transfer small amounts of data in an energy efficient manner. The standard debuted in 2011, and is now widely supported by Internet of Things (IoT) and mobile devices.
 
 \subsection{Fitness Trackers}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:bg_fitnesstrackers}
 
 There are a wide variety of fitness trackers available on the market - most utilise a combination of gyroscopes, accelerometers and GPS, and in addition sometimes heart rate monitors, altimeters and other sensors to track the user's movements and provide feedback.
 
@@ -274,6 +296,7 @@ Actofit\cite{bgref13} is another startup that recently funded via Indiegogo\cite
 FocusMotion\cite{bgref15} provides an SDK that works on many different devices, and uses their sensors as input to their machine learning algorithms, which aim to classify and analyse user's movements.
 
 \subsection{Bodyweight Exercises}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:bg_exercises}
 
 While there is no objective standard for how most exercises should be performed, for the most common exercises there exists a broad consensus on the proper technique.
 
@@ -341,8 +364,9 @@ This video\cite{bgref25} illustrates good lunge technique.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Design \& Specification - Neural Network Library}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:dn}
 
-I will be creating a C++ class-based library to facilitate the implementation of two layer feed-forward backpropagation neural networks on embedded systems, based on \todo[inline]{ArduinoANN (link to background).}
+I will be creating a C++ class-based library to facilitate the implementation of two layer feed-forward backpropagation neural networks on embedded systems, based on \hyperref[subsec:bg_arduinoann]{ArduinoANN).}
 
 The library is designed to enable a network to be trained on a (more powerful) desktop system, and then uploaded to the embedded system for use.
 
@@ -351,12 +375,14 @@ Because of this, there are two core Network classes: \lstinline{Network_L} (whic
 Functions for writing and reading network configurations to and from disk can be found in the file \lstinline{network-saveload-linux.hpp}
 
 \subsection{Language \& Dependencies}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dn_language}
 
 All three files are written to conform to the C++11 standard\cite{nnref0}. The two Linux-based files further depend on the C++ Standard Template Library, in particular the \lstinline{std::vector} data structure.
 
 The Arduino file lacks the dependency on the STL, but itself depends on the \textit{pgmspace} library.\cite{nnref1}
 
 \subsection{API Reference}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dn_API}
 
 \subsubsection{Network\_L API}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -968,6 +994,7 @@ Saves the given network's configuration to the given file, if necessary overwrit
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Network Configuration File Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dn_fileformat}
 
 \todo[inline]{UPDATE WITH ERROR AND ACTIVATION FUNCTIONS}
 
@@ -1004,18 +1031,20 @@ The specification for the configuration file format is as follows:
 \item One blank line
 \end{itemize}
 
-Examples of valid configuration files can be found \todo[inline]{in the appendices (link)}
+Examples of valid configuration files can be found \hyperref[subsec:a2_configfiles]{in the appendices}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Design \& Specification - Exercise Classifier}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:dc}
 
 The exercise classifier will be a multi-device system that uses a neural network on a microcontroller to classify exercises the user performs, then sends the classification over Bluetooth to a phone for display. The network will be trained on a desktop computer.
 
 \todo[inline]{diagram?}
 
 \subsection{Hardware}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_hardware}
 
 This section details the requirements of the three main pieces of hardware needed to complete the project. It includes both the specifications of the hardware I will use, and the minimum specifications of any alternative hardware.
 
@@ -1026,21 +1055,21 @@ The requirements of the microcontroller for this project are the most stringent,
 \todo[inline]{finish}
 
 \begin{description}
-\item[Processor] The microcontroller's processor needs to be capable of performing a classification within 100 milliseconds, to ensure that the user receives feedback on their exercises in a short enough interval to be useful. Given \todo[inline]{the network}, the minimum clock speed is around 211KHz.\cite{dsref0}
-\item[Memory] \todo[inline]{work out how much memory the damn thing takes}
-\item[Storage] The microcontroller needs to have enough storage for the weights. Given \todo[inline]{the network}, this takes about 17KB not including the bootloader\cite{dsref2}.
+\item[Processor] The microcontroller's processor needs to be capable of performing a classification within 100 milliseconds, to ensure that the user receives feedback on their exercises in a short enough interval to be useful. Given \hyperref[subsec:dc_networkarchitecture]{the chosen network configuration}, the minimum clock speed is around 211KHz.\cite{dsref0}\todo{update?}
+\item[RAM] \todo[inline]{work out how much RAM the damn thing takes}
+\item[Non Volatile Memory] The microcontroller needs to have enough storage for the weights. Given \hyperref[subsec:dc_networkarchitecture]{the chosen network architecture}, this takes about 17KB not including the bootloader\cite{dsref2}.\todo{update?}
 \item[Accelerometer] The microcontroller needs to be capable of measuring acceleration on three axes through an IMU or accelerator, either onboard or via a shield.
 \item[Bluetooth] The microcontroller needs to be capable of connecting over a Bluetooth Low Energy connection, either onboard or via a shield.
 \item[Battery] A battery capable of providing enough current for the chosen microcontroller and enough energy to last three hours between charging/replacement. The Arduino 101 draws around 70 mA when processing intensely,\cite{dsref3} so a 210mAh battery capable of providing this much current is definitely adequate.
-\item[Connectivity] The microcontroller must have some way of connecting to the computer, either over Bluetooth or some form of Serial connnection.
+\item[Connectivity] The microcontroller must have some way of connecting to the computer, either over Bluetooth or some form of Serial connection.
 \end{description}
 
 For my implementation, I used an \textbf{Arduino 101} board, which contains an Intel Curie module. It has the following specifications:\cite{dsref4}
 
 \begin{description}
 \item[Processor] 32MHz
-\item[Memory] 24KB SRAM
-\item[Storage] 196KB Flash memory
+\item[RAM] 24KB SRAM
+\item[Non Volatile Memory] 196KB Flash memory \& 1KB EEPROM
 \item[Accelerometer] 6-axis IMU
 \item[Bluetooth] Integrated BLE 
 \item[Battery] A standard 9V battery, with roughly 500mAh capacity\cite{dsref5}
@@ -1051,9 +1080,7 @@ For my implementation, I used an \textbf{Arduino 101} board, which contains an I
 
 \subsubsection{Microcontroller Attachment}
 
-To attach the microcontroller to the user's body, it will need some form of attachment. For my implementation, I chose to attach the Arduino to a belt with a wide range of possible lengths. This belt was then passed around the wearer's upper torso and secured. 
-
-\todo[inline]{Link to spec which details where it will be (below)}
+To attach the microcontroller to the user's body, it will need some form of attachment. For my implementation, I chose to attach the Arduino to a belt with a wide range of possible lengths. This belt was then passed around the wearer's upper torso and secured \hyperref[subsubsec:dc_dc_placement]{in the correct location.}
 
 \todo[inline]{picture}
 
@@ -1066,7 +1093,7 @@ The requirements of the computer are not onerous, and most of them are standard 
 \item[Memory] Likewise, the computer will need enough memory to hold the network. For any network which can be fitted onto the Flash (or other) memory of a microcontroller, this is unlikely to be a problem.
 \item[USB Ports] At least one USB port is necessary to upload files to the microcontroller.
 \item[Linux] I haven't tested any of the software on other operating systems, so a machine running a Linux variant is probably necessary.
-\item[Software] A list of the necessary software can be found in the \todo{Project Management section (link)}
+\item[Software] A list of the necessary software can be found in the \hyperref[subsec:pp_languages]{Project Management section.}
 \end{description}
 
 My machine, a 2013 Lenovo IdeaPad running Ubuntu 16.04, fulfills all of the above requirements.
@@ -1082,10 +1109,12 @@ My phone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
 \todo[inline]{picture}
 
 \subsection{Microcontroller Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_msa}
 
 There are four different programs to be run on the microcontroller, each with an accompanying program running on the phone or computer. Each program can be found in a folder of the same name, within the folder \lstinline{curie/src/}.
 
-\subsubsection{logger-supervised}
+\subsubsection{logger-supervised}%%%%%%%%%%
+\label{subsubsec:dc_msa_loggersupervised}
 
 This program will be used to log example exercises for training when someone is available to supervise. Because of this, the microcontroller program is simple.
 
@@ -1096,9 +1125,10 @@ While sending data, the microcontroller will blink an LED to indicate activity.
 
 Because of the simplicity of the program, the entirety of the code will be contained in one file called \lstinline{logger-supervised.ino}
 
-When using this program, the accompanying program \lstinline{log-data-supervised} must be run on the computer.\todo{link to section}
+When using this program, \hyperref[subsubsec:dc_csa_logsupervised]{the accompanying program} \lstinline{log-data-supervised} must be run on the computer.
 
-\subsubsection{logger-unsupervised}
+\subsubsection{logger-unsupervised}%%%%%%%%%%
+\label{subsubsec:dc_msa_loggerunsupervised}
 
 This program will be used to log example exercises for training when no one is available to supervise. Because of this, the microcontroller program is slightly more complex than the supervised logger, as it will need to recognise the start and end of movements.
 
@@ -1111,9 +1141,15 @@ It will continue to do this until the end of the motion is detected, at which po
 
 Because of the simplicity of the program, the entirety of the code will be contained in one file called \lstinline{logger-unsupervised.ino}
 
-When using this program, the accompanying program \lstinline{log-data-unsupervised} must be run on the computer. \todo{link to section}
+When using this program, \hyperref[subsubsec:dc_csa_logunsupervised]{the accompanying program} \lstinline{log-data-unsupervised} must be run on the computer.
+
+\subsubsection{logger-ble}%%%%%%%%%%
+\label{subsubsec:dc_msa_loggerble}
+
+\todo[inline]{write spec!}
 
 \subsubsection{classifier-serial}
+\label{subsubsec:dc_msa_classifierserial}
 
 This program will be used to test the classifier without relying on a Bluetooth connection. The use of a Serial connection also allows for the values of the output nodes to be returned for analysis, rather than just the classification.
 
@@ -1126,9 +1162,10 @@ This structure will also implicitly include the implementation file for the netw
 
 \todo[inline]{diagram of includes}
 
-When using this program, the accompanying program \lstinline{analyse-classifications} must be run on the computer. \todo{link to section}
+When using this program, \hyperref[subsubsec:dc_csa_analyse]{the accompanying program} \lstinline{analyse-classifications} must be run on the computer.
 
-\subsubsection{classifier-ble}
+\subsubsection{classifier-ble}%%%%%%%%%%
+\label{subsubsec:dc_msa_classifierble}
 
 This program will be used to perform classifications and send the results to a phone for display, which is the final 'end user' application of the project.
 
@@ -1141,9 +1178,10 @@ This structure will also implicitly include the implementation file for the netw
 
 \todo[inline]{diagram of includes}
 
-When using this program, the accompanying program \lstinline{ble-classifier} must be run on the phone. \todo{link to section}
+When using this program, \hyperref[subsubsec:dc_asa_classifier]{the accompanying program} \lstinline{ble-classifier} must be run on the phone.
 
 \subsection{Linux Computer Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_csa}
 
 There are a variety of programs for the computer, broadly split into four parts:
 
@@ -1151,10 +1189,11 @@ There are a variety of programs for the computer, broadly split into four parts:
 \item C++ programs for creating and training networks using the neural network library
 \item Python scripts for logging and normalising data ready for training
 \item Python scripts to compile the C++ programs and all their dependencies easily. These are noted in the entries for their respective programs.
-\item Unit tests, runners and scripts to compile code for unit testing. These are discussed in the Project Management section \todo{link}
+\item Unit tests, runners and scripts to compile code for unit testing. These are discussed in the \hyperref[subsec:pp_testing]{Project Management section}.
 \end{itemize}
 
-\subsubsection{new-network}
+\subsubsection{new-network}%%%%%%%%%%
+\label{subsubsec:dc_cas_newnetwork}
 
 This program is used to create a new neural network with the configuration specified in the command line arguments, and then save the network configuration to the file with filename specified in the arguments.
 
@@ -1183,6 +1222,7 @@ The main code for this program will be contained in the file \lstinline{new-netw
 Because of these dependencies, the script \lstinline{compile-new-network} in the folder \lstinline{linux/} will be used to compile the new network program into the executable \lstinline{new-network}, for ease of use.
 
 \subsubsection{train}
+\label{subsubsec:dc_csa_train}
 
 This program is used to load a given neural network and then train it on the training data in the given file or directory. The arguments are as follows (in order):
 
@@ -1199,6 +1239,7 @@ The main code for this program will be contained in the file \lstinline{train.cp
 Because of these dependencies, the script \lstinline{compile-train} in the folder \lstinline{linux/} will be used to compile the training program into the executable \lstinline{train}, for ease of use.
 
 \subsubsection{training-set library}
+\label{subsubsec:dc_csa_trainingset}
 
 This code, found in the files \lstinline{training-set.hpp} and \lstinline{training-set.cpp} within the folder \lstinline{linux/src/} define the class \lstinline{TrainingSet} and a single function: \lstinline{TrainingSet *loadTrainingSet(std::string filename);}.
 
@@ -1207,6 +1248,7 @@ This function takes as an argument a filename, which must refer to a properly no
 Keeping this functionality separate enables the precise format of the normalised log files to be decoupled from the logic of training the network.
 
 \subsubsection{log-data-supervised}
+\label{subsubsec:dc_csa_logsupervised}
 
 This script is used to receive accelerometer data over a Serial connection and save it to a given log file, with start and end markings input by the supervisor.
 
@@ -1229,6 +1271,7 @@ This script is entirely contained in the file \lstinline{log-data-supervised} in
 It should be run in conjunction with the \lstinline{logger-supervised} program on the microcontroller.
 
 \subsubsection{log-data-unsupervised}
+\label{subsubsec:dc_csa_logunsupervised}
 
 This script is used to receive accelerometer data over a Serial connection and save it to a given log file, with start and end markings input by the microcontroller.
 
@@ -1242,7 +1285,13 @@ This script is entirely contained in the file \lstinline{log-data-unsupervised} 
 
 It should be run in conjunction with the \lstinline{logger-unsupervised} program on the microcontroller.
 
+\subsubsection{analyse-classifications}
+\label{subsubsec:dc_csa_analyse}
+
+\todo[inline]{write spec!}
+
 \subsubsection{normalise-data}
+\label{subsubsec:dc_csa_normalise}
 
 This program is used to transform the 'raw' log files saved by \lstinline{log-data-supervised} and \lstinline{log-data-unsupervised} into a normalised format suitable for training the neural network on. 
 
@@ -1267,24 +1316,30 @@ This script is entirely contained in the file \lstinline{normalise-data} in the 
 It should be run on files created by the \lstinline{log-data-supervised} and \lstinline{log-data-unsupervised} scripts.
 
 \subsubsection{monitor}
+\label{subsubsec:dc_csa_monitor}
 
 This program simply opens a Serial connection and prints any input over said connection to the screen. It will exit on any key press.
 
+It can be used as an alternative to any of the logging or analysis programs above, if simply reading what is sent over Serial is desired.
+
 \subsection{Android Phone Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_asa}
 
 There are only two programs for the phone, both connecting over Bluetooth to the microcontroller.
 
 \subsubsection{BLE-Classifier}
+\label{subsubsec:dc_asa_classifier}
 
 This program displays the classifications made by the microcontroller, and keeps a tally of the number of exercised performed, which is the final 'end user' application of the project.
 
-After connecting to the microcontroller over a Bluetooth Low Energy connection, the program will display the data in the format defined in the section \todo[inline]{Data Display}
+After connecting to the microcontroller over a Bluetooth Low Energy connection, the program will display the data in the format defined in the \hyperref[subsec:dc_datadisplay]{Data Display section.}
 
 As an Android project, the architecture of the program is relatively complex. All of the code for the program resides in the folder \lstinline{android/ble-classifier}. 
 
 \todo[inline]{Sanitise folder and update section. Do diagram}
 
 \subsubsection{BLE-Logger}
+\label{subsubsec:dc_asa_logger}
 
 This program receives logging data and writes it to a log file along with markers input by the supervisor, in a similar manner to the \lstinline{log-data-supervised} script for computer.
 
@@ -1305,8 +1360,10 @@ As an Android project, the architecture of the program is relatively complex. Al
 \todo[inline]{Sanitise folder and update section. Do diagram}
 
 \subsection{Data Capture \& Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_datacapture}
 
 \subsubsection{Microcontroller Placement}
+\label{subsubsec:dc_dc_placement}
 
 In order to ensure that the results are consistent, the microcontroller must always be calibrated and attached in the same way.
 
@@ -1339,7 +1396,7 @@ The format of the file will be as follows; zero or more instances of \emph{repet
 \item One or more lines with the values of the inputs.
 \end{itemize}
 
-An example of a valid supervised log file can be found \todo[inline]{todo: link}
+An example of a valid supervised log file can be found in \hyperref[subsubsec:a2_lf_supervised]{Appendix 2.}
 
 \subsubsection{Log File Specification (Unsupervised)}
 
@@ -1357,7 +1414,7 @@ Where X and Y are the intervals between the last motion detection event.
 
 Prior to normalisation, the correct targets will need to be manually added to the log file.
 
-An example of a valid unsupervised log file can be found \todo[inline]{todo: link}
+An example of a valid unsupervised log file can be found in \hyperref[subsubsec:a2_lf_unsupervised]{Appendix 2.}
 
 \subsubsection{Normalised Log File Specification}
 
@@ -1373,9 +1430,10 @@ The format of the file will be as follows; zero or more instances of \emph{repet
 
 There should be no blank lines between repetitions.
 
-An example of a valid repetition can be found \todo[inline]{link}
+An example of a valid repetition can be found in \hyperref[subsubsec:a2_lf_normalised]{Appendix 2.}
 
 \subsection{Neural Network Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_networkarchitecture}
 
 The parameters of the neural network for exercise classification will be as follows:
 
@@ -1390,13 +1448,14 @@ The parameters of the neural network for exercise classification will be as foll
 
 \todo[inline]{Update parameters as necessary}
 
-The network parameters were decided upon after experimentation with a variety of values - for more information on how these values were arrived at, see \todo[inline]{section?}
+The network parameters were decided upon after experimentation with a variety of values - for more information on how these values were arrived at, see \hyperref[subsubsec:ev_cp_parameterchoice]{the Evaluation.}
 
-The network will be trained on \todo{number} examples (\todo{breakdown of numbers}), with a further \todo{another number} (\todo{breakdown}) kept back for validation.
+The network will be trained on \todo{number} examples (\todo{breakdown of numbers}), with a further 120 (30 examples each of press ups, sit ups, lunges and invalid exercises) kept back for validation.
 
-For information on how the neural network will work, see the section on the neural network library. \todo[inline]{link}
+For information on how the neural network will work, see the \hyperref[sec:dn]{section on the neural network library.}
 
 \subsection{Classification by the Neural Network}%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_classification}
 
 Having returned a set of output values from the classifier, the following algorithm will be used to classify the result:
 
@@ -1414,15 +1473,15 @@ return classificationIndex
 
 Where \lstinline{index(v,vs)} is a function that returns the index of v in the set vs.
 
-\todo[inline]{include code?}
-
 The classification can then be transmitted to the phone for display (see below).
 
 \subsection{Connectivity}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_connectivity}
 
 The microcontroller will communicate over a Bluetooth Low Energy connection with the phone. Upon classification, the microcontroller will send a single integer representing the (zero indexed) index of the output node corresponding to the classification, or the integer \lstinline{-1} if the input was not classifiable (see above for the specifics of the algorithm).
 
 \subsection{Data Display}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:dc_datadisplay}
 
 In response to the integer transmitted by the microcontroller, the phone will display a message indicating the latest classification. The mapping between the integers and the messages to be displayed is as follows:
 \begin{description}
@@ -1441,14 +1500,16 @@ On updating, the previous message will fade out and the new one fade in. This en
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Project Plan and Management}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:pp}
 
 This section briefly details how I managed my project, and the tools and methodologies that I employed. 
 
-Hardware specifications can be found \todo[inline]{in the Design and Spec section (link)}, while an evaluation of how the various tools and methodologies worked in practice can be found \todo[inline]{in the evaluation section (link)}
+Hardware specifications can be found in the \hyperref[subsec:dc_hardware]{Design and Specification}, while an evaluation of how the various tools and methodologies worked in practice can be found in the \hyperref[subsec:ev_pm]{in the Evaluation.}
 
 \subsection{Timetable}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:pp_tt}
 
-Because the focus of my project changed significantly between the submission of my interim report and the submission of this report, my initial project timetable (as recorded in my interim report) is different to my revised project timetable. The revised project timetable is detailed below, while the initial timetable can be found in the appendices.\todo[inline]{Add initial timetable to appendices and link}
+Because the focus of my project changed significantly between the submission of my interim report and the submission of this report, my initial project timetable (as recorded in my interim report) is different to my revised project timetable. The revised project timetable is detailed below, while the initial timetable can be found in \hyperref[subsec:a3_it]{Appendix 3.}
 
 Because the revised timetable was only drawn up after the interim report, it contains no entries before March.
 
@@ -1460,13 +1521,13 @@ Finish research so as to be ready to start implementation on time.
 
 \subsubsection{Implementation of logging functionality - 14/4/17}
 
-Finish implementation of a logging program to record example data and store it on computer in preparation for training.\todo[inline]{See relevant section and link}
+Finish implementation of a logging program to record example data and store it on computer in preparation for training.
 
 Finishing this functionality early will enable data collection to continue alongside development, so that when I am ready to start training I will have a large enough data set to do so.
 
 \subsubsection{Implementation of C++ neural network library - 28/4/17}
 
-Reimplement ArduinoANN as a C++ library (see \todo[inline]{link to design section}). Additionally, implement a program to train an example of a network on the training data already connected, and do so.
+Re-implement ArduinoANN as a C++ library. Additionally, implement a program to train an example of a network on the training data already connected, and do so.
 
 \subsubsection{Implementation of classifier - 5/5/17}
 
@@ -1496,6 +1557,7 @@ Prepare for the project presentation, fixing bugs as necessary to make a demonst
 Tidy up codebase and write user guide. Fix any remaining bugs and make programs more robust.
 
 \subsection{Version Control}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:pp_vc}
 
 \subsubsection{git}
 
@@ -1507,7 +1569,7 @@ In addition to these two branches, and the feature branches, I used two more lon
 
 The branch \lstinline{data} was created once the logging functionality was complete, and was used to track changes to the loggers and to track the recording of data. This branch was then merged to \lstinline{development} whenever necessary to make the data available for other branches.
 
-The branch \lstinline{documentation} was created at the very start, and contains only documentation, in particular the project diary (\todo[inline]{link}) and both reports. While the projects were both written in Overleaf\todo[inline]{link}, the changes were transferred to the branch regularly.
+The branch \lstinline{documentation} was created at the very start, and contains only documentation, in particular the \hyperref[subsec:a3_pd]{project diary} and both reports. While the projects were both written in \hyperref[subsubsec:pp_ts_overleaf]{Overleaf}, the changes were transferred to the branch regularly.
 
 \subsubsection{Github}
 
@@ -1516,12 +1578,13 @@ Much like git, I chose to use Github\cite{ppref2} to host my git repository larg
 I maintained a repository\cite{ppref3} for the duration of the project and stored virtually everything relating to my project in it.
 
 \subsection{Languages \& Libraries Used}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:pp_ll}
 
-The multi platform nature of this project meant that I used several languages for the various constituent parts/
+The multi platform nature of this project meant that I used several languages for the various constituent parts.
 
 \subsubsection{C++}
 
-The core neural network code (for both the Linux and Arduino versions, see \todo[inline]{link} for details) was written in C++\cite{ppref4}. I also wrote the training and save/load code in C++.
+The core neural network code (for both the Linux and Arduino versions, see \hyperref[sec:dn]{the specification} for details) was written in C++\cite{ppref4}. I also wrote the training and save/load code in C++.
 
 I chose to follow the \lstinline{c++11}\cite{ppref5} standard to enable me to make use of the new \lstinline{std::vector<>} that was introduced with \lstinline{c++11}.
 
@@ -1548,6 +1611,7 @@ Android\cite{ppref14} programs are written in Java, which is then compiled for t
 I wrote the Android phone programs to display data in Java.
 
 \subsection{Tools Used}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:pp_ts}
 
 \subsubsection{GCC}
 
@@ -1569,18 +1633,29 @@ I used version 1.8.2, but any version since 1.6.6 would have worked just as well
 
 I did most of my programming in the CLion\cite{ppref19} IDE. I used version 2016.3.1 
 
-\subsection{Android Studio}
+\subsubsection{Android Studio}
 
 I used Android Studio\cite{ppref20} to edit my Java code, and to manage compilation and upload of the Android code. I used version 2.3.2.
+
+\subsubsection{Overleaf}%%%%%%%%%%
+\label{subsubsec:pp_ts_overleaf}
+
+\todo[inline]{fill this in}
+
+\subsection{Unit Testing \& Test Driven Development}%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:pp_testing}
+
+\todo[inline]{Write this}
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Evaluation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:ev}
 
 My project was broadly split into two major contributions: the implementation of a C++ neural network library, and the implementation of an exercise classifier using the library. For both of these contributions, I managed to complete a complete (if not fully featured) implementation.
 
-Reviewing the project contributions (as defined in the Introduction \todo{link}), the specific list of individual contributions is as follows:
+Reviewing the project contributions (as defined in the \hyperref[subsec:in_contributions]{Introduction}), the specific list of individual contributions is as follows:
 
 \begin{itemize}
 \item Neural Network Library 
@@ -1599,6 +1674,7 @@ Reviewing the project contributions (as defined in the Introduction \todo{link})
 \end{itemize}
 
 \subsection{Neural Network Library Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:ev_nn}
 
 \subsubsection{Implementation of a neural network capable of running on  both desktop and microcontroller}
 
@@ -1612,7 +1688,7 @@ I achieved this by removing the training functionality. This allowed me not only
 
 The lack of training functionality, while not much of a problem in practice, is a major blow because it is a key piece of functionality.The switch to separate 'desktop' and 'microcontroller' versions of the same library also makes maintaining the library more difficult.
 
-Approaches to solving these problems are discussed in the Future Work section \todo{link}.
+Approaches to solving these problems are discussed in the \hyperref[subsec:fw_futurework]{Future Work section.}
 
 \subsubsection{Storage and retrieval of network configurations}
 
@@ -1625,11 +1701,11 @@ This did increase the complexity of the parser for loading configurations on des
 The main downsides of this approach are that it restricts the microcontroller to running only a single neural network at a time, and that the library code is very tightly coupled to the configuration file (indeed it will not compile without it). While the former is unlikely to be much of an issue in practice, it is disappointing not to have made a more general approach work.
 The latter is an issue not because it compromises any of the functionality, but because it will make it much more difficult to change the behaviour of the library in future. 
 
-Approaches to solving these problems are discussed in the Future Work section \todo{link}.
+Approaches to solving these problems are discussed in the \hyperref[subsec:fw_futurework]{Future Work section.}
 
 \subsubsection{Neural Network Evaluation Metrics}
 
-In the introduction\todo{link}, I defined some evaluation metrics for the neural network as follows:
+In the \hyperref[subsubsec:in_cs_nnmetrics]{introduction}, I defined some evaluation metrics for the neural network as follows:
 
 The library must be able to do the following:
 
@@ -1659,17 +1735,16 @@ The RAM usage is very low, mainly because of the lack of training capability. Th
 
 Processing power is also very low - my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. \todo[inline]{update if necessary}
 
-The ease of use is discussed at length in combination with the ease of use for the exercise classifer later in the evaluation.\todo{link}
+The ease of use is discussed at length in combination with the ease of use for the exercise classifier \hyperref[subsec:ev_eu]{later in the evaluation.}
 
 The library really only depends on the version of C++ (C++11 or greater) and the C++ STL, both of which are widely available. 
 
 \subsection{Exercise Classifier Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:ev_cl}
 
 \subsubsection{Programs to acquire training data}
-
-The original design called for three programs to help record training data:
-
-\todo[inline]{link back to design section?}
+\label{subsubsec:ev_cl_training}
+The \hyperref[subse:dc_msa]{final design} called for three programs to help record training data:
 
 \begin{description}
 \item[logger-supervised] For data collection when another person was available to manually delimit and mark exercises
@@ -1677,6 +1752,7 @@ The original design called for three programs to help record training data:
 \item[logger-ble] For data collection without needing to be physically connected to a desktop computer
 \end{description}
 
+\label{para:ev_cl_loggerunsupervised}
 \textbf{logger-unsupervised} presented something of a chicken and egg problem - how do you detect when an exercise starts and ends without knowing what an exercise looks like?
 
 My approach made use of the motion detection features in the Curie IMU - 
@@ -1688,17 +1764,18 @@ To deal with this problem, I decided to implement a second logger that made use 
 
 The only real issue with this program was that it relied on a Serial (USB) connection to my computer, limiting mobility. To address this issue, I decided to implement a third logger that would send the logging data over a Bluetooth Low Energy connection to a phone, allowing me to log data without being tethered to a laptop.
 
+\label{para:ev_cl_loggerble}
 \textbf{logger-ble} was my attempt to solve the issue of being tethered to a laptop when recording data. I attempted an implementation, but was unable to get even a rudimentary version working in time to record any data with it.
 
 The issue was with the BLE Notification system on Android - I was unable to enable notifications, and as such was unable to properly receive new accelerometer values for logging (note that I later fixed this issue enough to implement the BLE classifier).
 
-Although not itself a core contribution, this failure to deliver a working system (the only outright failure to deliver a contribution in this project) had a negative impact on the quantity of data I was able to collect, as discussed in the Data Collection section. \todo{link}
+Although not itself a core contribution, this failure to deliver a working system (the only outright failure to deliver a contribution in this project) had a negative impact on the quantity of data I was able to collect, as discussed in the \hyperref[subsec:ev_ds]{Data Set Contribution section.}
 
 \subsubsection{A trained network capable of reliably classifying the three chosen exercises}
 
 Using the training data that I was able to collect and the neural network library, I determined the optimal parameters for the network and trained it on the data.
 
-An in depth look at the performance of this network can be found in the Classifier Performance section of the evaluation\todo{link}, while the process of finding the optimal parameters is detailed 
+An in depth look at the performance of this network can be found in the \hyperref[subsec:ev_cp]{Classifier Performance section} of the evaluation, while the process of finding the optimal parameters is detailed 
 
 \subsubsection{An implementation of a classifier using the above network, running on a microcontroller}
 
@@ -1706,14 +1783,15 @@ I implemented two versions of the microcontroller-based classifier: \lstinline{c
 
 \textbf{classifier-serial} was fairly simple to implement, drawing on the motion detection that I tested in the \lstinline{logger-unsupervised} program and the neural network library.
 
-The motion detection still retains the flaws detailed earlier\todo{link} - motion detection is temperamental and can force the user to be quite robotic in their movements.
+The motion detection still retains the flaws \hyperref[para:ev_cl_loggerunsupervised]{detailed earlier} - motion detection is temperamental and can force the user to be quite robotic in their movements.
 
-\textbf{classifier-ble} was much more difficult to make work, mostly because of the difficulties presented by the Android BLE Notification system noted earlier\todo{link}. 
-I was surprised to find that working with BLE on the Arduino was much simpler than working with it on Android. Having got this working, the rest of the system was a simple UI for display, which works well. 
+\label{para:ev_cl_classifierble}
+\textbf{classifier-ble} was much more difficult to make work, mostly because of the difficulties presented by the Android BLE Notification system \hyperref[para:ev_cl_loggerble]{noted earlier.
+}I was surprised to find that working with BLE on the Arduino was much simpler than working with it on Android. Having got this working, initially by manually enabling notifications for the BLE connection using a separate application, the rest of the system consisted a simple UI for display, which works well. 
 
 \subsubsection{Exercise Classifier Evaluation Metrics}
 
-In the introduction\todo{link}, I defined some evaluation metrics for the exercise classifier as follows:
+In the \hyperref[subsubsec:in_cs_ecmetrics]{introduction}, I defined some evaluation metrics for the exercise classifier as follows:
 
 The classifier must be able to do the following:
 
@@ -1734,21 +1812,28 @@ If the classifier is efficiently implemented, it will:
 \item It must be as easy to use as possible
 \end{itemize}
 
-Classifier performance is discussed at length in the section below (Classifier Performance\todo{link}), while ease of use is discussed together with the library in the section Ease of Use \todo{link}.
+Classifier performance is discussed at length in the section below (\hyperref[subsec:ev_cp]{Classifier Performance}), while ease of use is discussed together with the library in the section \hyperref[subsec:ev_eu]{Ease of Use.}
 
 The memory usage is very low because the library stores the weights in program memory. This means that only the values of the nodes must be kept in RAM, using X \todo{input actual number}B for the network and Y B \todo{actual number} overall when running (the rest of the memory being used for the BLE functionality).
 
-Processing power is also very low - as previously stated, my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. 
+Processing power is also very low - as previously stated, my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. \todo{update?}
 
 \subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:ev_cp}
+
+\subsubsection{Parameter Choice}%%%%%%%%%%
+\label{subsubsec:ev_cp_parameterchoice}
+
 
 \todo[inline]{All the normal classification measures. Will probably need numbers for all the versions. Note how library constrained performance too (IE wrong error/activation functions)}
 
 \subsection{Energy Consumption}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:ev_energyconsumption}
 
 \todo[inline]{How long did the battery last? Is this practicable for the smaller form factor Curie etc}
 
 \subsection{Ease of Use}%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:ev_eu}
 
 \subsubsection{Neural Network Library}
 
@@ -1780,13 +1865,14 @@ Using the classifier is conceptually simple; the steps are as follows:
 \item Do exercises, and the classifications should appear
 \end{itemize}
 
-In practice there are two problems with this. Firstly, the BLE notifications don't always work and so it may be necessary to manually enable them (as discussed in the section???\todo{link}).
+In practice there are two problems with this. Firstly, the BLE notifications don't always work and so it may be necessary to manually enable them (\hyperref[para:ev_cl_classifierble]{as discussed earlier}).
 
 The second issue is the unreliable motion detection, which can force the user to do their exercises in a somewhat robotic manner. 
 
-Ideas for how to fix these two issues are discussed in the Future Work section. \todo{link}
+Ideas for how to fix these two issues are discussed in the \hyperref[subsec:fw_futurework]{Future Work section.}
 
 \subsection{Data Set Contribution}
+\label{subsec:ev_ds}
 
 It is more or less axiomatic that in the world of machine learning, you can never have too much data. My aim was to record between 500 and 1000 examples of each of the three exercises, with a roughly 3:1 ratio between positive and negative examples, for a total of 3000 example repetitions. This meant that the total number of examples would be equal for each of the four classifications (Press Up, Sit Up, Lunge \& None)
 
@@ -1814,12 +1900,14 @@ My results were as follows:
       \end{tabular}
 \end{center}
 
-It is obvious from the above table that I struggled to get the amount of data that I wanted. Fortunately, the data I did manage to gather seems to have been sufficient (see the section above on Classifier Performance)\todo[inline]{link. Change this if performance was unsatisfactory}
+It is obvious from the above table that I struggled to get the amount of data that I wanted. Fortunately, the data I did manage to gather seems to have been sufficient (see the section above on \hyperref[subsec:ev_cp]{Classifier Performance})\todo[inline]{Change this and below if performance was unsatisfactory}
 
 Nonetheless, it is still worthwhile asking why I failed to record as much data as I originally intended. 
 
 The primary reason that I recorded less data than intended is that press ups, sit ups and lunges are physically taxing.\cite{evref2} This initially limited me to recording around 50 exercises on any given day, even without other forms of exercise, and putting a limit of around 2700 on how many exercises I would be able to record.\cite{evref3} 
 Naturally, recording hundreds of examples of exercises made me fitter and so towards the end of the project I was able to record more examples per day, particularly when I was recording multiple different exercises together rather than one type, but this increase was more than balanced out by the fact that I was only able to record data four\todo{correct?} times a week on average.
+
+In total, I recorded [A] examples - B press ups, C sit ups, D lunges and E invalid exercises. \todo[inline]{input numbers}
 
 To increase the quantity of data collected, and to prevent the network from overfitting to my actions, I attempted to gather data from other people. 
 
@@ -1827,13 +1915,13 @@ Firstly I recorded some data from friends and family, in total recording X examp
 
 Initially, I went to the Department of Computing labs and tried to bribe DoC students to do press ups with sweets. This went about as well as expected, and resulted in no additional data. 
 
-My other solution was to bring the Arduino to a rugby training session and borrow my teammates for a few minutes each to record exercises for me. Unfortunately this idea was thwarted by my inability to make the BLE logger work (see section on contributions\todo{link}), but I am confident that this would have solved my remaining data collection issues.
+My other solution was to bring the Arduino to a rugby training session and borrow my teammates for a few minutes each to record exercises for me. Unfortunately this idea was thwarted by my inability to make the BLE logger work (see \hyperref[para:ev_cl_logerble]{section on contributions}), but I am confident that this would have solved my remaining data collection issues.
 
 \todo[inline]{frantic exercise recording in last week}
 
 \subsubsection{Data Set Evaluation Metrics}
 
-In the introduction\todo{link}, I defined some evaluation metrics for the exercise classifier as follows:
+In the \hyperref[subsubsec:in_cs_dsmetrics]{introduction}, I defined some evaluation metrics for the exercise classifier as follows:
 
 The data set must have the following:
 
@@ -1862,13 +1950,15 @@ I attempted to include a range of valid examples by enlisting other people to pe
 
 I believe that my reliance on supervised exercises using the \lstinline{logger-supervised} program, rather than my unsupervised version has kept the number of misclassified examples low, although this is of course difficult to enumerate.
 
-The final two metrics are discussed in the section Classifier Performance\todo{link}.
+The final two metrics are discussed in the section \hyperref[subsec:ev_cp]{Classifier Performance.}
 
 \subsection{Project Management}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:ev_pm}
 
 Overall, my project management during the project was more of a help than a hindrance. My choices of version control systems, languages and tools caused me very little in the way of real issues, while the inclusion of slippage time in my timetable meant that I was able to deliver the core contributions despite my overrunning on them.
 
 \subsubsection{Timetable}
+\label{subsubsec:ev_pm_timetable}
 
 My timetabling was the weakest part of my project management. The table below details my estimated and actual finish dates for each milestone, along with my estimated and actual time taken to complete each milestone and the percentages of that time.
 
@@ -1896,7 +1986,7 @@ From the table, it's I took longer than expected to reach my milestones and as a
 
 The reasons for this vary on a case by case basis but a common theme is thinking that tasks would be easier than they were, caused by my lack of experience working with embedded systems.
 
-The initial milestone (logging functionality) went exactly to time, but this result hides the fact that I later had to spend time implementing a different logger (see section on contributions for more information \todo{link}), which was only finished on the 26/4 and so took time away from the neural network library.
+The initial milestone (logging functionality) went exactly to time, but this result hides the fact that I later had to spend time implementing a different logger (see \hyperref[subsubsec:ev_cl_training]{section on contributions} for more information), which was only finished on the 26/4 and so took time away from the neural network library.
 
 The second milestone also started well; it took only two days to create a C++ library from the ArduinoANN code, and the rest of the week to finish writing and testing the core network library. The save/load functionality progressed slowly but steadily, and by the end of the milestone I was apparently only a week behind schedule.
 
@@ -1914,19 +2004,21 @@ In actuality, the implementation of the BLE functionality on the microcontroller
 
 Throughout the project (from the 19th of December onwards) I maintained a project diary briefly listing my work on each day. This proved to be a major help in evaluating my project timetable and enabled me to accurately locate what pieces of the project took most and least time.
 
-This dairy can be found \todo[inline]{in the appendices}
+This dairy can be found in \hyperref[subsec:a3_pd]{Appendix 3}
 
 Overall, while my naivety regarding the complexities of implementing embedded software caused most of my project to overrun, my inclusion of a two week extension/buffer at the end meant that I was able to complete the core contributions of my project successfully. 
 
 For future projects I will be careful to factor in time taken to debug things that are harder than they seem, and make sure that I continue to include a buffer at the end of the project.
 
 \subsubsection{Version Control}
+\label{subsubsec:ev_pm_versioncontrol}
 
 In general my use of git and Gitflow worked extremely well. It helped me keep the various aspects of the project separate and at no point did I lose data or have non working code on the \lstinline{development} or \lstinline{master} branches. 
 
 I did notice that I had to manually sync my \lstinline{.gitignore} files across branches, as work done on one branch often added code that needed ignoring in others, but this problem consumed at most couple of minutes a week and never lead to missing data. On a more complicated or multiple developer project, a way of solving this issue would need to be found.
 
 \subsubsection{Languages \& Libraries Used}
+\label{subsubsec:ev_pm_languages}
 
 Most of the language choices in the project were made for me - Arduino programming must be done in Arduino C/C++ and Android programming is almost exclusively in Java. 
 
@@ -1937,6 +2029,7 @@ The choice of Catch to unit test my code proved a good one. I ended up with 464 
 I feel that my choice of Python to do my scripting in (rather than Bash or another option) was the correct one. Python is powerful and easy to use - it enabled me to quickly write scripts to do many of the mundane tasks required and so concentrate on the more difficult aspects of my project. 
 
 \subsubsection{Tools Used}
+\label{subsubsec:ev_pm_tools}
 
 I had no real issues with GCC (at one point I thought I was getting errors due to the version, but this was proved false), likewise with AVR-GCC.
 
@@ -1946,8 +2039,10 @@ The Arduino IDE managed the upload of files well, but I found the editing side t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions and Future Work}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:fw}
 
 \subsection{Conclusion}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:fw_conclusion}
 
 The twin goals of this project were to develop a neural network library for embedded systems, and then to implement an exercise classifier using the library. Both of these goals have been met, albeit with some caveats, so I consider the project to be a qualified success.
 
@@ -1960,6 +2055,7 @@ Unfortunately the difficulties encountered during implementation of the neural n
 Through the implementations above I proved that it is possible to run artificial neural networks on microcontrollers, and made it easier for others to do so.
 
 \subsection{Future Work}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:fw_futurework}
 
 While I have completed what I believe to be minimal viable implementations for both of these contributions, there are many things that could be done to make them more useful.
 
@@ -2050,26 +2146,33 @@ To pick an example close to my own interests, rugby players could use such a sys
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Appendix 1: User Guide}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:a1}
 
 \subsection{Installation}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:a1_installation}
 
 \todo[inline]{How to: install all the stuff. Ideally git repo + single script to install dependencies should be enough}
 
-\subsection{Setup}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Training}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:a1_training}
 
 \todo[inline]{How to get ready to classify (inc. training the network to match your movements, probably. If not this section becomes less useful).}
 
 \subsection{Usage}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:a1_usage}
 
 \todo[inline]{How to: actually use the thing}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Appendix 2: Examples and Code Samples}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:a2}
 
 \subsection{Example Log Files}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:a2_lf}
 
 \subsubsection{Supervised Log File Example}
+\label{subsubsec:a2_lf_supervised}
 
 An example of a valid supervised log file is as follows (this example contains two repetitions, and there are two output nodes - the correct target is the first of the two):
 
@@ -2123,6 +2226,7 @@ Repetition End
 \end{lstlisting}
 
 \subsubsection{Unsupervised Log File Example}
+\label{subsubsec:a2_lf_unsupervised}
 
 An example of a valid unsupervised log file is as follows (this example contains one valid repetition and an unfinished one, which will be removed in the normalisation process):
 
@@ -2167,9 +2271,10 @@ Motion detected after  784  milliseconds. Logging...
  -1676 -6678 26284
 \end{lstlisting}
 
-\subsubsection{Normalised Log File Example}
+\subsubsection{Normalised Repetition Example}%%%%%%%%%%
+\label{subsubsec:a2_lf_normalised}
 
-An example of a valid repetition for a network with 20 input nodes and one output node is as follows:
+An example of a valid repetition for a network with 20 input nodes and three output nodes is as follows:
 
 \begin{lstlisting}
 Repetition start
@@ -2195,15 +2300,18 @@ Repetition start
 18608
 Repetition end
 1
+0
+0
 \end{lstlisting}
 
 \subsection{Example Network Configuration Files}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:a2_configfiles}
 
 \subsubsection{Untrained Network}
 
 \todo[inline]{Complete this}
 
-\subsection{Trained Network}
+\subsubsection{Trained Network}
 
 This example shows a network that has undergone training. As such, the \lstinline{TrainingCycle} counter has increased, and some weights are now larger than the defined \lstinline{initialWeightMax}.
 
@@ -2265,6 +2373,7 @@ const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
 
 
 \subsection{Code Samples}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:a2_codesamples}
 
 \todo[inline]{Code samples?}
 
@@ -2272,8 +2381,25 @@ const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Appendix 3: Initial Timetable \&Project Diary}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:a3}
+
+\subsection{Initial Timetable}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:a3_it}
+
+\todo[inline]{enter this}
+
+\subsection{Project Diary}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{subsec:a3_pd}
+
+\todo[inline]{enter this}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Bibliography}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:bi}
 
 \begin{thebibliography}{9}
 
