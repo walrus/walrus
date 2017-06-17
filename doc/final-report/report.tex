@@ -50,8 +50,7 @@
 
 \begin{document}
 
-\title{\textbf{WALRUS:}\\
-Exercise classification on embedded hardware}
+\title{Using Artificial Neural Networks for Classification on Embedded Hardware}
 \date{2017}
 \author{
 Daniel Clay\\
@@ -90,25 +89,23 @@ Daniel Clay\\
 
 \subsection{Motivation}%%%%%%%%%%%%%%%%%%%%%%%%%
 
+As the growths of machine learning and the Internet of Things continue apace, the overlap between the two is driving the demand for smart devices. While the standard way to provide intelligent functionality of embedded systems is to connect them to more computational power via the cloud, this is not always an option.
 
+With the growth in power of embedded systems, it is becoming more and more feasible to do simple machine learning onboard. Unfortunately, most machine learning frameworks and programs (Torch, Numenta, Tensorflow et al) are not compatible with the operating systems and restricted resources available on embedded systems, leaving those who wish to do machine learning on embedded systems needing to write their own machine learning applications from scratch. This represents a high barrier to entry.
 
-
-In the West, obesity is a growing problem - as of 2015, \textbf{62.9\%} of adults in the UK were either overweight or obese, a number which is still increasing.\cite{inref1}
-
-While many people express a desire to exercise more this does not always translate into action, and one of the reasons for this is that
-people often don't know how to exercise, and even if they do exercise this lack of knowledge stops or hampers them from exercising as effectively as they might be able to.
-
-Traditionally the solution to this dilemma has been provided by people like coaches, instructors and personal trainers. They generally bring a lot of expertise and experience, and are highly effective, but the cost of hiring them can be unaffordable for many people.
-
-With advances in technology, more and more of the tasks which personal trainers and their ilk were relied upon to do can instead be performed by machines. Companies are starting to release gadgets which can classify different exercises, normally into large groups such as 'walking' or 'cycling', but as yet they do not tell the user how well they are performing said exercise.
+To solve this problem, what is necessary are a new class of cross-platform machine learning frameworks to facilitate machine learning on embedded systems.
 
 \subsection{Issues}%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{What makes this difficult}
+The main issue making implementation of machine learning applications on embedded systems is their lack of resources. Neural networks and similar programs typically use a large number of neurons and connections, trained on a large amount of data.
+
+Likewise, much of the currently favoured machine learning algorithms are extremely computationally expensive, and even on high performance systems can take hours or days to train.
+
+In order to work, a neural network running on an embedded system will have to make do with far fewer neurons and much simpler algorithms for training. The challenge is not so much whether this can be done, but whether this can be done and still remain effective.
 
 \subsection{Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-My contributions for this project will be split broadly into two areas: a neural network library, and an exercise classifier using the library.
+My contributions for this project will be split broadly into two areas: a neural network library designed specifically to run on embedded systems, and an exercise classifier implemented using the library as an example of the system in use.
 
 A more specific breakdown of the contributions is as follows:
 
@@ -142,12 +139,12 @@ For the library, capability means that it must be able to do the following:
 \begin{itemize}
 \item Create an arbitrarily sized network (with one hidden layer)
 \item Run on both desktop and embedded systems
-\item Be capable of storing and retrieving configurations from disk
-\item Be capable of implementing all the functionality of ArduinoANN
+\item Be capable of storing and retrieving configurations from non volatile memory
+\item Be capable of implementing all the functionality of ArduinoANN\todo{link}
 \end{itemize}
 
 For the library, efficiency means the following:
-
+\todo[inline]{quantify metrics}
 \begin{itemize}
 \item It must use as little memory as possible
 \item It must use as little processing power as possible
@@ -166,6 +163,7 @@ For the classifier, capability means that it must be able to do the following:
 \end{itemize}
 
 For the classifier, efficiency means the following:
+\todo[inline]{quantify metrics}
 
 \begin{itemize}
 \item It must classify the movements reliably and correctly
@@ -184,9 +182,10 @@ For the data set, capability means that it must have the following:
 \end{itemize}
 
 For the data set, efficiency means the following:
-
+\todo[inline]{quantify metrics}
 \begin{itemize}
 \item It must have as little noise as possible
+\item It must include as much of the set of valid examples as possible
 \item It must have as few misclassified examples as possible
 \item It must have the correct balance of examples so as to maximise the efficiency of the classifier
 \item It must have enough examples to train the classifier effectively
@@ -203,7 +202,7 @@ Neural networks are currently the focus of a lot of research in academia, and al
 
 Because my project is centered around a novel usage of existing neural network techniques, rather than any new techniques, my research into the theory of neural networks has been relatively limited, and I have focussed on their application to my project.
 
-Most of my general knowledge of Neural Networks comes from the third year DoC course \textbf{395 Machine Learning}\cite{bgref0}. (in particular, see the notes for the Artificial Neural Networks lectures):
+Most of my general knowledge of neural networks comes from the third year DoC course \textbf{395 Machine Learning}\cite{bgref0}. (in particular, see the notes for the Artificial Neural Networks lectures).
 
 As well as the course notes, the lecturers have recommended several other resources (a list of which can be found on the previously linked page), of which the paper \textit{Artifical Neural Networks: A Tutorial}\cite{bgref1} is the most relevant. This provided an overall introduction to neural networks and gave a different perspective to that given by the DoC course.
 
@@ -243,7 +242,7 @@ Bluetooth Low Energy\cite{bgref7} is a low power version of the Bluetooth standa
 
 \subsection{Fitness Trackers}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-There are a wide variety of fitness trackers available on the market - most utilise a combination of gyroscopes, accelerometers and GPS, and more sometimes heart rate monitors, altimeters and other sensors to track the user's movements and provide feedback.
+There are a wide variety of fitness trackers available on the market - most utilise a combination of gyroscopes, accelerometers and GPS, and in addition sometimes heart rate monitors, altimeters and other sensors to track the user's movements and provide feedback.
 
 Tracking via sensors other than those available on the Intel Curie (I.E. gyroscope and accelerometer) is outside the scope of this project, so I will be ignoring this functionality in other fitness trackers.
 
@@ -315,7 +314,7 @@ For more specific information on unanchored sit ups, the article \textit{How to 
 The proper technique for a sit up, with the caveats above, is as follows:
 
 \begin{itemize}
-    \item Lie flat on your back, with your knees bent at a 90° angle and feet on the floor. Cross your arms over your chest and straighten your neck. and spine.
+    \item Lie flat on your back, with your knees bent at a 90° angle and feet on the floor. Cross your arms over your chest and straighten your neck and spine.
     \item Keeping your legs immobile, lift your back off the floor by flexing at the waist, and continue until your back is vertical. This should be a smooth, controlled movement not a jerk, and should not be assisted by the arms. Your neck should remain straight, but the spine can flex a little. You may find it helpful to exhale as you do this.
     \item Having reached the upright position, rest if necessary and lower yourself back down in the same manner. You may find it helpful to inhale as you do this.
 \end{itemize}
@@ -360,6 +359,8 @@ The Arduino file lacks the dependency on the STL, but itself depends on the \tex
 \subsection{API Reference}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Network\_L API}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{UPDATE WITH ERROR AND ACTIVATION FUNCTIONS}
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -968,6 +969,8 @@ Saves the given network's configuration to the given file, if necessary overwrit
 
 \subsection{Network Configuration File Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\todo[inline]{UPDATE WITH ERROR AND ACTIVATION FUNCTIONS}
+
 Network configurations will be laid out in such a way that the configuration files are valid C++ header files and can be stored in Arduino program memory through the \lstinline{#include} directive.
 
 To that end, configuration files will be stored as \lstinline{.h} files.
@@ -1028,7 +1031,7 @@ The requirements of the microcontroller for this project are the most stringent,
 \item[Storage] The microcontroller needs to have enough storage for the weights. Given \todo[inline]{the network}, this takes about 17KB not including the bootloader\cite{dsref2}.
 \item[Accelerometer] The microcontroller needs to be capable of measuring acceleration on three axes through an IMU or accelerator, either onboard or via a shield.
 \item[Bluetooth] The microcontroller needs to be capable of connecting over a Bluetooth Low Energy connection, either onboard or via a shield.
-\item[Battery] A battery capable of providing enough current for the chosen microcontroller. The Arduino 101 draws around 70 mA when processing reasonably intensely.\cite{dsref3}
+\item[Battery] A battery capable of providing enough current for the chosen microcontroller and enough energy to last three hours between charging/replacement. The Arduino 101 draws around 70 mA when processing intensely,\cite{dsref3} so a 210mAh battery capable of providing this much current is definitely adequate.
 \item[Connectivity] The microcontroller must have some way of connecting to the computer, either over Bluetooth or some form of Serial connnection.
 \end{description}
 
@@ -1040,7 +1043,7 @@ For my implementation, I used an \textbf{Arduino 101} board, which contains an I
 \item[Storage] 196KB Flash memory
 \item[Accelerometer] 6-axis IMU
 \item[Bluetooth] Integrated BLE 
-\item[Battery] A standard 9V battery
+\item[Battery] A standard 9V battery, with roughly 500mAh capacity\cite{dsref5}
 \item[Connectivity] USB
 \end{description}
 
@@ -1072,7 +1075,7 @@ My machine, a 2013 Lenovo IdeaPad running Ubuntu 16.04, fulfills all of the abov
 
 \subsubsection{Android Phone}
 
-Bluetooth Low Energy support was added in Android 4.3 (Jelly Bean MR2), with the Level 18 API.\cite{dsref5} Any phone running Android 4.3 or later, and which supports Bluetooth Low Energy, will suffice for this project.
+Bluetooth Low Energy support was added in Android 4.3 (Jelly Bean MR2), with the Level 18 API.\cite{dsref6} Any phone running Android 4.3 or later, and which supports Bluetooth Low Energy, will suffice for this project.
 
 My phone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
 
@@ -1313,11 +1316,11 @@ Because calibration requires no movement, it is best to place the microcontrolle
 
 The board must then be attached in the same place for each exercise. This placement can vary as long as it is always the same for the exercise. I chose the following placements:
 
-For the press ups and lunges, on the back between the shoulder blades with the belt tight up under the armpits, and the USB port orientated to the left (the writing on the board is the correct way up). This keeps the microcontroller well out of the way, and prevents the possibility of damaging it while doing press ups.
+For the press ups and lunges, on the back between the shoulder blades with the belt tight up under the armpits, and the USB port orientated to the left shoulder (the writing on the board should be the correct way up). This keeps the microcontroller well out of the way, and prevents the possibility of damaging it while doing press ups.
 
 \todo[inline]{picture}
 
-For the sit ups, because placing it on the back would potentially cause damage, I placed it on the front of the user's torso just below the collarbone, with the belt once again tight up under the armpits and the USB port pointing to the left (as before, the writing should be the correct way up).
+For the sit ups, because placing it on the back would potentially cause damage, I placed it on the front of the user's torso just below the collarbone, with the belt once again tight up under the armpits and the USB port pointing to the right shoulder (as before, the writing should be the correct way up).
 
 \todo[inline]{picture}
 
@@ -1652,9 +1655,9 @@ If the library is efficiently implemented, it will:
 
 For the above efficiency metrics, once again they have been met to a reasonable degree. 
 
-The memory usage is very low, mainly because of the lack of training capability. This means that only the values of the nodes must be kept in memory, using X \todo{input actual number}B for my exercise classifier example with 20 input nodes, 10 hidden nodes and one output node. 
+The RAM usage is very low, mainly because of the lack of training capability. This means that only the values of the nodes must be kept in RAM, using X \todo{input actual number}B for my exercise classifier example with 20 input nodes, 10 hidden nodes and one output node. \todo[inline]{update example}
 
-Processing power is also very low - my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. 
+Processing power is also very low - my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. \todo[inline]{update if necessary}
 
 The ease of use is discussed at length in combination with the ease of use for the exercise classifer later in the evaluation.\todo{link}
 
@@ -1815,16 +1818,18 @@ It is obvious from the above table that I struggled to get the amount of data th
 
 Nonetheless, it is still worthwhile asking why I failed to record as much data as I originally intended. 
 
-The primary reason that I recorded less data than intended is that press ups, sit ups and lunges are physically taxing.\cite{evref2} This limited me to recording around 50 exercises on any given day, even without other forms of exercise, and putting a hard limit of around 2700 on how many exercises I was able to record.\cite{evref3} 
+The primary reason that I recorded less data than intended is that press ups, sit ups and lunges are physically taxing.\cite{evref2} This initially limited me to recording around 50 exercises on any given day, even without other forms of exercise, and putting a limit of around 2700 on how many exercises I would be able to record.\cite{evref3} 
 Naturally, recording hundreds of examples of exercises made me fitter and so towards the end of the project I was able to record more examples per day, particularly when I was recording multiple different exercises together rather than one type, but this increase was more than balanced out by the fact that I was only able to record data four\todo{correct?} times a week on average.
 
 To increase the quantity of data collected, and to prevent the network from overfitting to my actions, I attempted to gather data from other people. 
 
-Firstly I recorded some data from friends and family, in total recording X examples \todo{input number}. This helped somewhat, but was never going to allow me to collect hundreds of examples in a day, so I decided to try and collect data from a larger group.
+Firstly I recorded some data from friends and family, in total recording X examples \todo{input number}. This helped somewhat, but made it difficult to collect hundreds of examples in a day, so I decided to try and collect data from a larger group.
 
 Initially, I went to the Department of Computing labs and tried to bribe DoC students to do press ups with sweets. This went about as well as expected, and resulted in no additional data. 
 
 My other solution was to bring the Arduino to a rugby training session and borrow my teammates for a few minutes each to record exercises for me. Unfortunately this idea was thwarted by my inability to make the BLE logger work (see section on contributions\todo{link}), but I am confident that this would have solved my remaining data collection issues.
+
+\todo[inline]{frantic exercise recording in last week}
 
 \subsubsection{Data Set Evaluation Metrics}
 
@@ -1845,12 +1850,15 @@ If the data set is efficient, it will:
 
 \begin{itemize}
 \item It must have as little noise as possible
+\item It must include as much of the set of valid examples as possible
 \item It must have as few misclassified examples as possible
 \item It must have the correct balance of examples so as to maximise the efficiency of the classifier
 \item It must have enough examples to train the classifier effectively
 \end{itemize}
 
 The amount of noise in the dataset is difficult to evaluate. Certainly my normalising approach (dropping or duplicating data points at random) increased the noise, but the calibration methods and consistency of data collection have reduced the noise as far as practicable.
+
+I attempted to include a range of valid examples by enlisting other people to perform exercises for me, with varying results. This meant that the data set is heavily skewed towards the data I recorded myself, and so the training will be skewed towards my specific style of exercises rather than a more generic style.
 
 I believe that my reliance on supervised exercises using the \lstinline{logger-supervised} program, rather than my unsupervised version has kept the number of misclassified examples low, although this is of course difficult to enumerate.
 
@@ -1896,13 +1904,17 @@ This illusion was comprehensively shattered when implementing the classifier. Al
 
 Initially I misdiagnosed the error as being due to the difference between certain constructs in C++11 and previous versions of C++, and spend two days trying to fix this before realising that the implementation of the C++ STL available on the Arduino didn't include key necessary features (\lstinline{std::vector, std::random_device} and \lstinline{std::string}. I managed to overcome this problem with an external library, and by the 12/5 had managed to make the network run on the classifier, if not work properly.
 
-It was at this point that I encountered the lack of memory problem, and decided that I needed two versions of the network library. Rewriting the network library took until the 23/5, at which point the classifier itself took only three days. 
+It was at this point that I encountered the lack of RAM problem, and decided that I needed two versions of the network library. Rewriting the network library took until the 23/5, at which point the classifier itself took only three days. 
 
 From the above it's clear that my estimate for the amount of work to implement the classifier was relatively accurate, but that said estimate relied on a working library which I did not have. My mistakes implementing the neural network library put me three weeks behind schedule, and it was at this point that I decided to abandon the extension completely and get a minimum viable implementation of the BLE classifer running, giving myself until 6/6 to do so.
 
 In actuality, the implementation of the BLE functionality on the microcontroller took less than a day, and most of the time was spent wrestling with the Android portion of the program. I managed to get the minimum viable implementation running on the 5/6, and started work on the report on the 7/6, only four days behind schedule.
 
 \todo[inline]{Finish writing this section when report is almost done}
+
+Throughout the project (from the 19th of December onwards) I maintained a project diary briefly listing my work on each day. This proved to be a major help in evaluating my project timetable and enabled me to accurately locate what pieces of the project took most and least time.
+
+This dairy can be found \todo[inline]{in the appendices}
 
 Overall, while my naivety regarding the complexities of implementing embedded software caused most of my project to overrun, my inclusion of a two week extension/buffer at the end meant that I was able to complete the core contributions of my project successfully. 
 
@@ -1912,7 +1924,7 @@ For future projects I will be careful to factor in time taken to debug things th
 
 In general my use of git and Gitflow worked extremely well. It helped me keep the various aspects of the project separate and at no point did I lose data or have non working code on the \lstinline{development} or \lstinline{master} branches. 
 
-I did notice that I had to manually sync my \lstinline{.gitignore} files across branches, as work done on one branch often added code that needed ignoring in others, but this was problem consumed a couple of minutes a week and never lead to missing data.
+I did notice that I had to manually sync my \lstinline{.gitignore} files across branches, as work done on one branch often added code that needed ignoring in others, but this problem consumed at most couple of minutes a week and never lead to missing data. On a more complicated or multiple developer project, a way of solving this issue would need to be found.
 
 \subsubsection{Languages \& Libraries Used}
 
@@ -2267,12 +2279,6 @@ const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
 
 % Introduction references (inref#)
 
-\bibitem{inref1}
-\url{http://webarchive.nationalarchives.gov.uk/20170110165405/http://www.noo.org.uk/NOO_about_obesity/adult_obesity/UK_prevalence_and_trends}
-\textbf{Public Health England / UK Government}
-UK and Ireland obesity prevalence and trends
-\\\textit{Accessed 7/6/2017}
-
 % Background references (bgref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibitem{bgref0}
@@ -2471,6 +2477,12 @@ Intel Curie Module Datasheet
 \\\textit{Accessed 10/6/17}
 
 \bibitem{dsref5}
+\url{http://www.techlib.com/reference/batteries.html}
+\textbf{C. Wenzel, Techlib.com}
+Battery Capacity
+\\\textit{Accessed 17/6/17}
+
+\bibitem{dsref6}
 \url{https://developer.android.com/about/versions/android-4.3.html#Wireless}
 \textbf{Google}
 Android 4.3 API Guide
