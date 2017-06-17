@@ -99,7 +99,6 @@ TEST_CASE("The core network functionality is all correct") {
                 output[i] = test_dist(m_mt);
             }
 
-            //This is a bit messy, but will work until I replace all the arrays with vectors
             float error = network.trainNetwork(input, output);
 
             REQUIRE(error > 0.0f);
@@ -200,7 +199,6 @@ TEST_CASE("The core network functionality is all correct") {
                 output[i] = test_dist(m_mt);
             }
 
-            //This is a bit messy, but will work until I replace all the arrays with vectors
             float error = network.trainNetwork(input, output);
 
             REQUIRE(error > 0.0f);
@@ -273,7 +271,6 @@ TEST_CASE("The core network functionality is all correct") {
                 output[i] = test_dist(m_mt);
             }
 
-            //This is a bit messy, but will work until I replace all the arrays with vectors
             float error = network.trainNetwork(input, output);
 
             REQUIRE(error > 0.0f);
@@ -329,7 +326,6 @@ TEST_CASE("The core network functionality is all correct") {
                 output[i] = test_dist(m_mt);
             }
 
-            //This is a bit messy, but will work until I replace all the arrays with vectors
             float error = network.trainNetwork(input, output);
 
             REQUIRE(error > 0.0f);
@@ -385,7 +381,6 @@ TEST_CASE("The core network functionality is all correct") {
                 output[i] = test_dist(m_mt);
             }
 
-            //This is a bit messy, but will work until I replace all the arrays with vectors
             float error = network.trainNetwork(input, output);
 
             REQUIRE(error > 0.0f);

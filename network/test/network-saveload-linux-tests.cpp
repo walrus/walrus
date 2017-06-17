@@ -122,7 +122,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         THEN("The fourteenth line records the activation function correctly") {
             std::string afBody = "// ActivationFunction (not needed on Arduino):";
             REQUIRE(lines[13].substr(0, 46) == afBody);
-            ActivationFunction fileAF = stringToAF(lines[13].substr(47, lines[13].length()-48));
+            ActivationFunction fileAF = stringToAF(lines[13].substr(47, lines[13].length()-47));
             REQUIRE(fileAF == af);
         }
 
