@@ -6,6 +6,7 @@
  */
 
 #include <random>
+#include <iostream>
 
 #include "network-linux.hpp"
 
@@ -387,4 +388,58 @@ void Network_L::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) 
 
 void Network_L::setOutputWeights(std::vector<std::vector<float>> outputWeights) {
     Network_L::outputWeights = outputWeights;
+}
+
+
+/*
+ * Utility function to get an Activation Function from a string
+ */
+ActivationFunction stringToAF(std::string name) {
+    if (name == "Sigmoid") {
+        return ActivationFunction::Sigmoid;
+    } else if (name == "ReLu") {
+        return ActivationFunction::ReLu;
+    } else {
+        std::cout << "Activation function not recognised: " << name << "\n";
+        return ActivationFunction::Sigmoid; // Default to Sigmoid
+    }
+}
+
+
+/*
+ * Utility function to get the string representation of an Activation Function
+ */
+std::string aFToString(ActivationFunction af) {
+    if (af == ActivationFunction::Sigmoid) {
+        return "Sigmoid";
+    } else if (af == ActivationFunction::ReLu) {
+        return "ReLu";
+    }
+}
+
+
+/*
+ * Utility function to get an Error Function from a string
+ */
+ErrorFunction stringToEF(std::string name) {
+    if (name == "SumSquared") {
+        return ErrorFunction::SumSquared;
+    } else if (name == "CrossEntropy") {
+        return ErrorFunction::CrossEntropy;
+    } else {
+        std::cout << "Error function not recognised: " << name << "\n";
+        return ErrorFunction::SumSquared;
+    }
+}
+
+
+/*
+ * Utility function to get the string representation of an Error Function
+ */
+std::string eFToString(ErrorFunction ef) {
+    if (ef == ErrorFunction::SumSquared) {
+        return "SumSquared";
+    } else if (ef == ErrorFunction::CrossEntropy) {
+        return "CrossEntropy";
+    }
 }

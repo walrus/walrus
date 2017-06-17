@@ -28,10 +28,13 @@ Network_L *loadNetwork(std::string filename) {
 
     long tc = std::stol(lines[12].substr(42, lines[12].length()-42));
 
+    ActivationFunction af = stringToAF(lines[13].substr(47, lines[13].length()-47));
+    ErrorFunction ef = stringToEF(lines[14].substr(42, lines[14].length()-42));
+
     Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm, tc);
 
     // Parse the hidden weights
-    int line_num = 15;
+    int line_num = 17;
     std::vector<std::vector<float>> hiddenWeights;
     hiddenWeights.resize(nin+1, std::vector<float>(nhn));
 
@@ -54,7 +57,7 @@ Network_L *loadNetwork(std::string filename) {
     }
 
     // Parse the output weights
-    line_num = 18 + (nin + 1);
+    line_num = 20 + (nin + 1);
     std::vector<std::vector<float>> outputWeights;
     outputWeights.resize(nhn+1, std::vector<float>(non));
 
@@ -81,7 +84,6 @@ Network_L *loadNetwork(std::string filename) {
     return network;
 }
 
-
 int saveNetwork(std::string filename, Network_L *network) {
     std::ofstream config_file (filename);
     if (!config_file.is_open() || config_file.bad()) {
@@ -106,6 +108,9 @@ int saveNetwork(std::string filename, Network_L *network) {
     config_file << "\n";
 
     config_file << "// TrainingCycle (not needed on Arduino): " << std::to_string(network->getTrainingCycle()) <<"\n";
+    config_file << "// ActivationFunction (not needed on Arduino): " << aFToString(network->getActivationFunction()) <<"\n";
+    config_file << "// ErrorFunction (not needed on Arduino): " << eFToString(network->getErrorFunction()) <<"\n";
+
     config_file << "\n";
 
 

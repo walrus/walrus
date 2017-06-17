@@ -6,7 +6,13 @@
 
 enum class ActivationFunction {Sigmoid, ReLu};
 
+ActivationFunction stringToAF(std::string name);
+std::string aFToString(ActivationFunction af);
+
 enum class ErrorFunction {SumSquared, CrossEntropy};
+
+ErrorFunction stringToEF(std::string name);
+std::string eFToString(ErrorFunction ef);
 
 class Network_L {
 private:

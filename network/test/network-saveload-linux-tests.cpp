@@ -18,6 +18,8 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         float diwm = 0.5;
 
         long tc = 0;
+        ActivationFunction af = ActivationFunction::Sigmoid;
+        ErrorFunction ef = ErrorFunction::SumSquared;
 
         Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
@@ -59,7 +61,6 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         THEN("The fifth line is blank") {
             REQUIRE(lines[4] == "");
         }
-
 
         THEN("The main configuration options are all recorded") {
             REQUIRE(lines.size() >= 10);
@@ -114,24 +115,38 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         THEN("The thirteenth line records the training cycle correctly") {
             std::string tcBody = "// TrainingCycle (not needed on Arduino):";
             REQUIRE(lines[12].substr(0, 41) == tcBody);
-            float fileTC = std::stol(lines[12].substr(42, lines[12].length()-42));
+            long fileTC = std::stol(lines[12].substr(42, lines[12].length()-42));
             REQUIRE(fileTC == tc);
         }
 
-        THEN("The fourteenth line is blank") {
-            REQUIRE(lines[13] == "");
+        THEN("The fourteenth line records the activation function correctly") {
+            std::string afBody = "// ActivationFunction (not needed on Arduino):";
+            REQUIRE(lines[13].substr(0, 46) == afBody);
+            ActivationFunction fileAF = stringToAF(lines[13].substr(47, lines[13].length()-48));
+            REQUIRE(fileAF == af);
         }
 
-        THEN("The fifteenth line records the hidden weight declaration") {
-            REQUIRE(lines[14] == "const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
+        THEN("The fifteenth line records the activation function correctly") {
+            std::string efBody = "// ErrorFunction (not needed on Arduino):";
+            REQUIRE(lines[14].substr(0, 41) == efBody);
+            ErrorFunction fileEF = stringToEF(lines[14].substr(42, lines[14].length()-42));
+            REQUIRE(fileEF == ef);
+        }
+
+        THEN("The sixteenth line is blank") {
+            REQUIRE(lines[15] == "");
+        }
+
+        THEN("The seventeenth line records the hidden weight declaration") {
+            REQUIRE(lines[16] == "const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
         }
 
         THEN("The hidden weights are all recorded") {
-            REQUIRE(lines.size() >= 15 + (nin + 1));
+            REQUIRE(lines.size() >= 17 + (nin + 1));
         }
 
         THEN("The correct lines record the hidden weights correctly") {
-            int line_num = 15;
+            int line_num = 17;
             float weight_from_file, weight_from_vector;
 
             std::vector<std::vector<float>> hiddenWeights = network->getHiddenWeights();
@@ -157,7 +172,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             }
         }
 
-        int previous_lines = 15 + (nin + 1);
+        int previous_lines = 17 + (nin + 1);
 
         THEN("The line after the hidden weights encloses the array") {
             REQUIRE(lines[previous_lines] == "};");
@@ -234,7 +249,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
         config_file.close();
 
-        GIVEN("A saved network") {
+        GIVEN("A saved network configuration, which is then loaded") {
 
             Network_L loaded_network = *loadNetwork(filename);
 
@@ -263,7 +278,15 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             }
 
             THEN("The network is created with the correct training cycle") {
-                REQUIRE(loaded_network.getTrainingCycle() == 0);
+                REQUIRE(loaded_network.getTrainingCycle() == tc);
+            }
+
+            THEN("The network is created with the correct activation function") {
+                REQUIRE(loaded_network.getActivationFunction() == af);
+            }
+
+            THEN("The network is created with the correct error function") {
+                REQUIRE(loaded_network.getErrorFunction() == ef);
             }
 
             THEN("The network is created with the correct hidden weights") {
