@@ -32,6 +32,7 @@ Network_L::Network_L(int numInputNodes,
     accumulatedInput = 0.0f;
 
     activationFunction = ActivationFunction::Sigmoid;
+    errorFunction = ErrorFunction::SumSquared;
 
     hiddenNodes.resize(numHiddenNodes);
     outputNodes.resize(numOutputNodes);
@@ -143,7 +144,7 @@ void Network_L::computeOutputLayerActivations() {
         for(int j = 0 ; j < numHiddenNodes ; j++ ) {
             accumulatedInput += hiddenNodes[j] * outputWeights[j][i] ;
         }
-        outputNodes[i] = float(1.0/(1.0 + exp(-accumulatedInput))) ;
+        outputNodes[i] = computeActivation(accumulatedInput);
     }
 }
 
@@ -151,14 +152,27 @@ void Network_L::computeOutputLayerActivations() {
 /*
  *  Compute the delta for a single output node
  */
-
 float Network_L::computeDelta(float target, float output) {
     if (activationFunction == ActivationFunction::Sigmoid) {
         return (target - output) * output * (1.0f - output);
-    } else if (activationFunction == ActivationFunction::ReLu) {
+    } else if (activationFunction == ActivationFunction::ReLu
+            || errorFunction == ErrorFunction::CrossEntropy) {
         return target - output;
     }
 }
+
+
+/*
+ *  Compute the error rate using the selected error function
+ */
+float Network_L::computeErrorRate(float target, float output) {
+    if (errorFunction == ErrorFunction::SumSquared) {
+        return 0.5 * (target - output) * (target - output);
+    } else if (errorFunction == ErrorFunction::CrossEntropy) {
+        return -1.0 * (target * log(output) + (1.0f - target) * log(1.0f - output));
+    }
+}
+
 
 /*
  *  Compute the errors for the output layer
@@ -166,7 +180,7 @@ float Network_L::computeDelta(float target, float output) {
 void Network_L::computeErrors(std::vector<float> targets) {
     for(int i = 0 ; i < numOutputNodes ; i++ ) {
         outputNodesDeltas[i] = computeDelta(targets[i], outputNodes[i]);
-        errorRate += 0.5 * (targets[i] - outputNodes[i]) * (targets[i] - outputNodes[i]);
+        errorRate += computeErrorRate(targets[i], outputNodes[i]);
     }
 }
 
@@ -298,6 +312,12 @@ ActivationFunction Network_L::getActivationFunction() const {
     return activationFunction;
 }
 
+
+ErrorFunction Network_L::getErrorFunction() const {
+    return errorFunction;
+}
+
+
 const std::vector<float> Network_L::getHiddenNodes() const {
     return hiddenNodes;
 }
@@ -354,6 +374,10 @@ void Network_L::setInitialWeightMax(float initialWeightMax) {
 
 void Network_L::setActivationFunction(ActivationFunction activationFunction) {
     Network_L::activationFunction = activationFunction;
+}
+
+void Network_L::setErrorFunction(ErrorFunction errorFunction) {
+    Network_L::errorFunction = errorFunction;
 }
 
 void Network_L::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) {

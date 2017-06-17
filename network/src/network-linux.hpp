@@ -6,6 +6,8 @@
 
 enum class ActivationFunction {Sigmoid, ReLu};
 
+enum class ErrorFunction {SumSquared, CrossEntropy};
+
 class Network_L {
 private:
     const int numInputNodes;                                // AKA 'InputNodes' in the original code
@@ -21,6 +23,7 @@ private:
     float accumulatedInput;                                 // AKA 'Accum' in the original code
 
     ActivationFunction activationFunction;                  // Activation function. Original code used Sigmoid
+    ErrorFunction  errorFunction;                           // Error function. Original code used SumSquared
 
     std::vector<float> hiddenNodes;                         // AKA 'Hidden' in the original code
     std::vector<float> outputNodes;                         // AKA 'Output' in the original code
@@ -40,6 +43,7 @@ private:
     void computeHiddenLayerActivations(std::vector<float> inputs);
     void computeOutputLayerActivations();
     float computeDelta(float target, float output);
+    float computeErrorRate(float target, float output);
     void computeErrors(std::vector<float> targets);
     void backpropagateErrors();
     void updateHiddenWeights(std::vector<float> inputs);
@@ -73,6 +77,7 @@ public:
     float getErrorRate() const;
     float getAccumulatedInput() const;
     ActivationFunction getActivationFunction() const;
+    ErrorFunction getErrorFunction() const;
     const std::vector<float> getHiddenNodes() const;
     const std::vector<float> getOutputNodes() const;
     const std::vector<float> getHiddenNodesDeltas() const;
@@ -85,6 +90,7 @@ public:
     void setMomentum(float momentum);
     void setInitialWeightMax(float initialWeightMax);
     void setActivationFunction(ActivationFunction activationFunction);
+    void setErrorFunction(ErrorFunction errorFunction);
 };
 
 #endif // NETWORK_L_H
