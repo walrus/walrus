@@ -113,7 +113,7 @@ float Network_L::trainNetwork(std::vector<float> inputs, std::vector<float> targ
 float Network_L::computeActivation(float accumulatedInput) {
     if (activationFunction == ActivationFunction::Sigmoid) {
         return float(1.0/(1.0 + exp(-accumulatedInput))) ;
-    }else if (activationFunction == ActivationFunction::ReLu) {
+    } else if (activationFunction == ActivationFunction::ReLu) {
         return std::max(0.0f, accumulatedInput);
     } else {
         // Default to linear if for some reason activation is not specified
@@ -154,10 +154,11 @@ void Network_L::computeOutputLayerActivations() {
  *  Compute the delta for a single output node
  */
 float Network_L::computeDelta(float target, float output) {
-    if (activationFunction == ActivationFunction::Sigmoid) {
+    if (activationFunction == ActivationFunction::Sigmoid
+            && errorFunction == ErrorFunction::SumSquared) {
         return (target - output) * output * (1.0f - output);
     } else if (activationFunction == ActivationFunction::ReLu
-            || errorFunction == ErrorFunction::CrossEntropy) {
+               || errorFunction == ErrorFunction::CrossEntropy) {
         return target - output;
     }
 }
@@ -170,6 +171,11 @@ float Network_L::computeErrorRate(float target, float output) {
     if (errorFunction == ErrorFunction::SumSquared) {
         return 0.5 * (target - output) * (target - output);
     } else if (errorFunction == ErrorFunction::CrossEntropy) {
+        float rate = (target * log(output) + (1.0f - target) * log(1.0f - output));
+        std::cout << "target: " << target << "\n";
+        std::cout << "output: " << output << "\n";
+        std::cout << "CE calculated error: " << rate << "\n";
+        std::cout << "\n";
         return -1.0 * (target * log(output) + (1.0f - target) * log(1.0f - output));
     }
 }
@@ -193,7 +199,7 @@ void Network_L::backpropagateErrors() {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         accumulatedInput = 0.0 ;
         for(int j = 0 ; j < numOutputNodes ; j++ ) {
-            accumulatedInput += outputWeights[i][j] * outputNodesDeltas[j] ;
+            accumulatedInput += outputWeights[i][j] * outputNodesDeltas[j];
         }
         hiddenNodesDeltas[i] = float(accumulatedInput * hiddenNodes[i] * (1.0 - hiddenNodes[i])) ;
     }

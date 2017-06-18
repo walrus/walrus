@@ -6,6 +6,8 @@ TEST_CASE("The core network functionality is all correct") {
     std::random_device rd;
     std::mt19937 m_mt(rd());
     std::uniform_real_distribution<float> test_dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
+    std::uniform_real_distribution<float> target_dist = std::uniform_real_distribution<float>(0.0f, 1.0f);
+
 
     int nin = 8;
     int nhn = 7;
@@ -88,44 +90,45 @@ TEST_CASE("The core network functionality is all correct") {
         THEN("It can be trained") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             for (int i = 0; i < non; i++) {
-                output[i] = test_dist(m_mt);
+                target[i] = target_dist(m_mt);
             }
 
-            float error = network.trainNetwork(input, output);
+
+            float error = network.trainNetwork(input, target);
 
             REQUIRE(error > 0.0f);
         }
         THEN("Training reduces the error") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
-            for (int i = 0;  i < non; i++) {
-                output[i] = test_dist(m_mt);
+            for (int i = 0; i < non; i++) {
+                target[i] = target_dist(m_mt);
             }
 
-            float untrained_error = network.trainNetwork(input, output);
+            float untrained_error = network.trainNetwork(input, target);
 
             REQUIRE(untrained_error > 0.0f);
 
             for (int i =0; i < 9; i++) {
-                network.trainNetwork(input, output);
+                network.trainNetwork(input, target);
             }
 
-            float trained_error = network.trainNetwork(input, output);
+            float trained_error = network.trainNetwork(input, target);
 
             REQUIRE(trained_error < untrained_error);
             REQUIRE(trained_error > 0.0f);
@@ -188,44 +191,46 @@ TEST_CASE("The core network functionality is all correct") {
         THEN("It can be trained") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             for (int i = 0; i < non; i++) {
-                output[i] = test_dist(m_mt);
+                target[i] = target_dist(m_mt);
             }
 
-            float error = network.trainNetwork(input, output);
+
+            float error = network.trainNetwork(input, target);
 
             REQUIRE(error > 0.0f);
         }
         THEN("Training reduces the error") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
-            for (int i = 0;  i < non; i++) {
-                output[i] = test_dist(m_mt);
+            for (int i = 0; i < non; i++) {
+                target[i] = target_dist(m_mt);
             }
 
-            float untrained_error = network.trainNetwork(input, output);
+
+            float untrained_error = network.trainNetwork(input, target);
 
             REQUIRE(untrained_error > 0.0f);
 
             for (int i =0; i < 9; i++) {
-                network.trainNetwork(input, output);
+                network.trainNetwork(input, target);
             }
 
-            float trained_error = network.trainNetwork(input, output);
+            float trained_error = network.trainNetwork(input, target);
 
             REQUIRE(trained_error < untrained_error);
             REQUIRE(trained_error > 0.0f);
@@ -260,44 +265,46 @@ TEST_CASE("The core network functionality is all correct") {
         THEN("It can be trained") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             for (int i = 0; i < non; i++) {
-                output[i] = test_dist(m_mt);
+                target[i] = target_dist(m_mt);
             }
 
-            float error = network.trainNetwork(input, output);
+
+            float error = network.trainNetwork(input, target);
 
             REQUIRE(error > 0.0f);
         }
         THEN("Training reduces the error") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
-            for (int i = 0;  i < non; i++) {
-                output[i] = test_dist(m_mt);
+            for (int i = 0; i < non; i++) {
+                target[i] = target_dist(m_mt);
             }
 
-            float untrained_error = network.trainNetwork(input, output);
+
+            float untrained_error = network.trainNetwork(input, target);
 
             REQUIRE(untrained_error > 0.0f);
 
             for (int i =0; i < 9; i++) {
-                network.trainNetwork(input, output);
+                network.trainNetwork(input, target);
             }
 
-            float trained_error = network.trainNetwork(input, output);
+            float trained_error = network.trainNetwork(input, target);
 
             REQUIRE(trained_error < untrained_error);
             REQUIRE(trained_error > 0.0f);
@@ -315,102 +322,103 @@ TEST_CASE("The core network functionality is all correct") {
         THEN("It can be trained") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             for (int i = 0; i < non; i++) {
-                output[i] = test_dist(m_mt);
+                target[i] = target_dist(m_mt);
             }
 
-            float error = network.trainNetwork(input, output);
+
+            float error = network.trainNetwork(input, target);
 
             REQUIRE(error > 0.0f);
         }
         THEN("Training reduces the error") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             for (int i = 0; i < non; i++) {
-                output[i] = test_dist(m_mt);
+                target[i] = target_dist(m_mt);
             }
 
-            float untrained_error = network.trainNetwork(input, output);
+            float untrained_error = network.trainNetwork(input, target);
 
             REQUIRE(untrained_error > 0.0f);
 
             for (int i = 0; i < 9; i++) {
-                network.trainNetwork(input, output);
+                network.trainNetwork(input, target);
             }
 
-            float trained_error = network.trainNetwork(input, output);
+            float trained_error = network.trainNetwork(input, target);
 
             REQUIRE(trained_error < untrained_error);
             REQUIRE(trained_error > 0.0f);
         }
     }
-    /*
+
     GIVEN("A network using the CrossEntropy error function") {
         Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         network.setErrorFunction(ErrorFunction::CrossEntropy);
 
-        THEN("The activation function is set properly") {
+        THEN("The error function is set properly") {
             REQUIRE(network.getErrorFunction() == ErrorFunction::CrossEntropy);
         }
         THEN("It can be trained") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             for (int i = 0; i < non; i++) {
-                output[i] = test_dist(m_mt);
+                target[i] = target_dist(m_mt);
             }
 
-            float error = network.trainNetwork(input, output);
+            float error = network.trainNetwork(input, target);
 
             REQUIRE(error > 0.0f);
         }
         THEN("Training reduces the error") {
             std::vector<float> input;
             input.resize(nin);
-            std::vector<float> output;
-            output.resize(non);
+            std::vector<float> target;
+            target.resize(non);
 
             for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
-            for (int i = 0;  i < non; i++) {
-                output[i] = test_dist(m_mt);
+            for (int i = 0; i < non; i++) {
+                target[i] = target_dist(m_mt);
             }
 
-            float untrained_error = network.trainNetwork(input, output);
+            float untrained_error = network.trainNetwork(input, target);
 
             REQUIRE(untrained_error > 0.0f);
 
             for (int i =0; i < 9; i++) {
-                network.trainNetwork(input, output);
+                network.trainNetwork(input, target);
             }
 
-            float trained_error = network.trainNetwork(input, output);
+            float trained_error = network.trainNetwork(input, target);
 
             REQUIRE(trained_error < untrained_error);
             REQUIRE(trained_error > 0.0f);
         }
-    } */
+    }
 }
