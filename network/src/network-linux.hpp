@@ -25,7 +25,7 @@ private:
 
     long trainingCycle;                                     // AKA 'TrainingCycle' in the original code
     float randomFloat;                                      // AKA 'Rando' in the original code
-    float errorRate;                                        // AKA 'Error' in the original code
+    double errorRate;                                       // AKA 'Error' in the original code
     float accumulatedInput;                                 // AKA 'Accum' in the original code
 
     ActivationFunction hiddenActivationFunction;            // Activation function. Original code used Sigmoid
