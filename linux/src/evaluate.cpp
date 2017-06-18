@@ -35,6 +35,7 @@ bool training = false;
 long examplesTrainedOn = 0;
 float latestErrorRate = 0;
 float classificationThreshold = 0.5; // Default value
+float errorSuccess = 0.001;
 
 // Arguments
 std::string trainingdir;
@@ -132,23 +133,25 @@ void loadDir(std::string dirname, Network_L *network) {
 
 int main(int argc, char * argv[]) {
     // Parse arguments
-    if (argc < 4) {
+    if (argc < 5) {
         std::cout << "Too few arguments supplied\n";
         return 1;
-    } else if (argc > 5) {
+    } else if (argc > 6) {
         std::cout << "Too many arguments supplied\n";
         return 1;
     }
 
     config_file_location = argv[1];
-    if (argc == 5) {
+    if (argc == 6) {
         trainingdir = argv[2];
         validationdir = argv[3];
         classificationThreshold = std::stof(argv[4]);
+        errorSuccess = std::stof(argv[5]);
         training = true;
     } else {
         validationdir = argv[2];
         classificationThreshold = std::stof(argv[3]);
+        errorSuccess = std::stof(argv[4]);
     }
 
     Network_L *network;
@@ -178,14 +181,13 @@ int main(int argc, char * argv[]) {
         std::shuffle(indexes.begin(), indexes.end(), g);
 
         // Now train the network in this random order
-
         int currentIndex;
         for (int i = 0; i < indexes.size(); i++) {
             currentIndex = indexes[i];
             latestErrorRate = network->trainNetwork(trainingInputs[currentIndex], trainingTargets[currentIndex]);
             examplesTrainedOn++;
 
-            if (latestErrorRate < 0.01){
+            if (latestErrorRate < errorSuccess){
                 break;
             }
 
@@ -237,6 +239,7 @@ int main(int argc, char * argv[]) {
                 classification = j;
             }
         }
+        std::cout << "\n";
         std::cout << "Classification: " << classification << "\n";
         std::cout << "Target: " << targetClassifications[i] << "\n";
         std::cout << "\n";
