@@ -15,8 +15,10 @@ import os, sys
 
 
 
-positive = 0;
-negative = 0;
+positive = 0
+negative = 0
+
+overall_readings = 0
 
 d_flag = False          # Whether or not the -d 'directory' flag is set
 r_flag = False          # Whether or not the -r 'recursive' flag is set
@@ -45,10 +47,12 @@ def count_file(filename):
 
     global positive
     global negative
+    global overall_readings
 
-    file_positive = 0;
-    file_negative = 0;
-
+    file_positive = 0
+    file_negative = 0
+    file_readings = 0
+    rep_readings = 0
     file_to_count = open(filename,"r")
 
     in_rep = 0 # 2 means reading motion, 1 means reading target, 0 means not in rep
@@ -57,12 +61,18 @@ def count_file(filename):
 
         if ("Motion detected" in line or "Repetition Start" in line):
             in_rep = 2
+            rep_readings = 0
         elif ("Motion ended" in line or "Repetition End" in line):
             if (in_rep == 2):
                 in_rep = 1
+                file_readings += rep_readings
+                rep_readings = 0
             else:
                 in_rep = 0
+                rep_readings = 0
         else:
+            if in_rep == 2:
+                rep_readings +=1
             if (in_rep == 1):
                 if (int(line) == 0):
                     file_negative += 1
@@ -76,6 +86,7 @@ def count_file(filename):
 
     positive += file_positive
     negative += file_negative
+    overall_readings += file_readings
 
     #print "done: file contains {} examples: {} positive and {} negative".format(
     #    file_positive + file_negative, file_positive, file_negative)
@@ -110,12 +121,9 @@ else:
 print " "
 print "Data set contains {} examples: {} positive and {} negative".format(positive + negative, positive, negative)
 
-positive_remaining = 750 - positive
-negative_remaining = 250 - negative
-
 ratio = positive / negative
 
-print "Still required: {} examples: {} positive and {} negative".format(positive_remaining + negative_remaining, positive_remaining, negative_remaining)
 print "Ratio of positive to negative examples is {}:1".format(ratio)
-
+print ""
+print "Average readings per example is {}".format(overall_readings/(positive+negative))
 sys.exit(0)
