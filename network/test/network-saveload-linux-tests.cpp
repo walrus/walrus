@@ -18,6 +18,9 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         float diwm = 0.5;
 
         long tc = 0;
+        ActivationFunction haf = ActivationFunction::Sigmoid;
+        ActivationFunction oaf = ActivationFunction::Sigmoid;
+        ErrorFunction ef = ErrorFunction::SumSquared;
 
         Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
@@ -59,7 +62,6 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         THEN("The fifth line is blank") {
             REQUIRE(lines[4] == "");
         }
-
 
         THEN("The main configuration options are all recorded") {
             REQUIRE(lines.size() >= 10);
@@ -114,24 +116,45 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         THEN("The thirteenth line records the training cycle correctly") {
             std::string tcBody = "// TrainingCycle (not needed on Arduino):";
             REQUIRE(lines[12].substr(0, 41) == tcBody);
-            float fileTC = std::stol(lines[12].substr(42, lines[12].length()-42));
+            long fileTC = std::stol(lines[12].substr(42, lines[12].length()-42));
             REQUIRE(fileTC == tc);
         }
 
-        THEN("The fourteenth line is blank") {
-            REQUIRE(lines[13] == "");
+        THEN("The fourteenth line records the hidden activation function correctly") {
+            std::string hafBody = "// hiddenActivationFunction (not needed on Arduino):";
+            REQUIRE(lines[13].substr(0, 52) == hafBody);
+            ActivationFunction filehAF = stringToAF(lines[13].substr(53, lines[13].length()-53));
+            REQUIRE(filehAF == haf);
         }
 
-        THEN("The fifteenth line records the hidden weight declaration") {
-            REQUIRE(lines[14] == "const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
+        THEN("The fifteenth line records the output activation function correctly") {
+            std::string oafBody = "// outputActivationFunction (not needed on Arduino):";
+            REQUIRE(lines[14].substr(0, 52) == oafBody);
+            ActivationFunction fileoAF = stringToAF(lines[14].substr(53, lines[14].length()-53));
+            REQUIRE(fileoAF == oaf);
+        }
+
+        THEN("The sixteenth line records the error function correctly") {
+            std::string efBody = "// ErrorFunction (not needed on Arduino):";
+            REQUIRE(lines[15].substr(0, 41) == efBody);
+            ErrorFunction fileEF = stringToEF(lines[15].substr(42, lines[15].length()-42));
+            REQUIRE(fileEF == ef);
+        }
+
+        THEN("The seventeenth line is blank") {
+            REQUIRE(lines[16] == "");
+        }
+
+        THEN("The eighteenth line records the hidden weight declaration") {
+            REQUIRE(lines[17] == "const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {");
         }
 
         THEN("The hidden weights are all recorded") {
-            REQUIRE(lines.size() >= 15 + (nin + 1));
+            REQUIRE(lines.size() >= 18 + (nin + 1));
         }
 
         THEN("The correct lines record the hidden weights correctly") {
-            int line_num = 15;
+            int line_num = 18;
             float weight_from_file, weight_from_vector;
 
             std::vector<std::vector<float>> hiddenWeights = network->getHiddenWeights();
@@ -157,7 +180,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             }
         }
 
-        int previous_lines = 15 + (nin + 1);
+        int previous_lines = 18 + (nin + 1);
 
         THEN("The line after the hidden weights encloses the array") {
             REQUIRE(lines[previous_lines] == "};");
@@ -234,7 +257,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
         config_file.close();
 
-        GIVEN("A saved network") {
+        GIVEN("A saved network configuration, which is then loaded") {
 
             Network_L loaded_network = *loadNetwork(filename);
 
@@ -263,7 +286,19 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
             }
 
             THEN("The network is created with the correct training cycle") {
-                REQUIRE(loaded_network.getTrainingCycle() == 0);
+                REQUIRE(loaded_network.getTrainingCycle() == tc);
+            }
+
+            THEN("The network is created with the correct hidden activation function") {
+                REQUIRE(loaded_network.getHiddenActivationFunction() == haf);
+            }
+
+            THEN("The network is created with the correct output activation function") {
+                REQUIRE(loaded_network.getOutputActivationFunction() == oaf);
+            }
+
+            THEN("The network is created with the correct error function") {
+                REQUIRE(loaded_network.getErrorFunction() == ef);
             }
 
             THEN("The network is created with the correct hidden weights") {

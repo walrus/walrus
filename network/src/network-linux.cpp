@@ -6,6 +6,7 @@
  */
 
 #include <random>
+#include <iostream>
 
 #include "network-linux.hpp"
 
@@ -30,6 +31,10 @@ Network_L::Network_L(int numInputNodes,
     randomFloat = 0.0f;
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
+
+    hiddenActivationFunction = ActivationFunction::Sigmoid;
+    outputActivationFunction = ActivationFunction::Sigmoid;
+    errorFunction = ErrorFunction::SumSquared;
 
     hiddenNodes.resize(numHiddenNodes);
     outputNodes.resize(numOutputNodes);
@@ -103,38 +108,100 @@ float Network_L::trainNetwork(std::vector<float> inputs, std::vector<float> targ
 
 
 /*
+ * Compute the activation for a single node using the selected activation function
+ */
+
+float Network_L::computeActivation(float accumulatedInput, ActivationFunction af) {
+    if (af == ActivationFunction::Sigmoid) {
+        return float(1.0/(1.0 + exp(-accumulatedInput))) ;
+    } else if (af == ActivationFunction::ReLu) {
+        return std::max(0.0f, accumulatedInput);
+    } else if (af == ActivationFunction::SoftMax) {
+        return exp(accumulatedInput);
+    } else {
+        // Default to linear if for some reason activation is not specified
+        return accumulatedInput;
+    }
+}
+
+/*
  * Compute the activations of the hidden layer nodes from the given inputs
  */
 void Network_L::computeHiddenLayerActivations(std::vector<float> inputs) {
+    float sumHidden = 0;
     for(int i = 0 ; i < numHiddenNodes; i++ ) {
         accumulatedInput = hiddenWeights[numInputNodes][i] ;
         for(int j = 0 ; j < numInputNodes; j++ ) {
             accumulatedInput += inputs[j] * hiddenWeights[j][i] ;
         }
-        hiddenNodes[i] = float(1.0/(1.0 + exp(-accumulatedInput))) ;
+        hiddenNodes[i] = computeActivation(accumulatedInput, hiddenActivationFunction);
+        sumHidden += hiddenNodes[i];
+    }
+    // If we're using SoftMax then we need to divide each output node's output by their sum
+    if (hiddenActivationFunction == ActivationFunction::SoftMax) {
+        for (int i = 0; i < numHiddenNodes; i++) {
+            hiddenNodes[i] = hiddenNodes[i] / sumHidden;
+        }
     }
 }
 
 
 /*
- * Compute the activations of the hidden layer nodes from the current state of the hidden nodes,
+ * Compute the activations of the output layer nodes from the current state of the hidden nodes,
  * then compute the output errors and overall error rate
  */
 void Network_L::computeOutputLayerActivations() {
-    for(int i = 0 ; i < numOutputNodes ; i++ ) {
+    float sumOutputs = 0;
+    for(int i = 0; i < numOutputNodes; i++ ) {
         accumulatedInput = outputWeights[numHiddenNodes][i] ;
-        for(int j = 0 ; j < numHiddenNodes ; j++ ) {
+        for(int j = 0; j < numHiddenNodes; j++ ) {
             accumulatedInput += hiddenNodes[j] * outputWeights[j][i] ;
         }
-        outputNodes[i] = float(1.0/(1.0 + exp(-accumulatedInput))) ;
+        outputNodes[i] = computeActivation(accumulatedInput, outputActivationFunction);
+        sumOutputs += outputNodes[i];
+    }
+    // If using SoftMax then it is necessary to divide each output node's output by their sum
+    if (outputActivationFunction == ActivationFunction::SoftMax) {
+        for (int i = 0; i < numOutputNodes; i++) {
+            outputNodes[i] = outputNodes[i] / sumOutputs;
+        }
     }
 }
 
 
+/*
+ *  Compute the delta for a single output node
+ */
+float Network_L::computeDelta(float target, float output) {
+    if (outputActivationFunction == ActivationFunction::Sigmoid
+            && errorFunction == ErrorFunction::SumSquared) {
+        return (target - output) * output * (1.0f - output);
+    } else if (outputActivationFunction == ActivationFunction::ReLu
+               || errorFunction == ErrorFunction::CrossEntropy) {
+        return target - output;
+    }
+}
+
+
+/*
+ *  Compute the error rate using the selected error function
+ */
+float Network_L::computeErrorRate(float target, float output) {
+    if (errorFunction == ErrorFunction::SumSquared) {
+        return 0.5 * (target - output) * (target - output);
+    } else if (errorFunction == ErrorFunction::CrossEntropy) {
+        return -1.0 * (target * log(output) + (1.0f - target) * log(1.0f - output));
+    }
+}
+
+
+/*
+ *  Compute the errors for the output layer
+ */
 void Network_L::computeErrors(std::vector<float> targets) {
     for(int i = 0 ; i < numOutputNodes ; i++ ) {
-        outputNodesDeltas[i] = (targets[i] - outputNodes[i]) * outputNodes[i] * (1.0f - outputNodes[i]);
-        errorRate += 0.5 * (targets[i] - outputNodes[i]) * (targets[i] - outputNodes[i]);
+        outputNodesDeltas[i] = computeDelta(targets[i], outputNodes[i]);
+        errorRate += computeErrorRate(targets[i], outputNodes[i]);
     }
 }
 
@@ -146,7 +213,7 @@ void Network_L::backpropagateErrors() {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         accumulatedInput = 0.0 ;
         for(int j = 0 ; j < numOutputNodes ; j++ ) {
-            accumulatedInput += outputWeights[i][j] * outputNodesDeltas[j] ;
+            accumulatedInput += outputWeights[i][j] * outputNodesDeltas[j];
         }
         hiddenNodesDeltas[i] = float(accumulatedInput * hiddenNodes[i] * (1.0 - hiddenNodes[i])) ;
     }
@@ -262,6 +329,21 @@ float Network_L::getAccumulatedInput() const {
 }
 
 
+ActivationFunction Network_L::getHiddenActivationFunction() const {
+    return hiddenActivationFunction;
+}
+
+
+ActivationFunction Network_L::getOutputActivationFunction() const {
+    return outputActivationFunction;
+}
+
+
+ErrorFunction Network_L::getErrorFunction() const {
+    return errorFunction;
+}
+
+
 const std::vector<float> Network_L::getHiddenNodes() const {
     return hiddenNodes;
 }
@@ -317,6 +399,21 @@ void Network_L::setInitialWeightMax(float initialWeightMax) {
 }
 
 
+void Network_L::setHiddenActivationFunction(ActivationFunction activationFunction) {
+    Network_L::hiddenActivationFunction = activationFunction;
+}
+
+
+void Network_L::setOutputActivationFunction(ActivationFunction activationFunction) {
+    Network_L::outputActivationFunction = activationFunction;
+}
+
+
+void Network_L::setErrorFunction(ErrorFunction errorFunction) {
+    Network_L::errorFunction = errorFunction;
+}
+
+
 void Network_L::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) {
     Network_L::hiddenWeights = hiddenWeights;
 }
@@ -324,4 +421,62 @@ void Network_L::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) 
 
 void Network_L::setOutputWeights(std::vector<std::vector<float>> outputWeights) {
     Network_L::outputWeights = outputWeights;
+}
+
+
+/*
+ * Utility function to get an Activation Function from a string
+ */
+ActivationFunction stringToAF(std::string name) {
+    if (name == "Sigmoid") {
+        return ActivationFunction::Sigmoid;
+    } else if (name == "ReLu") {
+        return ActivationFunction::ReLu;
+    } else if (name == "SoftMax") {
+        return ActivationFunction::SoftMax;
+    } else {
+        std::cout << "Activation function not recognised: " << name << "\n";
+        return ActivationFunction::Sigmoid; // Default to Sigmoid
+    }
+}
+
+
+/*
+ * Utility function to get the string representation of an Activation Function
+ */
+std::string aFToString(ActivationFunction af) {
+    if (af == ActivationFunction::Sigmoid) {
+        return "Sigmoid";
+    } else if (af == ActivationFunction::ReLu) {
+        return "ReLu";
+    } else if (af == ActivationFunction::SoftMax) {
+        return "SoftMax";
+    }
+}
+
+
+/*
+ * Utility function to get an Error Function from a string
+ */
+ErrorFunction stringToEF(std::string name) {
+    if (name == "SumSquared") {
+        return ErrorFunction::SumSquared;
+    } else if (name == "CrossEntropy") {
+        return ErrorFunction::CrossEntropy;
+    } else {
+        std::cout << "Error function not recognised: " << name << "\n";
+        return ErrorFunction::SumSquared;
+    }
+}
+
+
+/*
+ * Utility function to get the string representation of an Error Function
+ */
+std::string eFToString(ErrorFunction ef) {
+    if (ef == ErrorFunction::SumSquared) {
+        return "SumSquared";
+    } else if (ef == ErrorFunction::CrossEntropy) {
+        return "CrossEntropy";
+    }
 }

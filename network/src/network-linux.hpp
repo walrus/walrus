@@ -4,6 +4,16 @@
 #include <vector>
 #include <random>
 
+enum class ActivationFunction {Sigmoid, ReLu, SoftMax};
+
+ActivationFunction stringToAF(std::string name);
+std::string aFToString(ActivationFunction af);
+
+enum class ErrorFunction {SumSquared, CrossEntropy};
+
+ErrorFunction stringToEF(std::string name);
+std::string eFToString(ErrorFunction ef);
+
 class Network_L {
 private:
     const int numInputNodes;                                // AKA 'InputNodes' in the original code
@@ -17,6 +27,10 @@ private:
     float randomFloat;                                      // AKA 'Rando' in the original code
     float errorRate;                                        // AKA 'Error' in the original code
     float accumulatedInput;                                 // AKA 'Accum' in the original code
+
+    ActivationFunction hiddenActivationFunction;            // Activation function. Original code used Sigmoid
+    ActivationFunction outputActivationFunction;            // Activation function. Original code used Sigmoid
+    ErrorFunction  errorFunction;                           // Error function. Original code used SumSquared
 
     std::vector<float> hiddenNodes;                         // AKA 'Hidden' in the original code
     std::vector<float> outputNodes;                         // AKA 'Output' in the original code
@@ -32,8 +46,11 @@ private:
 
     void initialiseHiddenWeights();
     void initialiseOutputWeights();
+    float computeActivation(float accumulatedInput, ActivationFunction af);
     void computeHiddenLayerActivations(std::vector<float> inputs);
     void computeOutputLayerActivations();
+    float computeDelta(float target, float output);
+    float computeErrorRate(float target, float output);
     void computeErrors(std::vector<float> targets);
     void backpropagateErrors();
     void updateHiddenWeights(std::vector<float> inputs);
@@ -66,6 +83,9 @@ public:
     float getRandomFloat() const;
     float getErrorRate() const;
     float getAccumulatedInput() const;
+    ActivationFunction getHiddenActivationFunction() const;
+    ActivationFunction getOutputActivationFunction() const;
+    ErrorFunction getErrorFunction() const;
     const std::vector<float> getHiddenNodes() const;
     const std::vector<float> getOutputNodes() const;
     const std::vector<float> getHiddenNodesDeltas() const;
@@ -77,6 +97,9 @@ public:
     void setLearningRate(float learningRate);
     void setMomentum(float momentum);
     void setInitialWeightMax(float initialWeightMax);
+    void setHiddenActivationFunction(ActivationFunction activationFunction);
+    void setOutputActivationFunction(ActivationFunction activationFunction);
+    void setErrorFunction(ErrorFunction errorFunction);
 };
 
 #endif // NETWORK_L_H
