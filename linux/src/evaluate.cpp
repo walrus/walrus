@@ -59,9 +59,9 @@ std::vector<std::string> caLabels = {" Press up | ", "   Sit up | ", "    Lunge 
 std::vector<int> predictions;  // Number of predicted classifications for each class
 std::vector<int> actuals;      // Number of actual classifications for each class
 
-std::vector<int> recalls;    // Recall of each class (correct predictions over actuals)
-std::vector<int> precisions; // Precision of each class (correct predictions over predictions)
-
+std::vector<float> recalls;    // Recall of each class (correct predictions over actuals)
+std::vector<float> precisions; // Precision of each class (correct predictions over predictions)
+std::vector<float> fones;      // F1 measure of each class
 
 
 void validateSet(std::string filename, Network_L *network) {
@@ -147,6 +147,9 @@ int main(int argc, char * argv[]) {
         return 1;
     }
 
+    // Only show 2dp on standard output
+    std::cout.precision(2);
+
     config_file_location = argv[1];
     if (argc == 6) {
         trainingdir = argv[2];
@@ -214,10 +217,14 @@ int main(int argc, char * argv[]) {
     validateDir(validationdir, network);
 
     // Resize vectors in preparation for computation
-    predictions.resize(validationTargets[0].size()+1);
-    actuals.resize(validationTargets[0].size()+1);
-    precisions.resize(validationTargets[0].size()+1);
-    recalls.resize(validationTargets[0].size()+1);
+
+    int confusionMatrixSize = validationTargets[0].size()+1;
+
+    predictions.resize(confusionMatrixSize);
+    actuals.resize(confusionMatrixSize);
+    precisions.resize(confusionMatrixSize);
+    recalls.resize(confusionMatrixSize);
+    fones.resize(confusionMatrixSize);
 
     // Iterate through the validation targets and compute classifications
     for (int i = 0; i < validationTargets.size(); i++) {
@@ -235,7 +242,7 @@ int main(int argc, char * argv[]) {
     int correct = 0;
     int wrong = 0;
 
-    confusion.resize(validationOutputs[0].size()+1, std::vector<int>(validationOutputs[0].size()+1));
+    confusion.resize(confusionMatrixSize, std::vector<int>(confusionMatrixSize));
 
     // Iterate through the validation outputs and compute classifications & confusion matrix
     for (int i = 0; i < validationOutputs.size(); i++) {
@@ -258,7 +265,7 @@ int main(int argc, char * argv[]) {
         confusion[classification][targetClassifications[i]] += 1;
         predictions[classification]++;
 
-        if (classification = targetClassifications[i]) {
+        if (classification == targetClassifications[i]) {
             correct++;
         } else {
             wrong++;
@@ -281,28 +288,35 @@ int main(int argc, char * argv[]) {
     }
     std::cout << "\n";
 
-    // compute and print precision and recall rates
-    std::cout << "            Recall | Precision\n";
+    // compute and print precision, recall and F1 rates
+    std::cout << "            Recall | Precision | F1\n";
     for (int i = 0; i < predictions.size(); i++) {
         if (actuals[i] > 0) {
-            recalls[i] = int(100 * confusion[i][i] / float(actuals[i]));
+            recalls[i] = confusion[i][i] / float(actuals[i]);
         } else {
             recalls[i] = 0;
         }
         if (predictions[i] > 0) {
-            precisions[i] = int(100 * confusion[i][i] / float(predictions[i]));
+            precisions[i] = confusion[i][i] / float(predictions[i]);
         } else {
             precisions[i] = 0;
         }
-        std::cout << caLabels[i];
-        if (recalls[i] < 10) {
-            std::cout << "  ";
-        } else if (recalls[i] < 100) {
-            std::cout << " ";
+        if (precisions[i] + recalls[i] > 0) {
+            fones[i] = (2.0 * precisions[i] * recalls[i]) / (precisions[i] + recalls[i]);
+        } else {
+            fones[i] = 0;
         }
-        std::cout << " " << recalls[i] << "   |   " << precisions[i] << "\n";
+        std::cout << caLabels[i] << " " << recalls[i];
+        if (recalls[i] == 0) {
+            std::cout << "  ";
+        }
+        std::cout << "   |   " << precisions[i];
+        if (precisions[i] == 0) {
+            std::cout << "  ";
+        }
+        std::cout <<  "   |   " << fones[i] << "\n";
     }
-    std::cout << "\n";
+    std::cout <<"\n";
 
     std::cout << "Correct: " << correct << "\n";
     std::cout << "Wrong: " << wrong << "\n";
