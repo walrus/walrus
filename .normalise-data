@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, random
+import os, sys, random, math
 
 # Script to normalise data collected using the '.log-data-unsupervised' and '.log-data-supervised' scripts
 #
@@ -87,8 +87,8 @@ def normalise_file(filename):
 
 # Take the three acceleration readings and sum them
 def normalise_reading(reading):
-    readings = [int(value) for value in reading.split()]
-    return str(sum(readings) / float(acceleration_multiplier))
+    readings = [int(value) * int(value) for value in reading.split()]
+    return str(math.sqrt(sum(readings)) / float(acceleration_multiplier))
 
 # Takes a list of readings and returns a normalised set with len = normalised_length
 def normalise_readings(original_readings):
@@ -104,6 +104,12 @@ def normalise_readings(original_readings):
 # Takes a set of readings with len > normalised length and reduces it's length accordingly
 # This is a basic implementation, which simply randomly drops readings
 def cull_readings(original_readings, diff):
+    original_length = diff + normalised_length
+    if diff >= normalised_length:
+        # If we have more than twice the correct number of readings, cull every other reading
+        original_readings = original_readings[0::2]
+        diff -= original_length / 2
+
     for _ in range(diff):
         index = random.randrange(len(original_readings))
         original_readings.pop(index)
