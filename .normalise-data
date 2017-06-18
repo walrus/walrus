@@ -4,6 +4,10 @@ import os, sys, random
 
 # Script to normalise data collected using the '.log-data-unsupervised' and '.log-data-supervised' scripts
 #
+# Args:
+#
+# ./.normalise-data [-r|-d] filename|dirname readings target
+#
 # Flags:
 #
 # -d means normalise all files in a given directory
@@ -17,6 +21,7 @@ import os, sys, random
 
 normalised_length = 20  # Number of readings to normalise to
 num_targets = 1         # Number of targets
+target = []
 acceleration_multiplier = 16384 # Value to convert raw IMU value into mg
 
 d_flag = False          # Whether or not the -d 'directory' flag is set
@@ -55,7 +60,12 @@ def normalise_file(filename):
     # Break the file into reps and normalise each rep separately
     for line in original_file:
         if writing_targets > 0:
-            normalised_file.write(line)
+            if "1" in line:
+                for digit in target:
+                    normalised_file.write(digit + "\n")
+            else:
+                for _ in range(len(target)):
+                    normalised_file.write("0\n")
             writing_targets -= 1
         else:
             if ("Motion detected" in line or "Repetition Start" in line):
@@ -119,17 +129,21 @@ def grow_readings(original_readings, diff):
 if len(sys.argv) < 2:
     print "No arguments given; try again."
     sys.exit(1)
-if len(sys.argv) == 2:
+if len(sys.argv) == 4:
     filename =  sys.argv[1]
-if len(sys.argv) == 3:
+    normalised_length = int(sys.argv[2])
+    target = list(sys.argv[3])
+if len(sys.argv) == 5:
     if (sys.argv[1] == "-d"):
         d_flag = True
     elif (sys.argv[1] == "-r"):
         r_flag = True
     else:
-        print "%s is not a valid argument; try again." % sys.argv[1]
+        print "%s is not a valid flag; try again." % sys.argv[1]
         sys.exit(1)
     directory_name = sys.argv[2]
+    normalised_length = int(sys.argv[3])
+    target = list(sys.argv[4])
 
 if d_flag:
     normalise_directory(directory_name, False)
