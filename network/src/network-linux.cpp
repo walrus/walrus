@@ -32,7 +32,8 @@ Network_L::Network_L(int numInputNodes,
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
-    activationFunction = ActivationFunction::Sigmoid;
+    hiddenActivationFunction = ActivationFunction::Sigmoid;
+    outputActivationFunction = ActivationFunction::Sigmoid;
     errorFunction = ErrorFunction::SumSquared;
 
     hiddenNodes.resize(numHiddenNodes);
@@ -110,11 +111,13 @@ float Network_L::trainNetwork(std::vector<float> inputs, std::vector<float> targ
  * Compute the activation for a single node using the selected activation function
  */
 
-float Network_L::computeActivation(float accumulatedInput) {
-    if (activationFunction == ActivationFunction::Sigmoid) {
+float Network_L::computeActivation(float accumulatedInput, ActivationFunction af) {
+    if (af == ActivationFunction::Sigmoid) {
         return float(1.0/(1.0 + exp(-accumulatedInput))) ;
-    } else if (activationFunction == ActivationFunction::ReLu) {
+    } else if (af == ActivationFunction::ReLu) {
         return std::max(0.0f, accumulatedInput);
+    } else if (af == ActivationFunction::SoftMax) {
+        return exp(accumulatedInput);
     } else {
         // Default to linear if for some reason activation is not specified
         return accumulatedInput;
@@ -125,27 +128,43 @@ float Network_L::computeActivation(float accumulatedInput) {
  * Compute the activations of the hidden layer nodes from the given inputs
  */
 void Network_L::computeHiddenLayerActivations(std::vector<float> inputs) {
+    float sumHidden = 0;
     for(int i = 0 ; i < numHiddenNodes; i++ ) {
         accumulatedInput = hiddenWeights[numInputNodes][i] ;
         for(int j = 0 ; j < numInputNodes; j++ ) {
             accumulatedInput += inputs[j] * hiddenWeights[j][i] ;
         }
-        hiddenNodes[i] = computeActivation(accumulatedInput);
+        hiddenNodes[i] = computeActivation(accumulatedInput, hiddenActivationFunction);
+        sumHidden += hiddenNodes[i];
+    }
+    // If we're using SoftMax then we need to divide each output node's output by their sum
+    if (hiddenActivationFunction == ActivationFunction::SoftMax) {
+        for (int i = 0; i < numHiddenNodes; i++) {
+            hiddenNodes[i] = hiddenNodes[i] / sumHidden;
+        }
     }
 }
 
 
 /*
- * Compute the activations of the hidden layer nodes from the current state of the hidden nodes,
+ * Compute the activations of the output layer nodes from the current state of the hidden nodes,
  * then compute the output errors and overall error rate
  */
 void Network_L::computeOutputLayerActivations() {
-    for(int i = 0 ; i < numOutputNodes ; i++ ) {
+    float sumOutputs = 0;
+    for(int i = 0; i < numOutputNodes; i++ ) {
         accumulatedInput = outputWeights[numHiddenNodes][i] ;
-        for(int j = 0 ; j < numHiddenNodes ; j++ ) {
+        for(int j = 0; j < numHiddenNodes; j++ ) {
             accumulatedInput += hiddenNodes[j] * outputWeights[j][i] ;
         }
-        outputNodes[i] = computeActivation(accumulatedInput);
+        outputNodes[i] = computeActivation(accumulatedInput, outputActivationFunction);
+        sumOutputs += outputNodes[i];
+    }
+    // If using SoftMax then it is necessary to divide each output node's output by their sum
+    if (outputActivationFunction == ActivationFunction::SoftMax) {
+        for (int i = 0; i < numOutputNodes; i++) {
+            outputNodes[i] = outputNodes[i] / sumOutputs;
+        }
     }
 }
 
@@ -154,10 +173,10 @@ void Network_L::computeOutputLayerActivations() {
  *  Compute the delta for a single output node
  */
 float Network_L::computeDelta(float target, float output) {
-    if (activationFunction == ActivationFunction::Sigmoid
+    if (outputActivationFunction == ActivationFunction::Sigmoid
             && errorFunction == ErrorFunction::SumSquared) {
         return (target - output) * output * (1.0f - output);
-    } else if (activationFunction == ActivationFunction::ReLu
+    } else if (outputActivationFunction == ActivationFunction::ReLu
                || errorFunction == ErrorFunction::CrossEntropy) {
         return target - output;
     }
@@ -171,11 +190,6 @@ float Network_L::computeErrorRate(float target, float output) {
     if (errorFunction == ErrorFunction::SumSquared) {
         return 0.5 * (target - output) * (target - output);
     } else if (errorFunction == ErrorFunction::CrossEntropy) {
-        float rate = (target * log(output) + (1.0f - target) * log(1.0f - output));
-        std::cout << "target: " << target << "\n";
-        std::cout << "output: " << output << "\n";
-        std::cout << "CE calculated error: " << rate << "\n";
-        std::cout << "\n";
         return -1.0 * (target * log(output) + (1.0f - target) * log(1.0f - output));
     }
 }
@@ -315,8 +329,13 @@ float Network_L::getAccumulatedInput() const {
 }
 
 
-ActivationFunction Network_L::getActivationFunction() const {
-    return activationFunction;
+ActivationFunction Network_L::getHiddenActivationFunction() const {
+    return hiddenActivationFunction;
+}
+
+
+ActivationFunction Network_L::getOutputActivationFunction() const {
+    return outputActivationFunction;
 }
 
 
@@ -379,13 +398,21 @@ void Network_L::setInitialWeightMax(float initialWeightMax) {
     Network_L::initialWeightMax = initialWeightMax;
 }
 
-void Network_L::setActivationFunction(ActivationFunction activationFunction) {
-    Network_L::activationFunction = activationFunction;
+
+void Network_L::setHiddenActivationFunction(ActivationFunction activationFunction) {
+    Network_L::hiddenActivationFunction = activationFunction;
 }
+
+
+void Network_L::setOutputActivationFunction(ActivationFunction activationFunction) {
+    Network_L::outputActivationFunction = activationFunction;
+}
+
 
 void Network_L::setErrorFunction(ErrorFunction errorFunction) {
     Network_L::errorFunction = errorFunction;
 }
+
 
 void Network_L::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) {
     Network_L::hiddenWeights = hiddenWeights;
@@ -405,6 +432,8 @@ ActivationFunction stringToAF(std::string name) {
         return ActivationFunction::Sigmoid;
     } else if (name == "ReLu") {
         return ActivationFunction::ReLu;
+    } else if (name == "SoftMax") {
+        return ActivationFunction::SoftMax;
     } else {
         std::cout << "Activation function not recognised: " << name << "\n";
         return ActivationFunction::Sigmoid; // Default to Sigmoid
@@ -420,6 +449,8 @@ std::string aFToString(ActivationFunction af) {
         return "Sigmoid";
     } else if (af == ActivationFunction::ReLu) {
         return "ReLu";
+    } else if (af == ActivationFunction::SoftMax) {
+        return "SoftMax";
     }
 }
 

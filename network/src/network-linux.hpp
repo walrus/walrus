@@ -4,7 +4,7 @@
 #include <vector>
 #include <random>
 
-enum class ActivationFunction {Sigmoid, ReLu};
+enum class ActivationFunction {Sigmoid, ReLu, SoftMax};
 
 ActivationFunction stringToAF(std::string name);
 std::string aFToString(ActivationFunction af);
@@ -28,7 +28,8 @@ private:
     float errorRate;                                        // AKA 'Error' in the original code
     float accumulatedInput;                                 // AKA 'Accum' in the original code
 
-    ActivationFunction activationFunction;                  // Activation function. Original code used Sigmoid
+    ActivationFunction hiddenActivationFunction;            // Activation function. Original code used Sigmoid
+    ActivationFunction outputActivationFunction;            // Activation function. Original code used Sigmoid
     ErrorFunction  errorFunction;                           // Error function. Original code used SumSquared
 
     std::vector<float> hiddenNodes;                         // AKA 'Hidden' in the original code
@@ -45,7 +46,7 @@ private:
 
     void initialiseHiddenWeights();
     void initialiseOutputWeights();
-    float computeActivation(float accumulatedInput);
+    float computeActivation(float accumulatedInput, ActivationFunction af);
     void computeHiddenLayerActivations(std::vector<float> inputs);
     void computeOutputLayerActivations();
     float computeDelta(float target, float output);
@@ -82,7 +83,8 @@ public:
     float getRandomFloat() const;
     float getErrorRate() const;
     float getAccumulatedInput() const;
-    ActivationFunction getActivationFunction() const;
+    ActivationFunction getHiddenActivationFunction() const;
+    ActivationFunction getOutputActivationFunction() const;
     ErrorFunction getErrorFunction() const;
     const std::vector<float> getHiddenNodes() const;
     const std::vector<float> getOutputNodes() const;
@@ -95,7 +97,8 @@ public:
     void setLearningRate(float learningRate);
     void setMomentum(float momentum);
     void setInitialWeightMax(float initialWeightMax);
-    void setActivationFunction(ActivationFunction activationFunction);
+    void setHiddenActivationFunction(ActivationFunction activationFunction);
+    void setOutputActivationFunction(ActivationFunction activationFunction);
     void setErrorFunction(ErrorFunction errorFunction);
 };
 

@@ -311,13 +311,15 @@ TEST_CASE("The core network functionality is all correct") {
         }
     }
 
-    GIVEN("A network using the ReLu activation function") {
+    GIVEN("A network using the ReLu activation function for both layers") {
         Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
-        network.setActivationFunction(ActivationFunction::ReLu);
+        network.setHiddenActivationFunction(ActivationFunction::ReLu);
+        network.setOutputActivationFunction(ActivationFunction::ReLu);
 
-        THEN("The activation function is set properly") {
-            REQUIRE(network.getActivationFunction() == ActivationFunction::ReLu);
+        THEN("The activation functions are set properly") {
+            REQUIRE(network.getHiddenActivationFunction() == ActivationFunction::ReLu);
+            REQUIRE(network.getOutputActivationFunction() == ActivationFunction::ReLu);
         }
         THEN("It can be trained") {
             std::vector<float> input;
@@ -373,6 +375,65 @@ TEST_CASE("The core network functionality is all correct") {
         network.setErrorFunction(ErrorFunction::CrossEntropy);
 
         THEN("The error function is set properly") {
+            REQUIRE(network.getErrorFunction() == ErrorFunction::CrossEntropy);
+        }
+        THEN("It can be trained") {
+            std::vector<float> input;
+            input.resize(nin);
+            std::vector<float> target;
+            target.resize(non);
+
+            for (int i = 0; i < nin; i++) {
+                input[i] = test_dist(m_mt);
+            }
+
+            for (int i = 0; i < non; i++) {
+                target[i] = target_dist(m_mt);
+            }
+
+            float error = network.trainNetwork(input, target);
+
+            REQUIRE(error > 0.0f);
+        }
+        THEN("Training reduces the error") {
+            std::vector<float> input;
+            input.resize(nin);
+            std::vector<float> target;
+            target.resize(non);
+
+            for (int i = 0; i < nin; i++) {
+                input[i] = test_dist(m_mt);
+            }
+
+            for (int i = 0; i < non; i++) {
+                target[i] = target_dist(m_mt);
+            }
+
+            float untrained_error = network.trainNetwork(input, target);
+
+            REQUIRE(untrained_error > 0.0f);
+
+            for (int i =0; i < 9; i++) {
+                network.trainNetwork(input, target);
+            }
+
+            float trained_error = network.trainNetwork(input, target);
+
+            REQUIRE(trained_error < untrained_error);
+            REQUIRE(trained_error > 0.0f);
+        }
+    }
+
+    GIVEN("A network using the sigmoid and softmax activation functions with the CrossEntropy error function") {
+        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+
+        network.setHiddenActivationFunction(ActivationFunction::Sigmoid);
+        network.setOutputActivationFunction(ActivationFunction::SoftMax);
+        network.setErrorFunction(ErrorFunction::CrossEntropy);
+
+        THEN("The activation and error functions are set properly") {
+            REQUIRE(network.getHiddenActivationFunction() == ActivationFunction::Sigmoid);
+            REQUIRE(network.getOutputActivationFunction() == ActivationFunction::SoftMax);
             REQUIRE(network.getErrorFunction() == ErrorFunction::CrossEntropy);
         }
         THEN("It can be trained") {
