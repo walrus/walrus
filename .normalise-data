@@ -132,10 +132,13 @@ def grow_readings(original_readings, diff):
 #
 
 # Parse arguments
-if len(sys.argv) < 2:
-    print "No arguments given; try again."
+if len(sys.argv) < 4:
+    print "Not enough arguments given; try again."
     sys.exit(1)
 if len(sys.argv) == 4:
+    if (sys.argv[1] == "-d" or sys.argv[1] == "-r"):
+        print "Not enough arguments given; try again."
+        sys.exit(1)
     filename =  sys.argv[1]
     normalised_length = int(sys.argv[2])
     target = list(sys.argv[3])
