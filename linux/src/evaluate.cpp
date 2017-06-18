@@ -56,6 +56,12 @@ std::vector<int> outputClassifications;
 std::vector<std::vector<int>> confusion;
 std::vector<std::string> caLabels = {" Press up | ", "   Sit up | ", "    Lunge | ", "     None | "};
 
+std::vector<int> predictions;  // Number of predicted classifications for each class
+std::vector<int> actuals;      // Number of actual classifications for each class
+
+std::vector<int> recalls;    // Recall of each class (correct predictions over actuals)
+std::vector<int> precisions; // Precision of each class (correct predictions over predictions)
+
 
 
 void validateSet(std::string filename, Network_L *network) {
@@ -186,11 +192,10 @@ int main(int argc, char * argv[]) {
             currentIndex = indexes[i];
             latestErrorRate = network->trainNetwork(trainingInputs[currentIndex], trainingTargets[currentIndex]);
             examplesTrainedOn++;
-
             if (latestErrorRate < errorSuccess){
+                std::cout << "Stopping early.\n";
                 break;
             }
-
             if (examplesTrainedOn % 100 == 0) {
                 std::cout << "Trained " << examplesTrainedOn << " examples. Error rate is " << latestErrorRate << "\n";
 
@@ -201,15 +206,18 @@ int main(int argc, char * argv[]) {
                 network->setMomentum(1.05 * network->getMomentum());
             }
         }
-
-
         std::cout << "Finished training after " << examplesTrainedOn << " examples. Error rate is " << latestErrorRate << "\n";
         std::cout << "\n";
     }
 
-
     std::cout << "Validating...\n";
     validateDir(validationdir, network);
+
+    // Resize vectors in preparation for computation
+    predictions.resize(validationTargets[0].size()+1);
+    actuals.resize(validationTargets[0].size()+1);
+    precisions.resize(validationTargets[0].size()+1);
+    recalls.resize(validationTargets[0].size()+1);
 
     // Iterate through the validation targets and compute classifications
     for (int i = 0; i < validationTargets.size(); i++) {
@@ -221,6 +229,7 @@ int main(int argc, char * argv[]) {
             }
         }
         targetClassifications.push_back(target);
+        actuals[target]++;
     }
 
     int correct = 0;
@@ -247,12 +256,14 @@ int main(int argc, char * argv[]) {
         outputClassifications.push_back(classification);
 
         confusion[classification][targetClassifications[i]] += 1;
+        predictions[classification]++;
 
-        if (classification == targetClassifications[i]) {
+        if (classification = targetClassifications[i]) {
             correct++;
         } else {
             wrong++;
         }
+
     }
     // Print the confusion matrix
 
@@ -270,9 +281,31 @@ int main(int argc, char * argv[]) {
     }
     std::cout << "\n";
 
+    // compute and print precision and recall rates
+    std::cout << "            Recall | Precision\n";
+    for (int i = 0; i < predictions.size(); i++) {
+        if (actuals[i] > 0) {
+            recalls[i] = int(100 * confusion[i][i] / float(actuals[i]));
+        } else {
+            recalls[i] = 0;
+        }
+        if (predictions[i] > 0) {
+            precisions[i] = int(100 * confusion[i][i] / float(predictions[i]));
+        } else {
+            precisions[i] = 0;
+        }
+        std::cout << caLabels[i];
+        if (recalls[i] < 10) {
+            std::cout << "  ";
+        } else if (recalls[i] < 100) {
+            std::cout << " ";
+        }
+        std::cout << " " << recalls[i] << "   |   " << precisions[i] << "\n";
+    }
+    std::cout << "\n";
+
     std::cout << "Correct: " << correct << "\n";
     std::cout << "Wrong: " << wrong << "\n";
-
     std::cout << "CR: " << 100 * correct/float(correct + wrong) << "%\n";
 
     saveNetwork(config_file_location, network);
