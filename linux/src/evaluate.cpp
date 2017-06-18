@@ -62,7 +62,7 @@ std::vector<int> actuals;      // Number of actual classifications for each clas
 std::vector<float> recalls;    // Recall of each class (correct predictions over actuals)
 std::vector<float> precisions; // Precision of each class (correct predictions over predictions)
 std::vector<float> fones;      // F1 measure of each class
-
+float uar = 0;                 // Unweighted average recall
 
 void validateSet(std::string filename, Network_L *network) {
     // Check the training file exists, and if it doesn't, exit
@@ -296,6 +296,7 @@ int main(int argc, char * argv[]) {
         } else {
             recalls[i] = 0;
         }
+        uar += recalls[i];
         if (predictions[i] > 0) {
             precisions[i] = confusion[i][i] / float(predictions[i]);
         } else {
@@ -320,7 +321,10 @@ int main(int argc, char * argv[]) {
 
     std::cout << "Correct: " << correct << "\n";
     std::cout << "Wrong: " << wrong << "\n";
-    std::cout << "CR: " << 100 * correct/float(correct + wrong) << "%\n";
+    uar = uar / predictions.size();
+    std::cout << "Classification rate: " << 100 * correct/float(correct + wrong) << "%\n";
+    std::cout << "Error rate: " << 100 * wrong/float(correct + wrong) << "%\n";
+    std::cout << "Unweighted Average Recall: " << uar * 100 << "%\n";
 
     saveNetwork(config_file_location, network);
 }
