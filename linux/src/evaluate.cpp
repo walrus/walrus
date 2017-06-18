@@ -3,7 +3,7 @@
  *
  * Run from command line as follows:
  *
- * train config_filename [trainingdir] validationdir
+ * train config_filename [trainingdir] validationdir threshold
  *
  * Will recursively scan directory  trainingdir and  read every log file with the _normalised suffix
  * and train the network on the data contained in it.
@@ -11,6 +11,10 @@
  * If trainingdir argument is omitted, will not train
  *
  * Once done will validate the network on the contents of validationdir
+ *
+ * Threshold is the number above which a target is counted
+ *
+ * For example, with a threshold of 0.5,  [0.6, 0.3, 0.1] would return 0, while [0.4, 0.1, 0.1] would return 3
  *
  * Must be run from the linux/ directory
  */
@@ -30,15 +34,28 @@ std::string config_file_location =  "../network/config/network.txt";
 bool training = false;
 long examplesTrainedOn = 0;
 float latestErrorRate = 0;
+float classificationThreshold = 0.5; // Default value
+
+// Arguments
 std::string trainingdir;
 std::string validationdir;
 
+// Training data
 std::vector<std::vector<float>> trainingInputs;
 std::vector<std::vector<float>> trainingTargets;
 std::vector<std::vector<float>> trainingOutputs;
 
+// Validation data
 std::vector<std::vector<float>> validationTargets;
 std::vector<std::vector<float>> validationOutputs;
+std::vector<int> targetClassifications;
+std::vector<int> outputClassifications;
+
+// Confusion matrix & other metrics
+std::vector<std::vector<int>> confusion;
+std::vector<std::string> caLabels = {" Press up | ", "   Sit up | ", "    Lunge | ", "     None | "};
+
+
 
 void validateSet(std::string filename, Network_L *network) {
     // Check the training file exists, and if it doesn't, exit
@@ -115,23 +132,24 @@ void loadDir(std::string dirname, Network_L *network) {
 
 int main(int argc, char * argv[]) {
     // Parse arguments
-    if (argc < 3) {
+    if (argc < 4) {
         std::cout << "Too few arguments supplied\n";
         return 1;
-    } else if (argc > 4) {
+    } else if (argc > 5) {
         std::cout << "Too many arguments supplied\n";
         return 1;
     }
 
     config_file_location = argv[1];
-    if (argc == 4) {
+    if (argc == 5) {
         trainingdir = argv[2];
         validationdir = argv[3];
+        classificationThreshold = std::stof(argv[4]);
         training = true;
     } else {
         validationdir = argv[2];
+        classificationThreshold = std::stof(argv[3]);
     }
-
 
     Network_L *network;
 
@@ -167,8 +185,18 @@ int main(int argc, char * argv[]) {
             latestErrorRate = network->trainNetwork(trainingInputs[currentIndex], trainingTargets[currentIndex]);
             examplesTrainedOn++;
 
+            if (latestErrorRate < 0.01){
+                break;
+            }
+
             if (examplesTrainedOn % 100 == 0) {
                 std::cout << "Trained " << examplesTrainedOn << " examples. Error rate is " << latestErrorRate << "\n";
+
+                if (network->getLearningRate() > 0.12) {
+                    network->setLearningRate(0.95 * network->getLearningRate());
+                }
+                if (network->getMomentum() < 0.9)
+                network->setMomentum(1.05 * network->getMomentum());
             }
         }
 
@@ -179,8 +207,70 @@ int main(int argc, char * argv[]) {
 
 
     std::cout << "Validating...\n";
+    validateDir(validationdir, network);
 
+    // Iterate through the validation targets and compute classifications
+    for (int i = 0; i < validationTargets.size(); i++) {
+        int target = validationTargets[0].size();
+        float tempClassificationThreshold = classificationThreshold;
+        for (int j = 0; j < validationTargets[i].size(); j++) {
+            if (validationTargets[i][j] > tempClassificationThreshold) {
+                target = j;
+            }
+        }
+        targetClassifications.push_back(target);
+    }
 
+    int correct = 0;
+    int wrong = 0;
+
+    confusion.resize(validationOutputs[0].size()+1, std::vector<int>(validationOutputs[0].size()+1));
+
+    // Iterate through the validation outputs and compute classifications & confusion matrix
+    for (int i = 0; i < validationOutputs.size(); i++) {
+        int classification = validationOutputs[0].size();
+        float tempClassificationThreshold = classificationThreshold;
+        std::cout << "Output: ";
+        for (int j = 0; j < validationOutputs[i].size(); j++) {
+            std::cout << validationOutputs[i][j] << " ";
+            if (validationOutputs[i][j] > tempClassificationThreshold) {
+                classification = j;
+            }
+        }
+        std::cout << "Classification: " << classification << "\n";
+        std::cout << "Target: " << targetClassifications[i] << "\n";
+        std::cout << "\n";
+
+        outputClassifications.push_back(classification);
+
+        confusion[classification][targetClassifications[i]] += 1;
+
+        if (classification == targetClassifications[i]) {
+            correct++;
+        } else {
+            wrong++;
+        }
+    }
+    // Print the confusion matrix
+
+    std::cout << "Predicted | pu | su | lu | no \n";
+
+    for (int i = 0; i < confusion[0].size(); i++) {
+        std::cout << caLabels[i];
+        for (int j = 0; j < confusion[0].size()-1; j++) {
+            if (confusion[i][j] < 10) {
+                std::cout << " "; //padding
+            }
+            std::cout << std::to_string(confusion[i][j]) + " | ";
+        }
+        std::cout << std::to_string(confusion[i][confusion[0].size()-1]) << "  \n";
+    }
+    std::cout << "\n";
+
+    std::cout << "Correct: " << correct << "\n";
+    std::cout << "Wrong: " << wrong << "\n";
+
+    std::cout << "CR: " << 100 * correct/float(correct + wrong) << "%\n";
 
     saveNetwork(config_file_location, network);
 }

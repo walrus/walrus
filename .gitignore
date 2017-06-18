@@ -160,3 +160,4 @@ linux/test/test_normalised_log_file.txt
 
 linux/train
 linux/new-network
+linux/evaluate
