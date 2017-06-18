@@ -1,7 +1,7 @@
 /*
  * Create a new network with the given arguments:
  *
- * new-network filename nin nhn non lr m diwm
+ * new-network filename nin nhn non lr m diwm haf oaf ef
  *
  * Where:
  *
@@ -15,6 +15,9 @@
  * lr  = learningRate
  * m   = momentum
  * diwm = defaultInitialWeightMax
+ * haf = hiddenActivationFunction
+ * oaf = outputActivationFunction
+ * ef = errorFunction
  *
  * Must be run from the project/linux/ directory
  */
@@ -37,12 +40,16 @@ float lr;
 float m;
 float diwm;
 
+ActivationFunction haf;
+ActivationFunction oaf;
+ErrorFunction ef;
+
 int main(int argc, char * argv[]) {
     // Parse arguments
-    if (argc < 8) {
+    if (argc < 11) {
         std::cout << "Too few arguments supplied\n";
         return 1;
-    } else if (argc > 8) {
+    } else if (argc > 11) {
         std::cout << "Too many arguments supplied\n";
         return 1;
     }
@@ -56,11 +63,20 @@ int main(int argc, char * argv[]) {
     m = atof(argv[6]);
     diwm = atof(argv[7]);
 
+    haf = stringToAF(argv[8]);
+    oaf = stringToAF(argv[9]);
+    ef = stringToEF(argv[10]);
+
     std::cout << "Checking for existing network config file...";
     std::ifstream check_config(config_file_path);
     if (!check_config.is_open()) {
         std::cout << "not found, creating new network.\n";
         Network_L *network = new Network_L(nin, nhn, non, lr, m, diwm, 0);
+
+        network->setHiddenActivationFunction(haf);
+        network->setOutputActivationFunction(oaf);
+        network->setErrorFunction(ef);
+
         saveNetwork(config_file_path, network);
         std::cout << "Network created.\n";
     } else {
