@@ -177,6 +177,10 @@ int main(int argc, char * argv[]) {
         network = loadNetwork(config_file_location);
     }
 
+    // Save for later
+    float lr = network->getLearningRate();
+    float m  = network->getMomentum();
+
     // Train the network on the data in the given directory
     if (training) {
         loadDir(trainingdir, network);
@@ -205,12 +209,17 @@ int main(int argc, char * argv[]) {
                 if (network->getLearningRate() > 0.12) {
                     network->setLearningRate(0.95 * network->getLearningRate());
                 }
-                if (network->getMomentum() < 0.9)
-                network->setMomentum(1.05 * network->getMomentum());
+                if (network->getMomentum() < 0.9) {
+                    network->setMomentum(1.05 * network->getMomentum());
+                }
             }
         }
         std::cout << "Finished training after " << examplesTrainedOn << " examples. Error rate is " << latestErrorRate << "\n";
         std::cout << "\n";
+
+        // Restore original learning rate and momentum for inspection
+        network->setLearningRate(lr);
+        network->setMomentum(m);
     }
 
     std::cout << "Validating...\n";
