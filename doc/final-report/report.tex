@@ -170,7 +170,7 @@ For the library, capability means that it must be able to do the following:
 \end{itemize}
 
 For the library, efficiency means the following:
-\todo[inline]{quantify metrics}
+
 \begin{itemize}
 \item It must use as little memory as possible
 \item It must use as little processing power as possible
@@ -209,7 +209,7 @@ For the data set, capability means that it must have the following:
 \end{itemize}
 
 For the data set, efficiency means the following:
-\todo[inline]{quantify metrics}
+
 \begin{itemize}
 \item It must have as little noise as possible
 \item It must include as much of the set of valid examples as possible
@@ -1157,8 +1157,6 @@ Examples of valid configuration files can be found \hyperref[subsec:a2_configfil
 
 The exercise classifier will be a multi-device system that uses a neural network on a microcontroller to classify exercises the user performs, then sends the classification via Bluetooth to a smartphone for display. The network will be trained on a desktop computer.
 
-\todo[inline]{diagram?}
-
 \subsection{Hardware}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dc_hardware}
 
@@ -1287,8 +1285,6 @@ Because this program relies on the neural network library, it will be structured
 The main program will reside in \lstinline{classifier-serial.ino}. This will \lstinline{#include} the file \lstinline{network-arduino.hpp}, which will in turn \lstinline{#include} the configuration stored in \lstinline{arduino_config.h}. 
 This structure will also implicitly include the implementation file for the network, \lstinline{network-arduino.cpp}.
 
-\todo[inline]{diagram of includes}
-
 When using this program, \hyperref[subsubsec:dc_csa_analyse]{the accompanying program} \lstinline{analyse-classifications} must be run on the computer.
 
 \subsubsection{classifier-ble}%%%%%%%%%%
@@ -1302,8 +1298,6 @@ Because this program relies on the neural network library, it will be structured
 
 The main program will reside in \lstinline{classifier-ble.ino}. This will \lstinline{#include} the file \lstinline{network-arduino.hpp}, which will in turn \lstinline{#include} the configuration stored in \lstinline{arduino_config.h}. 
 This structure will also implicitly include the implementation file for the network, \lstinline{network-arduino.cpp}.
-
-\todo[inline]{diagram of includes}
 
 When using this program, \hyperref[subsubsec:dc_asa_classifier]{the accompanying program} \lstinline{ble-classifier} must be run on the phone.
 
@@ -1344,8 +1338,6 @@ The other six arguments contain the parameters which control the network configu
 
 The main code for this program will be contained in the file \lstinline{new-network.cpp}, in the folder \lstinline{linux/src/}. It is dependent on the two header files \lstinline{network-linux.hpp} and \lstinline{network-saveload-linux.hpp} and implicitly their implementation files \lstinline{network-linux.cpp} and \lstinline{network-saveload-linux.cpp} respectively, all of which are in the folder \lstinline{network/src/}.
 
-\todo[inline]{UML diagram/dependency diagram}
-
 Due to these dependencies, the script \lstinline{compile-new-network} in the folder \lstinline{linux/} will be used to compile the new network program into the executable \lstinline{new-network} for ease of use.
 
 \subsubsection{train}
@@ -1360,8 +1352,6 @@ This program is used to load a given neural network and then train it on the tra
 \lstinline{[suffix]} If included, the program will only train on files with this suffix. 
 
 The main code for this program will be contained in the file \lstinline{train.cpp}, in the folder \lstinline{linux/src/}. It depends on the two header files \lstinline{network-linux.hpp} and \lstinline{network-saveload-linux.hpp} and implicitly their implementation files \lstinline{network-linux.cpp} and \lstinline{network-saveload-linux.cpp} respectively, all of which are in the folder \lstinline{network/src/}. It further depends on the training set library contained in \lstinline{training-set.hpp} and \lstinline{training-set.cpp}, both found in the same folder as the training program, \lstinline{linux/src}
-
-\todo[inline]{UML diagram/dependency diagram}
 
 Because of these dependencies, the script \lstinline{compile-train} in the folder \lstinline{linux/} will be used to compile the training program into the executable \lstinline{train} for ease of use.
 
@@ -1542,9 +1532,7 @@ This program displays the classifications made by the microcontroller, and keeps
 
 After connecting to the microcontroller over a BLE connection, the program will display the data in the format defined in the \hyperref[subsec:dc_datadisplay]{Data Display section.}
 
-As an Android project, the architecture of the program is relatively complex. All of the code for the program resides in the folder \lstinline{android/ble-classifier}. 
-
-\todo[inline]{Sanitise folder and update section. Do diagram}
+As an Android project, the architecture of the program is relatively complex. All of the code for the program resides in the folder \lstinline{android/ble-classifier}. The Java code resides in \lstinline{Application/src/main/java/com/example/android/bluetoothlegatt}, while the XML is in \lstinline{Application/src/main/res}.
 
 \subsubsection{BLE-Logger}
 \label{subsubsec:dc_asa_logger}
@@ -1563,9 +1551,7 @@ The program will finish logging when the \lstinline{Stop Logging} button is pres
 
 The filename of the log file will be entered by the user prior to beginning logging.
 
-As an Android project, the architecture of the program is relatively complex. All of the code for the program resides in the folder \lstinline{android/ble-logger}. 
-
-\todo[inline]{Sanitise folder and update section. Do diagram}
+As an Android project, the architecture of the program is relatively complex. All of the code for the program resides in the folder \lstinline{android/ble-logger}. The Java code resides in \lstinline{Application/src/main/java/com/example/android/bluetoothlegatt}, while the XML is in \lstinline{Application/src/main/res}. 
 
 \subsection{Data Capture \& Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dc_datacapture}
