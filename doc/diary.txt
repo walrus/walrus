@@ -250,3 +250,19 @@ Individual project 'diary'
 15/6/17
     Write contributrions + evaluation metrics in introduction
     Write evaluation (minus classifier performance)
+
+16/6/17
+    Write conclusion & future work section
+    Write evaluation metrics into introduction
+
+17/6/17
+    Write introduction section
+    Fix links in report
+
+18/6/17
+    Finish recording data
+    Train final network and write up classifier performance
+
+19/6/17
+    Tidy up final sections of report
+    Submit report
