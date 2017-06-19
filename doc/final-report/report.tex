@@ -1169,9 +1169,9 @@ This section details the requirements of the three main pieces of hardware requi
 The requirements of the microcontroller for this project are the most stringent, and are as follows:
 
 \begin{description}
-\item[Processor] The microcontroller's processor must be capable of performing a classification within 100 milliseconds, to ensure that the user receives feedback on their exercises in a short enough interval to be useful. Given \hyperref[subsec:dc_networkarchitecture]{the chosen network configuration}, the minimum clock speed is around 211KHz.\cite{dsref0}\todo{update?}
-\item[RAM] \todo[inline]{work out how much RAM the damn thing takes}
-\item[Non Volatile Memory] The microcontroller needs to have enough storage for the weights. Given \hyperref[subsec:dc_networkarchitecture]{the chosen network architecture}, this takes about 17KB not including the bootloader\cite{dsref2}.\todo{update?}
+\item[Processor] The microcontroller's processor must be capable of performing a classification within 100 milliseconds, to ensure that the user receives feedback on their exercises in a short enough interval to be useful. Given \hyperref[subsec:dc_networkarchitecture]{the chosen network configuration}, the minimum clock speed is around 900KHz.\cite{dsref0}
+\item[RAM] The microcontroller needs enough RAM for the nodes, in addition to whatever else the program does. Given \hyperref[subsec:dc_networkarchitecture]{the chosen network architecture}, this takes 112B.
+\item[Non Volatile Memory] The microcontroller needs to have enough non volatile memory for the weights. Given \hyperref[subsec:dc_networkarchitecture]{the chosen network architecture}, this takes 7900B not including the rest of the program code\cite{dsref2}.
 \item[Accelerometer] The microcontroller needs to be capable of measuring acceleration on three axes through an IMU or accelerator, either onboard or via a shield.
 \item[Bluetooth] The microcontroller needs to be capable of connecting over a BLE connection, either onboard or via a shield.
 \item[Battery] A battery capable of providing enough current for the chosen microcontroller and enough energy to last three hours between charging and replacement. The Arduino 101 draws around 70 mA when processing intensely,\cite{dsref3} so a 210mAh battery capable of providing this much current is more than adequate.
@@ -1309,8 +1309,6 @@ When using this program, \hyperref[subsubsec:dc_asa_classifier]{the accompanying
 
 \subsection{Linux Computer Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dc_csa}
-
-\todo[inline]{Add evaluation program}
 
 There are a variety of programs for the computer, broadly split into four parts:
 
@@ -1988,9 +1986,9 @@ If the library is efficiently implemented:
 
 For the above efficiency metrics, once again they have been met to a reasonable degree. 
 
-The RAM usage is very low, mainly because of the lack of training capability. This means that only the values of the nodes must be kept in RAM, using X \todo{input actual number}B for my exercise classifier example with 32 input nodes, 20 hidden nodes and 3 output nodes.
+The RAM usage is very low, mainly because of the lack of training capability. This means that only the values of the nodes must be kept in RAM, using 112B for my exercise classifier example with 32 input nodes, 20 hidden nodes and 3 output nodes.
 
-Processing power is also very low; my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. \todo[inline]{update if necessary}
+Processing power is also very low; my exercise classifier performs classifications in an average of 1354 microseconds\cite{dsref0}.
 
 The ease of use is discussed at length in combination with the ease of use for the exercise classifier \hyperref[subsec:ev_eu]{later in the evaluation.}
 
@@ -2059,7 +2057,7 @@ The classifier must be capable of the following:
 \item Display the classifications
 \end{itemize}
 
-All three of these metrics have been met. The classifier takes on average 658 microseconds\cite{dsref0} to perform a classification, and the Arduino reliably connects to the phone and displays classifications.
+All three of these metrics have been met. The classifier takes on average 1354 microseconds\cite{dsref0} to perform a classification, and the Arduino reliably connects to the phone and displays classifications.
 
 If the classifier is efficiently implemented:
 
@@ -2072,9 +2070,9 @@ If the classifier is efficiently implemented:
 
 Classifier performance is discussed at length in the section below (\hyperref[subsec:ev_cp]{Classifier Performance}), while ease of use is discussed together with the library in the section \hyperref[subsec:ev_eu]{Ease of Use.}
 
-The memory usage is very low because the library stores the weights in program memory. This means that only the values of the nodes must be kept in RAM, using X \todo{input actual number}B for the network and Y B \todo{actual number} overall when running (the rest of the memory being used for the BLE functionality).
+The memory usage is very low because the library stores the weights in program memory (using ~7900B to do so\cite{dsref2}. This means that only the values of the nodes must be kept in RAM, using 112B for the network and 14856B overall when running (much of the rest of the memory being used for the BLE functionality).
 
-Processing power is also very low; as previously stated, my exercise classifier performs classifications in an average of 658 microseconds\cite{dsref0}. \todo{update?}
+Processing power is also very low; as previously stated, my exercise classifier performs classifications in an average of 1354 microseconds\cite{dsref0}.
 
 \subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:ev_cp}
@@ -2485,9 +2483,9 @@ A more intelligent motion detection method might recognise the zero motion at th
 
 \begin{figure}[H]
     \centering
-        \includegraphics[scale=0.30]{pressups_first_solution}
-        \caption{Graph showing }
-        \label{fig:pu_false_positive}
+        \includegraphics[scale=0.20]{pressups_first_solution}
+        \caption{Graph showing the recording time for the false positive (red) and the true recording time (green)}
+        \label{fig:pu_first_solution}
 \end{figure}
 
 However, this approach still suffers from the fundamental chicken and egg problem of not knowing what to attempt classification on.
@@ -2495,7 +2493,12 @@ However, this approach still suffers from the fundamental chicken and egg proble
 Another approach to this issue would be to maintain a queue of the last 30 or so readings and attempt classification each time a new reading (or if this proves too computationally expensive, several readings) is added. 
 This would return many negative classifications, but would mean that no valid exercises were missed, and would prevent the user from having to adapt their movements to suit the motion detector. This would have the drawback of using more power, but would mean that the only thing attempting to decide what is and is not an exercise is the neural network rather than a more primitive system.
 
-\todo[inline]{This figure shows a simplified 10-second sample containing two exercises (marked in green). In this period there would be several negative classifications (marked in red).}
+\begin{figure}[H]
+    \centering
+        \includegraphics[scale=0.60]{pressups_second_solution}
+        \caption{Graph showing the attempted classifications, positive in green and negative in red}
+        \label{fig:pu_second_solution}
+\end{figure}
 
 \subsubsection{Neural Network Library}
 
@@ -3420,13 +3423,15 @@ Program Space Utilities
 % Design and Specification references (dsref#) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bibitem{dsref0}
-Figure calculated as follows: On an Arduino 101 (32MHz clock speed), classification took an average of 658 microseconds, so the minimum clock speed necessary is given by 32 * 0.658 / 100 = 211 KHz
+Figure calculated as follows: On an Arduino 101 (32MHz clock speed), classification took an average of 1354 microseconds, so the minimum clock speed necessary is given by 32MHz * 1.354 / 100 = 433 KHz
+
+This figure ignores the processing power needed to perform other functions, so should be at a minimum doubled, for a value of 900KHz
 
 \bibitem{dsref1}
 Calculations for memory usage
 
 \bibitem{dsref2}
-The 'BareMinimum' example sketch uses 48432B of program memory. The classifier sketch uses 65456B of program memory, a difference of 17033B.
+The \lstinline{classifier-serial} sketch uses 66752 B of program memory when the network code is included. If all of the network code is removed (including the \#include) this drops to 58852 B, a difference of 7900 B
 
 \bibitem{dsref3}
 \url{https://tlextrait.svbtle.com/arduino-power-consumption-compared}
