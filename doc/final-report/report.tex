@@ -57,14 +57,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-
-\title{Using Artificial Neural Networks for Classification on Embedded Hardware}
+\begin{titlepage}
+    \centering
+    \vfill
+    {\huge \textbf{Using Artificial Neural Networks for Classification on Embedded Hardware}
+        \vskip1cm
+        \LARGE Daniel Clay  \\
+        \vskip1cm
+        \large \emph{Supervised by Thomas Heinis}
+    }    
+    \vfill
+    %\includegraphics[scale=0.20]{college_crest}
+    \vfill
+    \LARGE 2017\\
+    \vfill
+    \large Department of Computing\\
+    Imperial College London
+    \vfill
+\end{titlepage}
+\title{\textbf{Using Artificial Neural Networks for Classification on Embedded Hardware}}
 \date{2017}
 \author{
 Daniel Clay\\
 \emph{Supervised by Dr Thomas Heinis}\\ 
 }
-\maketitle
+
 \pagebreak
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -73,13 +90,14 @@ Daniel Clay\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:ab}
 
-With the continuing growth in power of embedded systems, it is increasingly feasible to do simple machine learning onboard, rather than sending data off for processing in the cloud. 
-Unfortunately, there is a lack of machine learning frameworks and libraries available today, leaving those who wish to do machine learning on embedded systems having to write their own machine learning applications from scratch. 
+As the power of embedded systems grow, it is increasingly feasible to do simple machine learning onboard, rather than sending away data for processing in the cloud. 
+There is, however, a lack of available machine learning frameworks and libraries which are compatible with embedded systems, requiring those who wish to do machine learning on embedded systems to write machine learning applications from scratch. 
 
-In this project, I implement a library to facilitate the easy creation and usage of feed-forward backpropagation neural networks on embedded systems, particularly the Arduino series of microcontrollers.
+In this project, I implement a library to facilitate the easy creation and usage of feed-forward backpropagation neural networks on embedded systems, in particular, the Arduino family of microcontrollers.
 
-I then use the library to implement a sample application that uses an accelerometer to measure the user's exercises, and then classifies them using a neural network.
+I then use the library to implement a sample application that uses an accelerometer to measure the user's exercises, and classifies them using a neural network.
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgements}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -89,10 +107,9 @@ I would like to thank:
 
 \begin{itemize}
 \item Dr Thomas Heinis, for his supervision
-\item Squiddy Squid, for her help recording data and proof reading my report
-\item Jack, for his help recording data
-\item My father, Graham, for his advice on embedded systems and proof reading my report
-\item Jesus, for His infinite wisdom, love and guidance through the course of this project
+\item Hilary Lamb, for her help recording data and proof reading my report
+\item Jack Steadman, for his help recording data
+\item My father, Graham Clay, for his advice on embedded systems and proof reading my report
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,7 +133,7 @@ I would like to thank:
 
 As machine learning and the Internet of Things (IoT) emerge in consumer technologies, the overlap between the two drives demand for smart devices. The standard approach to providing intelligent functionality of embedded systems is to connect them to more computational power via the cloud, although this is not always an option.
 
-With the growth in power of embedded systems, it is increasingly feasible to do simple machine learning onboard. Unfortunately, most machine learning frameworks and programs (Torch, Numenta, Tensorflow et al) are not compatible with the operating systems and restricted resources available on embedded systems, leaving those who wish to do machine learning on embedded systems having to write their own machine learning applications from scratch. This represents a high barrier to entry.
+With the growth in power of embedded systems, it is increasingly feasible to do simple machine learning onboard. Unfortunately, most machine learning frameworks and programs (Torch, Numenta, TensorFlow et al) are not compatible with the operating systems and restricted resources available on embedded systems, leaving those who wish to do machine learning on embedded systems having to write their own machine learning applications from scratch. This represents a high barrier to entry.
 
 To solve this problem, it is necessary to develop a new class of cross-platform machine learning frameworks to facilitate machine learning on embedded systems.
 
@@ -127,7 +144,7 @@ The main issue in implementing machine learning applications on embedded systems
 
 Likewise, many of the currently favoured machine learning algorithms are extremely computationally expensive, and even on high performance systems can take hours or days to train.
 
-A neural network running on an embedded system must make do with far fewer neurons and much simpler algorithms for training in order to work. The challenge is not whether this can be achieved, but whether this can be achieved while remaining effective.
+A neural network running on an embedded system must make do with far fewer neurons and much simpler algorithms for training in order to work. The challenge is not so much whether this can be achieved, but whether this can be achieved while remaining effective.
 
 \subsection{Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:in_cs}
@@ -242,7 +259,7 @@ Another useful reference has been \textit{Neural Networks - Algorithms and Appli
 
 My neural network implementation is based on \textit{ArduinoANN}\cite{bgref3}, a C implementation of a two layer feed-forward backpropagation network. 
 
-ArduinoANN itself draws heavily on \textit{John Bullinaria's Step by Step Guide to Implementing a Neural Network in C}\cite{bgref4}.
+ArduinoANN itself draws heavily on John Bullinaria's \textit{Step by Step Guide to Implementing a Neural Network in C}\cite{bgref4}.
 
 \subsection{Embedded Systems \& The Intel Curie}%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:bg_embeddedsystems}
@@ -267,6 +284,7 @@ More information can be found at Intel's homepage for the Curie\cite{bgref6}.
 
 Information on software dependencies can be found \hyperref[subsec:dn_language]{in the Design \& Specification section}
 
+\newpage
 \subsection{Bluetooth / Bluetooth Low Energy (BLE)}%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:bg_ble}
 
@@ -306,6 +324,7 @@ Actofit\cite{bgref13} is startup that funded via Indiegogo\cite{bgref14}. Actofi
 
 FocusMotion\cite{bgref15} provides an software development kit (SDK) that works across different devices. Their sensors are used as input to machine learning algorithms, which aim to classify and analyse user's movements.
 
+\newpage
 \subsection{Bodyweight Exercises}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:bg_exercises}
 
@@ -396,8 +415,9 @@ These will be defined as \lstinline{enums}, and will have utility functions to r
 
 All three files are written to conform to the C++11 standard\cite{nnref0}. The two Linux-based files further depend on the C++ Standard Template Library, in particular the \lstinline{std::vector} data structure.
 
-The Arduino file lacks the dependency on the STL, but itself depends on the \textit{pgmspace} library.\cite{nnref1}
+The Arduino file lacks the dependency on the STL, but itself depends on the \lstinline{pgmspace} library.\cite{nnref1}
 
+\newpage
 \subsection{Network\_L API Reference}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dn_API_networkl}
 
@@ -481,6 +501,8 @@ Returns information about the current state of the network for display purposes.
 A string which contains the current training cycle and error rate of the network.
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hrulefill
 
 \textbf{Signature:} \begin{lstlisting}
 std::vector<float> classify(std::vector<float> inputs);
@@ -584,6 +606,8 @@ Getter for \lstinline{momentum}
 The current network momentum.
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hrulefill
 
 \textbf{Signature:} \begin{lstlisting}
 float getInitialWeightMax() const;
@@ -696,6 +720,8 @@ Getter for \lstinline{errorFunction}
 The currently selected error function for the network.
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hrulefill
 
 \textbf{Signature:} \begin{lstlisting}
 const std::vector<float> getHiddenNodes() const;
@@ -793,6 +819,8 @@ Getter for \lstinline{hiddenWeightsChanges}, the change to be applied to each hi
 A \textit{copy} of the current value of the network's hidden weights changes.
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hrulefill
 
 \textbf{Signature:} \begin{lstlisting}
 const std::vector<std::vector<float>> getOutputWeightsChanges() const;
@@ -985,6 +1013,8 @@ Getter for \lstinline{learningRate}
 The current network learning rate.
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\hrulefill
 
 \textbf{Signature:} \begin{lstlisting}
 float getMomentum() const;
@@ -1070,6 +1100,7 @@ A (const) pointer to the array containing the current values of the output nodes
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newpage
 \subsection{Save/Load API Reference}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dn_API_networksl}
 
@@ -1109,6 +1140,7 @@ Saves the given network's configuration to the given file, if necessary overwrit
 
 \hrulefill %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newpage
 \subsection{Network Configuration File Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dn_fileformat}
 
@@ -1118,6 +1150,7 @@ To that end, configuration files will be stored as \lstinline{.h} files.
 
 The specification for the configuration file format is as follows:
 
+\small
 \begin{itemize}
 \item One line containing the text \lstinline{#ifndef ARDUINO_CONFIG_H}
 \item One line containing the text \lstinline{#define ARDUINO_CONFIG_H}
@@ -1132,7 +1165,8 @@ The specification for the configuration file format is as follows:
 \item One line containing the text \lstinline{const float initialWeightMax = }, followed by the initial maximum weight and a semicolon
 \item One blank line
 \item One line containing the text \lstinline{// TrainingCycle (not needed on Arduino): }, followed by the training cycle and a semicolon
-\item One line containing the text \lstinline{// ActivationFunction (not needed on Arduino): }, followed by the activation function and a semicolon
+\item One line containing the text \lstinline{// HiddenActivationFunction (not needed on Arduino): }, followed by the hidden layer activation function and a semicolon
+\item One line containing the text \lstinline{// OutputActivationFunction (not needed on Arduino): }, followed by the output layer activation function and a semicolon
 \item One line containing the text \lstinline{// ErrorFunction (not needed on Arduino): }, followed by the error function and a semicolon
 \item One blank line
 \item One line containing the text \lstinline|const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {|
@@ -1147,6 +1181,7 @@ The specification for the configuration file format is as follows:
 \item One blank line
 \end{itemize}
 
+\normalsize
 Examples of valid configuration files can be found \hyperref[subsec:a2_configfiles]{in the appendices}
 
 \newpage
@@ -1206,6 +1241,7 @@ The microcontroller will require some form of fastening to be attached to the us
         \label{fig:ar_belt}
 \end{figure}
 
+\newpage
 \subsubsection{Linux Computer}
 
 The requirements of the computer are not onerous, and most of them are standard on modern computers:
@@ -1226,6 +1262,7 @@ BLE support was added in Android 4.3 (Jelly Bean MR2), with the Level 18 API.\ci
 
 My smartphone is a 2015 Huawei Nexus 6, running Android 7.1.2 (Nougat).
 
+\newpage
 \subsection{Microcontroller Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dc_msa}
 
@@ -1273,6 +1310,7 @@ Because of the simplicity of the program, the entirety of the code will be conta
 
 When using this program, \hyperref[subsubsec:dc_asa_logger]{the accompanying program} \lstinline{log-data-supervised} must be run on the smartphone.
 
+\newpage
 \subsubsection{classifier-serial}
 \label{subsubsec:dc_msa_classifierserial}
 
@@ -1301,6 +1339,7 @@ This structure will also implicitly include the implementation file for the netw
 
 When using this program, \hyperref[subsubsec:dc_asa_classifier]{the accompanying program} \lstinline{ble-classifier} must be run on the phone.
 
+\newpage
 \subsection{Linux Computer Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dc_csa}
 
@@ -1402,6 +1441,7 @@ This script is entirely contained in the file \lstinline{log-data-unsupervised} 
 
 It should be run in conjunction with the \lstinline{logger-unsupervised} program on the microcontroller.
 
+\newpage
 \subsubsection{analyse-classifications}
 \label{subsubsec:dc_csa_analyse}
 
@@ -1453,6 +1493,7 @@ This script is entirely contained in the file \lstinline{normalise-data} in the 
 
 It should be run on files created by the \lstinline{log-data-supervised} and \lstinline{log-data-unsupervised} scripts.
 
+\newpage
 \subsubsection{count-data}
 \label{subsubsec:dc_csa_countdata}
 
@@ -1520,6 +1561,7 @@ It should be run immediately after cloning the repository.
 
 This script is entirely contained in the file \lstinline{setup} in the project root directory, and has no dependencies on other project code.
 
+\newpage
 \subsection{Android Phone Software Architecture}%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dc_asa}
 
@@ -1553,6 +1595,7 @@ The filename of the log file will be entered by the user prior to beginning logg
 
 As an Android project, the architecture of the program is relatively complex. All of the code for the program resides in the folder \lstinline{android/ble-logger}. The Java code resides in \lstinline{Application/src/main/java/com/example/android/bluetoothlegatt}, while the XML is in \lstinline{Application/src/main/res}. 
 
+\newpage
 \subsection{Data Capture \& Format}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:dc_datacapture}
 
@@ -1565,7 +1608,7 @@ Because calibration requires no movement, it is best to place the microcontrolle
 
 \begin{figure}[H]
     \centering
-        \includegraphics[scale=0.30]{arduino_flat}
+        \includegraphics[scale=0.25]{arduino_flat}
         \caption{The Arduino 101 lying flat on a desk for calibration}
         \label{fig:ar_flat}
 \end{figure}
@@ -1576,7 +1619,7 @@ For press ups and lunges, on the back between the shoulder blades with the belt 
 
 \begin{figure}[H]
     \centering
-        \includegraphics[scale=0.30]{arduino_placement_back}
+        \includegraphics[scale=0.25]{arduino_placement_back}
         \caption{The Arduino 101 in the correct placement for press ups and lunges}
         \label{fig:ar_placement_back}
 \end{figure}
@@ -1585,7 +1628,7 @@ Placing the Arduino 101 on the back during sit ups could cause damage, so I plac
 
 \begin{figure}[H]
     \centering
-        \includegraphics[scale=0.30]{arduino_placement_front}
+        \includegraphics[scale=0.25]{arduino_placement_front}
         \caption{The Arduino 101 in the correct placement for sit ups}
         \label{fig:ar_placement_front}
 \end{figure}
@@ -1604,6 +1647,7 @@ I will be recording data for four classes of exercise - press ups, sit ups, lung
 
 Intuitively this means that the first output node corresponds to the classifier's certainty that the exercise was a press up, the second to a sit up and the third to a lunge. 
 
+\newpage
 \subsubsection{Log File Specification (Supervised)}
 
 A supervised log file will be a \lstinline{.txt} file, and generally be called \lstinline{set}, followed by a numerical suffix, for example \lstinline{set3.txt}. It is recommended that log files be stored in folders such that it is obvious whose exercises have been recorded.
@@ -1742,6 +1786,7 @@ Because the revised timetable was only drawn up after the interim report, it con
 
 My timetable is organised by 'milestones' - each consisting of a set piece of implementation with a projected date for completion.
 
+\small
 \subsubsection{End of research/start of implementation - 4/4/17}
 
 Finish research so as to be ready to start implementation on time.
@@ -1783,6 +1828,7 @@ Prepare for the project presentation, fixing bugs as necessary to make a demonst
 
 Tidy up codebase and write user guide. Fix any remaining bugs and make programs more robust.
 
+\normalsize
 \subsection{Version Control}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:pp_vc}
 
@@ -1914,6 +1960,7 @@ Reviewing the project contributions (as defined in the \hyperref[subsec:in_cs]{I
 \item A data set to train the exercise classifier on
 \end{itemize}
 
+\newpage
 \subsection{Neural Network Library Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:ev_nn}
 
@@ -1944,6 +1991,7 @@ The latter is an issue not because it compromises any of the functionality, but 
 
 Approaches to solving these problems are discussed in the \hyperref[subsec:fw_futurework]{Future Work section.}
 
+\newpage
 \subsubsection{Neural Network Evaluation Metrics}
 
 In the \hyperref[subsubsec:in_cs_nnmetrics]{introduction}, I defined some evaluation metrics for the neural network as follows:
@@ -1980,6 +2028,7 @@ The ease of use is discussed at length in combination with the ease of use for t
 
 The library is only dependent on the version of C++ (C++11 or greater) and the C++ STL, both of which are widely available. 
 
+\newpage
 \subsection{Exercise Classifier Contributions}%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:ev_cl}
 
@@ -2019,6 +2068,7 @@ Using the training data that I was able to collect and the neural network librar
 
 An in depth look at the performance of this network can be found in the \hyperref[subsec:ev_cp]{Classifier Performance section} of the evaluation, while the process of finding the optimal parameters is detailed 
 
+\newpage
 \subsubsection{An implementation of a classifier using the above network, running on a microcontroller}
 
 I implemented two versions of the microcontroller-based classifier: \lstinline{classifier-serial}, which connects over Serial and I mainly used for testing the classifier, and \lstinline{classifier-ble}, the 'full' version sending data over a BLE connection to a smartphone.
@@ -2060,21 +2110,22 @@ The memory usage is very low because the library stores the weights in program m
 
 Processing power is also very low; as previously stated, my exercise classifier performs classifications in an average of 1354 microseconds\cite{dsref0}.
 
+\newpage
 \subsection{Classifier Performance}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:ev_cp}
 
 \subsubsection{Parameter Choice Process}%%%%%%%%%%
 \label{subsubsec:ev_cp_parameterchoiceprocess}
 
-Initially I set \lstinline{numInputNodes} to 32 as this was the average number of readings per example in my data set. Matching this average meant that I had to do minimal normalisation, and thus introduce the least noise into my data set.
+Initially I set \lstinline{numInputNodes} to 32 as this was the average number of readings per example in my data set. Matching this average meant that minimal normalisation was required, introducing the least noise into my data set.
 
 I set \lstinline{numOutputNodes} to 3 to match the number of output classes, as defined in the \hyperref[subsubsec:dc_dc_classes]{Specification.}
 
 I chose the combination of Sigmoid and SoftMax activation functions for the hidden and output layers respectively and the CrossEntropy error function. This is a popular choice for multi-class classification problems.
 
-I set the learning rate and momentum update schedules not to change at all during training.
+I set the learning rate and momentum update schedules to remain constant during training.
 
-The other parameters I found by a trial and error method, starting with the following configuration:
+The other parameters I found by a trial and error method, beginning with the following configuration:
 
 \begin{description}
 \item[numInputNodes] 32
@@ -2094,11 +2145,12 @@ Classification threshold is the threshold at which an output is classified is po
 
 Error success is the \lstinline{errorRate} at which to stop training (I.E. when \lstinline{errorRate < errorSuccess}).
 
-I started by going through each of the non-fixed network parameters and testing to see which gave me optimal results (greedy search). I repeated this process twice, obtaining a best classification rate of \textbf{55\%} and then began experimenting with update schedule. 
+I began with the non-fixed network parameters, testing to see which produced optimal results (greedy search). I repeated this process twice, obtaining a best classification rate of \textbf{55\%} and then began experimenting with update schedule. 
 I then increased the initial weight maximum to \textbf{0.7} and checked all the variations possible with a learning rate between \textbf{0.1} and \textbf{0.3}, a momentum between \textbf{0.1} and \textbf{0.3} and the following update schedule for the learning rate and momentum: after every \textbf{100} examples multiplying the learning rate by \textbf{1.0 - α} and the momentum by \textbf{1.0 + α}, with α varying between \textbf{0.0} and \textbf{0.1}.
 
 I found my best classification rate of \textbf{65\%} (on both the validation and test sets) with a learning rate of \textbf{0.25}, a momentum of \textbf{0.1} and an α of \textbf{0.05}.
 
+\newpage
 \subsubsection{Final Network Parameters}%%%%%%%%%%
 \label{subsubsec:ev_cp_networkparameters}
 
@@ -2126,6 +2178,7 @@ The network was trained on the entirety of the training set (2111 examples). The
 
 The metrics below were calculated by running the network on the test data set contained in the \lstinline{data/test/} folder.
 
+\newpage
 \subsubsection{Classification Rate, Error Rate \& Unweighted Average Recall}
 \label{subsubsec:ev_cp_classificationrate}
 
@@ -2237,6 +2290,7 @@ The second issue is the unreliable motion detection, which can force the user to
 
 Ideas for how to fix these two issues are discussed in the \hyperref[subsec:fw_futurework]{Future Work section.}
 
+\newpage
 \subsection{Data Set Contribution}
 \label{subsec:ev_ds}
 
@@ -2322,6 +2376,7 @@ I believe that my reliance on supervised exercises using the \lstinline{logger-s
 
 The final two metrics are discussed in the section \hyperref[subsec:ev_cp]{Classifier Performance.}
 
+\newpage
 \subsection{Project Management}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:ev_pm}
 
@@ -2453,6 +2508,8 @@ Another problem caused by the lack of memory of microcontrollers, is the splitti
 
 Solving this issue is only possible if the library can either keep everything in RAM and have a 'bolt on' module for non volatile storage (the same function that the separate file \lstinline{network-saveload-linux} performs) or the library can detect which platform it is being run on and adjust where it puts the data accordingly. 
 
+The other significant problem with the library is that some activation functions (currently SoftMax and ReLu in some edge cases) do not always produce the correct output. This will need fixing.
+
 A major usability issue with the current exercise classifier is the unreliability of the motion detection. The most straightforward approach to this would be to make the motion detection more intelligent. 
 
 For instance, when doing press ups, the user may pause at the bottom of the repetition before pushing themselves back up. With naive motion detection, this is often registered as the end of the movement, and so classification is attempted on the first half of the move and subsequently returns a negative result.
@@ -2557,7 +2614,7 @@ For example, you could run (from the \lstinline{linux} directory):
 
 (this will create the example network from \textit{ArduinoANN}.
 
-You can now take your network and train it using the \lstinline{train} program, passing in your network configuration file and the file or directory containing the data to train it on. For more information on the program arguments, see \hyperref[subsubsec:dc_csa_train]{the specification.}
+You can now take your network and train it using the \lstinline{train} program, passing in your network configuration file and the file or directory containing the data with which to train it. For more information on the program arguments, see \hyperref[subsubsec:dc_csa_train]{the specification.}
 
 Continuing the example from earlier, given a training set stored under \lstinline{data/example/} where all the files to be trained on have the suffix \lstinline{_prepared.txt} and the network configuration from earlier, the command:
 
@@ -2579,11 +2636,11 @@ At this point you will (hopefully) have a fully trained network ready to use on 
 \label{subsec:a1_usage}
 
 To run the exercise classifier,  open the Arduino IDE and open the \lstinline{classifier-ble} file. Then, connect the Arduino and upload the sketch.
-Next, open Android Studio and open the \lstinline{ble-classifier} project, then connect the phone and upload
+Next, open Android Studio and open the \lstinline{ble-classifier} project, then connect the smartphone and upload.
 
-Using the program is even easier; with the classifier running on the Arduino, open the application on the phone and connect to the device. Do exercises, and the classifications should appear on screen
+Using the program is even easier; with the classifier running on the Arduino, open the application on the phone and connect to the device. Perform exercises, and classifications should appear on screen
 
-The network can be included in your own Arduino code very simply, in a three step process:
+The network can be included in your own Arduino code in a simple three step process:
 
 \begin{enumerate}
 \item Make sure a copy of \lstinline{network-arduino.hpp} and \lstinline{network-arduino.cpp} are in your Arduino program's source directory
@@ -2655,6 +2712,7 @@ Repetition End
  938 2236 10331
 \end{lstlisting}
 
+\newpage
 \subsubsection{Unsupervised Log File Example}
 \label{subsubsec:a2_lf_unsupervised}
 
@@ -2701,6 +2759,7 @@ Motion detected after  784  milliseconds. Logging...
  -1676 -6678 26284
 \end{lstlisting}
 
+\newpage
 \subsubsection{Normalised Repetition Example}%%%%%%%%%%
 \label{subsubsec:a2_lf_normalised}
 
@@ -2734,6 +2793,7 @@ Repetition end
 0
 \end{lstlisting}
 
+\newpage
 \subsection{Example Network Configuration Files}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:a2_configfiles}
 
@@ -2785,6 +2845,7 @@ const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
 #endif // ARDUINO_CONFIG_H
 \end{lstlisting}
 
+\newpage
 \subsubsection{Trained Network}
 
 This example shows the same network after undergoing training. As such, the \lstinline{TrainingCycle} counter has increased, and some weights are now larger than the defined \lstinline{initialWeightMax}.
@@ -2833,6 +2894,7 @@ const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
 #endif // ARDUINO_CONFIG_H
 \end{lstlisting}
 
+\newpage
 \subsection{Final Network Configuration}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:a2_finalconfig}
 
@@ -2891,7 +2953,9 @@ const float hiddenWeights[numInputNodes +1][numHiddenNodes] PROGMEM = {
     { -0.153985, 0.243316, -0.033669, -0.761929, 1.421464, -0.667317, -0.380695, 0.494337, 0.335660, 0.148993, 0.149657, 0.522634, 0.208184, 1.607090, 0.064861, 2.520534, -0.343209, 1.133274, -1.767192, 0.176897 }, 
     { 0.821235, -0.311203, 0.909753, 0.433459, 0.370689, -0.357040, 0.039265, -0.121809, 0.610140, 0.646801, 0.701808, 0.427065, 0.505053, 0.192589, 0.063916, 1.462347, 0.295601, 1.684935, -0.982994, -0.572840 }, 
 };
-
+\end{lstlisting}
+\newpage
+\begin{lstlisting}
 const float outputWeights[numHiddenNodes +1][numOutputNodes] PROGMEM = {
     { -1.069335, -0.210024, 0.673240 }, 
     { -0.538497, 0.121637, 0.307943 }, 
@@ -2948,6 +3012,7 @@ Over the summer term I will complete the main implementation, ideally by the end
 
 In the final week I will make any changes necessary to the report and codebase before submission of the final archive. 
 
+\newpage
 \subsection{Project Diary}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{subsec:a3_pd}
 
@@ -3412,9 +3477,6 @@ Program Space Utilities
 Figure calculated as follows: On an Arduino 101 (32MHz clock speed), classification took an average of 1354 microseconds, so the minimum clock speed necessary is given by 32MHz * 1.354 / 100 = 433 KHz
 
 This figure ignores the processing power needed to perform other functions, so should be at a minimum doubled, for a value of 900KHz
-
-\bibitem{dsref1}
-Calculations for memory usage
 
 \bibitem{dsref2}
 The \lstinline{classifier-serial} sketch uses 66752 B of program memory when the network code is included. If all of the network code is removed (including the \#include) this drops to 58852 B, a difference of 7900 B
