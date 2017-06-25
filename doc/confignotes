@@ -1,0 +1,326 @@
+#numInputNodes: 32
+**numHiddenNodes: 20
+#numOutputNodes: 3
+**momentum: 0.0
+**learningRate: 0.3
+**initialWeightMax: 0.5
+#hiddenActivationFunction: Sigmoid
+#outputActivationFunction: Sigmoid
+#errorFunction: CrossEntropy
+**classificationThreshold: 0.5
+**errorSuccess: 0.001
+
+CRs: 24, 38, 42 = 35
+
+First try classificationThreshold:
+
+0.1 : 46, 50, 32 = 43
+
+0.2 : 47, 33, 25 = 35
+
+0.3 : 44, 45, 25 = 38
+
+0.4 : 47, 37, 41 = 42
+
+0.5 : 24, 38, 42 = 35 (from above)
+
+0.7 : 42, 23, 38 = 34
+
+0.9 : 25, 24, 25 = 25
+
+No real results other than don't set it above 0.5 or so. 
+
+SET TO 0.4, but revisit later.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now try errorSuccess:
+
+0.0001 : 50, 28, 32 = 37
+
+0.001  : 47, 37, 41 = 42 (from above)
+
+0.01   : 28, 49, 38 = 38
+
+0.1    : 39, 28, 58 = 42
+
+No real results.
+
+KEEP AT 0.001, but revisit later
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now, try numHiddenNeurons
+
+8  : 37, 37, 42 = 39
+
+16 : 58, 32, 28 = 39
+
+20 : 47, 37, 41 = 42 (from above)
+
+24 : 32, 46, 37 = 38
+
+32 : 56, 39, 38 = 44
+
+No real differences, so keep at 20 (from 2/3 rule)
+
+KEEP AT 20, but revisit later
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now, try learningRate
+
+0.1   : 53, 37, 42 = 44
+
+0.125 : 50, 50, 42, 53, 51 = 49
+
+0.15  : 53, 42, 49, 58, 40 = 48
+
+0.175 : 48, 48, 44, 50, 52 = 48
+
+0.2   : 39, 46, 52 = 46
+
+0.25  : 37, 42, 44 = 41
+
+0.3   : 47, 37, 41 = 42 (from above)
+
+0.4   : 41, 49, 38 = 43
+
+0.5   : 39, 52, 29 = 40
+
+0.7   : 25, 26, 24 = 25
+
+SET LR TO 0.125
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now try momentum:
+
+0.0 : 50, 50, 42, 53, 51, 51, 32 = 47 (from above)
+
+0.05: 42, 56, 38, 48, 46, 50, 42 = 46
+
+0.1 : 54, 49, 56, 49, 43, 41, 47 = 50
+
+0.15: 40, 36, 45, 50, 52, 58, 46 = 47
+
+0.2 : 40, 55, 37, 56, 47 = 47
+
+0.3 : 46, 38, 47, 29, 52 = 42
+
+0.6 : 27, 27, 40 = 31
+
+0.9 : 25, 25, -
+
+SET MOMENTUM TO 0.1
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now, try initialWeightMax
+
+0.3 : 46, 34, 52, 44, 58, 45, 52 = 47
+
+0.4 : 41, 50, 38, 57, 52, 29, 53 = 46
+
+0.5 : 54, 49, 56, 49, 43, 41, 47 = 50
+
+0.6 : 42, 46, 33, 58, 43, 52, 45 = 46
+
+0.7 : 46, 42, 38, 42, 40, 35, 62 = 44
+
+KEEP AT 0.5
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now (back at the start again), randomness is still massive issue -> try errorSuccess again
+
+0.0001 : 56, 45, 52, 50, 45 = 50
+
+0.001  :                            = 50 (see above)
+
+0.01   : 45, 28, 28, 35, 47         = 37
+
+basically the same, but SWITCH TO 0.0001 for more training 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now try classificationThreshold
+
+0.2  : 54, 52, 33, 56, 52, 28, 54 = 47 (and R/P for None is 0 so too low)
+
+0.3  : 58, 54, 58, 48, 38, 42, 54 = 50 (R/P for None is better, but it's clearly hurting other classes)
+
+0.35 : 47, 60, 44, 51, 37, 42, 46 = 47
+
+0.4  : 50 (see above)
+
+0.5  : 
+
+0.6  : 38, 35, 25, 34, 37 = 34 (predicting far too many Nones)
+
+SWITCH TO 0.35, but revise later
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now try LearningRate
+
+0.1   : 57, 44, 53, 42, 38 = 47
+
+0.125 : 52, 53, 54, 57, 58 = 55
+
+0.15  : 48, 38, 59, 57, 58 = 52
+
+KEEP AT 0.125
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now try momentum again
+
+0.05  : 60, 61, 55, 47, 52 = 55
+
+0.075 : 48, 57, 46, 66, 39 = 51 (and noticably higher std dev)
+
+0.1   :                      55 (see above)
+
+0.15  : 30, 48, 48, 48, 46 = 44
+
+KEEP AT 0.1
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Try initialWeightMax again
+
+0.4 : 40, 45, 61, 44, 56 = 49
+
+0.5 : 55 (see above)
+
+0.6 : 38, 54, 52, 56, 39 = 48 
+
+KEEP AT 0.5
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Finally (for blind iterations) try numHiddenNodes again
+
+16 : 53, 30, 42, 54, 58 = 47
+
+20 : 55 (see above)
+
+24 : 53, 58, 45, 66, 47 = 54
+
+32 : 50, 62, 47, 56, 38 = 51
+
+KEEP AT 20 (no benefit for more and significant drop from <20 nodes)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now try update schedules
+
+to start with, try with values as before
+
+lr/m multipliers applied every 100 examples
+
+1/1       : 55 (see above)
+
+0.99/1.01 : 55, 52, 53, 52, 52 = 53
+
+0.95/1.05 : 53, 50, 48, 43, 38 = 46.4 
+
+0.9/1.1   : 48, 66, 26, 25, 43 = 42
+
+Now double the lr and halve momentum to 2.5 and 0.05
+
+lr/m multipliers applied every 100 examples
+
+0.99/1.01 : 27, 54, 28, 28, 41 = 36
+
+0.95/1.05 : 40, 42, 57, 42, 47 = 46 
+
+0.9/1.1   : 25, 25, 25 = 25
+
+Update schedules don't seem to work?
+
+Checking previous settings
+
+50, 49, 60, 42, 58 = 52
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+try again, but with higher iwm
+
+lr to 2.5, mom to 0.1 (095/1.05)
+
+0.6  : 64, 42, 56, 49, 42 = 51
+
+0.65 : 42, 62, 55, 58, 55 = 54
+
+0.7  : 61, 56, 66, 58, 47 = 58 <--- 
+
+0.75 : 55, 55, 58, 56, 56 = 56 
+
+0.8  : 49, 43, 50, 58, 61 = 52
+
+SET IWM TO 0.7
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now try variations on lr/m schedule again
+
+0.99/1.01 : 58, 44, 38, 48, 43 = 46 
+
+0.95/1.05 : 58 (see above)
+
+0.9/1.1   : 40, 44, 40, 38, 48 = 42
+
+KEEP AT 0.95/1.05
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now tweak lr:
+
+0.2  : 30, 49, 58, 52, 48 = 47
+
+0.25 : 58 (see above)
+
+0.3  : 54, 59, 48, 53, 58 = 54
+
+KEEP AT 0.25
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now tweak m
+
+0.05 : 46, 48, 58, 51, 50 = 51
+
+0.1  : 58 (see above)
+
+0.15 : 55, 57, 52, 41, 31 = 47.2
+
+KEEP AT 0.1
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now we're using an lr/m update schedule, try increasing errorSuccess
+
+0.00001 : 54, 45, 45, 55, 34 = ~48
+
+0.0001  : 58 (see above)
+
+0.001   : 46, 34, 48, 47, 40 = ~43
+
+KEEP AT 0.0001
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Now for more analysis:
+
+Notice lots of None classified as others -> try increasing threshold again
+
+0.35  : 58 (see above)
+
+0.375 : 45, 40, 42, 61, 58, 
+
+0.4   : 58, 58, 48, 63, 57 = 57
+
+
+

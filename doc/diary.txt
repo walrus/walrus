@@ -52,3 +52,217 @@ Individual project 'diary'
         IMU test
         BLE test
     Removed Numenta misc from the README
+
+10/4/17
+    Removed more references to Numenta...
+    Filled in skeleton with subsections
+
+11/4/17
+    Added base directories
+    Added logger (curie/src/logger/logger.ino) to segment exercises and send the IMU data to Serial.
+
+12/4/17
+    Added 'Data' folder
+    Completely failed to make reading data from Serial work...
+
+13/4/17
+    Finally managed to make reading data from Serial work and piped it to a text file
+
+14/4/17
+    Wrote a Python script (.log-data) to create/append a given text file and log data from Serial to it
+
+17/4/17
+    Wrote a Python script (.normalise-data) to normalise the data from the text files created by .log-data
+
+18/4/17
+    Began conversion of ArduinoANN into an actual C++ library
+
+19/4/17
+    Finished implementing ArduinoANN as a C++ library. 
+    Implementation as of today should have all the functionality of ArduinoANN (subject to testing).
+
+20/4/17
+    No progress today.
+
+21/4/17
+    Choose Catch as C++ testing library
+    Install Catch and set up core tests
+    Write script (network/.run-tests) to compile and run tests
+    Add test runner to pre-commit hook
+
+24/4/17
+    Refactor library to use vectors everywhere instead of arrays
+    Begin writing regression tests
+
+25/4/17
+    Finish writing regression tests
+    Update scripts
+    Begin writing training code
+
+26/4/17
+    Write Curie code for supervised data logging
+    Write script for supervised data logging
+    Update normalising script to work for supervised data too
+
+27/4/17
+    Begin writing file handling code for saving network config
+    Get stuck with compiler errors
+
+28/4/17
+    Update to GCC 6
+    Fix compiler errors
+
+1/5/17
+    Finish file handling code for saving network config
+    Finish file handling code for loading network config
+
+2/5/17
+    Write TrainingSet class
+
+3/5/17
+    None (busy)
+4/5/17
+    Begin training program (complete basic version)
+
+5/5/17
+    Finish training program (complete full version)
+    Start writing specifications etc
+
+8/5/17
+    Start on classifier code for the Curie
+        Network code #include not working, probably due to C++11 problems
+    Install latest Arduino IDE (1.8.2) to attempt to fix this, to no avail
+
+9/5/17
+    Continue attempts to fix
+    Problem identified as C++ stl things not being included properly - relevantly strings, random_device and vectors
+    Try vector implementations to replace std::vector, but none work.
+
+10/5/17
+    Find ArduinoSTL, which includes implementation of vectors
+    ArduinoSTL does not include std::random, so remove this dependency from network and move to network-io
+    At this point you can create a Network on the Arduino*, but not do much with it as it won't have it's weights properly initialised.
+        * or not, as the case may be
+
+11/5/17
+    Start writing script to send network config over Serial
+
+12/5/17
+    Finish script; network initialisation still not working due to apparent lack of memory problem(?)
+        Posted on StackOverflow RE this
+
+15/5/17
+    Continue work RE lack of memory problem
+    Completely fail to resolve
+
+16/5/17
+    Determine that vectors cannot be stored in PROGMEM
+    Determine that therefore there need to be two versions of Network
+    Refactor Network into two versions: Network_L for Linux and Network_A for Arduino
+    Rewrite logging scripts to return raw acceleration values and sum them in normalising script
+
+17/5/17
+    Write script to generate network config
+    Change format of config files to be ~valid .h file
+
+18/5/17
+    Change config files to actually valid .h files 
+    Check that they can be #included and store data in PROGMEM
+
+19/5/17
+    Find valid formats for config file that will work on Arduino
+        (don't work with Network code, however)
+
+22/5/17
+    Convert Network_A to use arrays
+     
+23/5/17
+    Finish fixing Arduino code/save format
+    Write basic classifier code on Arduino (it works!)
+
+24/5/17
+    Start on normalising code on Arduino
+
+25/5/17
+    Finish normalising code on Arduino
+    Update normalising code on Arduino to use mg instead of raw acceleration values
+    Update normalising script on linux to use mg instead of raw acceleration values
+    Renormalise data
+
+26/5/17
+    Finish (serial) classifier code on Arduino
+
+27/5/17
+    Tidy up then merge finished MVP to Master
+
+30/5/17
+    No real progress except data recording
+
+31/5/17
+    Write Arduino portion of BLE logging script
+
+1/6/17
+    Begin writing Android BLE programs
+
+2/6/17
+    Continue writing Android BLE programs
+    Write Arduino BLE classifier
+    Review structure of report and begin transferring body of Interim Report
+
+3/6/17
+    No real progress (more BLE faff)
+
+4/6/17
+    No real progress (more BLE faff)
+
+5/6/17
+    Make classifier work (when notifications are manually enabled)
+
+6/6/17
+    No real progress (more BLE faff)
+
+7/6/17
+    Finish background section of report
+
+8/6/17
+    Finish project plan and management
+
+9/6/17
+    General Election
+    Some work on referencing
+    
+10/6/17
+    Start design + spec section
+
+11/6/17
+    Work on design + spec section
+
+12/6/17
+    Work on design + spec section
+    Start on NN spec section
+
+13/6/17
+    Write NN library API and finish NN spec
+
+14/6/17
+    Finish design + spec section
+
+15/6/17
+    Write contributrions + evaluation metrics in introduction
+    Write evaluation (minus classifier performance)
+
+16/6/17
+    Write conclusion & future work section
+    Write evaluation metrics into introduction
+
+17/6/17
+    Write introduction section
+    Fix links in report
+
+18/6/17
+    Finish recording data
+    Train final network and write up classifier performance
+
+19/6/17
+    Tidy up final sections of report
+    Submit report
