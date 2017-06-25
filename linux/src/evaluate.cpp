@@ -3,14 +3,9 @@
  *
  * Run from command line as follows:
  *
- * train config_filename [trainingdir] validationdir threshold
+ * train config_filename validationdir threshold
  *
- * Will recursively scan directory  trainingdir and  read every log file with the _normalised suffix
- * and train the network on the data contained in it.
- *
- * If trainingdir argument is omitted, will not train
- *
- * Once done will validate the network on the contents of validationdir
+ * Will validate the network on the contents of validationdir
  *
  * Threshold is the number above which a target is counted
  *
@@ -30,21 +25,10 @@
 #include "../../network/src/network-saveload-linux.hpp"
 #include "training-set.hpp"
 
-std::string config_file_location =  "../network/config/network.txt";
-bool training = false;
-long examplesTrainedOn = 0;
-float latestErrorRate = 0;
-float classificationThreshold = 0.5; // Default value
-float errorSuccess = 0.001;
-
 // Arguments
-std::string trainingdir;
+std::string config_file_location;
 std::string validationdir;
-
-// Training data
-std::vector<std::vector<float>> trainingInputs;
-std::vector<std::vector<float>> trainingTargets;
-std::vector<std::vector<float>> trainingOutputs;
+float classificationThreshold = 0.5; // Default value
 
 // Validation data
 std::vector<std::vector<float>> validationTargets;
@@ -101,48 +85,12 @@ void validateDir(std::string dirname, Network_L *network) {
     }
 }
 
-void loadTrainingSets(std::string filename, Network_L *network) {
-    // Check the training file exists, and if it doesn't, exit
-    std::ifstream check_logfile(filename);
-    if (!check_logfile.good() || filename.find("_normalised") == std::string::npos) {
-        check_logfile.close();
-        std::cout << filename << " is an invalid log file, skipping.\n";
-    } else {
-
-        TrainingSet *set = loadTrainingSet(filename);
-
-        for (int i = 0; i < set->inputs.size(); i++) {
-            trainingInputs.push_back(set->inputs[i]);
-            trainingTargets.push_back(set->targets[i]);
-        }
-    }
-}
-
-void loadDir(std::string dirname, Network_L *network) {
-    DIR *dir;
-    struct dirent *ent;
-    if ((dir = opendir (dirname.c_str())) != NULL) {
-        while ((ent = readdir (dir)) != NULL) {
-            if (ent->d_type == DT_REG &&
-                std::string(ent->d_name).find("_normalised") != std::string::npos) {
-                loadTrainingSets(dirname + std::string(ent->d_name), network);
-            }else if (ent->d_type == DT_DIR &&
-                      std::string(ent->d_name).find(".") == std::string::npos) {
-                loadDir(dirname + std::string(ent->d_name) + "/", network);
-            }
-        }
-        closedir (dir);
-    } else {
-        std::cout << "Could not open directory " << dirname << "\n";
-    }
-}
-
 int main(int argc, char * argv[]) {
     // Parse arguments
-    if (argc < 5) {
+    if (argc < 4) {
         std::cout << "Too few arguments supplied\n";
         return 1;
-    } else if (argc > 6) {
+    } else if (argc > 4) {
         std::cout << "Too many arguments supplied\n";
         return 1;
     }
@@ -151,17 +99,8 @@ int main(int argc, char * argv[]) {
     std::cout.precision(2);
 
     config_file_location = argv[1];
-    if (argc == 6) {
-        trainingdir = argv[2];
-        validationdir = argv[3];
-        classificationThreshold = std::stof(argv[4]);
-        errorSuccess = std::stof(argv[5]);
-        training = true;
-    } else {
-        validationdir = argv[2];
-        classificationThreshold = std::stof(argv[3]);
-        errorSuccess = std::stof(argv[4]);
-    }
+    validationdir = argv[2];
+    classificationThreshold = std::stof(argv[3]);
 
     Network_L *network;
 
@@ -175,51 +114,6 @@ int main(int argc, char * argv[]) {
         std::cout << "found, loading network\n";
         // Load the network
         network = loadNetwork(config_file_location);
-    }
-
-    // Save for later
-    float lr = network->getLearningRate();
-    float m  = network->getMomentum();
-
-    // Train the network on the data in the given directory
-    if (training) {
-        loadDir(trainingdir, network);
-
-        // Create a vector of indexes and shuffle it
-        std::vector<int> indexes(trainingInputs.size());
-        std::iota (std::begin(indexes), std::end(indexes), 0);
-
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::shuffle(indexes.begin(), indexes.end(), g);
-
-        // Now train the network in this random order
-        int currentIndex;
-        for (int i = 0; i < indexes.size(); i++) {
-            currentIndex = indexes[i];
-            latestErrorRate = network->trainNetwork(trainingInputs[currentIndex], trainingTargets[currentIndex]);
-            examplesTrainedOn++;
-            if (latestErrorRate < errorSuccess){
-                std::cout << "Stopping early.\n";
-                break;
-            }
-            if (examplesTrainedOn % 100 == 0) {
-                std::cout << "Trained " << examplesTrainedOn << " examples. Error rate is " << latestErrorRate << "\n";
-
-                if (network->getLearningRate() > 0.12) {
-                    network->setLearningRate(0.95 * network->getLearningRate());
-                }
-                if (network->getMomentum() < 0.9) {
-                    network->setMomentum(1.05 * network->getMomentum());
-                }
-            }
-        }
-        std::cout << "Finished training after " << examplesTrainedOn << " examples. Error rate is " << latestErrorRate << "\n";
-        std::cout << "\n";
-
-        // Restore original learning rate and momentum for inspection
-        network->setLearningRate(lr);
-        network->setMomentum(m);
     }
 
     std::cout << "Validating...\n";
@@ -281,8 +175,8 @@ int main(int argc, char * argv[]) {
         }
 
     }
-    // Print the confusion matrix
 
+    // Print the confusion matrix
     std::cout << "Predicted | pu | su | lu | no \n";
 
     for (int i = 0; i < confusion[0].size(); i++) {
