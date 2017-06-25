@@ -15,9 +15,11 @@ import os, sys, random, math
 #
 # Flag must precede file or directory name
 #
+# readings is the number of readings to normalise to
+#
+# target is the target pattern, E.G. 001
+#
 # Root directory is assumed to be project/
-
-
 
 normalised_length = 20  # Number of readings to normalise to
 num_targets = 1         # Number of targets
