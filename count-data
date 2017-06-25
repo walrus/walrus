@@ -2,7 +2,7 @@
 
 import os, sys
 
-# Script to count data collected using the '.log-data-unsupervised' and '.log-data-supervised' scripts
+# Script to count data collected using the 'log-data-unsupervised' and 'log-data-supervised' scripts
 #
 # Flags:
 #

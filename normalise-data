@@ -2,11 +2,11 @@
 
 import os, sys, random, math
 
-# Script to normalise data collected using the '.log-data-unsupervised' and '.log-data-supervised' scripts
+# Script to normalise data collected using the 'log-data-unsupervised' and 'log-data-supervised' scripts
 #
 # Args:
 #
-# ./.normalise-data [-r|-d] filename|dirname readings target
+# ./normalise-data [-r|-d] filename|dirname readings target
 #
 # Flags:
 #
