@@ -14,7 +14,7 @@
  * non = numOutputNeurons
  * lr  = learningRate
  * m   = momentum
- * diwm = defaultInitialWeightMax
+ * iwm = initialWeightMax
  * haf = hiddenActivationFunction
  * oaf = outputActivationFunction
  * ef = errorFunction
@@ -38,7 +38,7 @@ int non;
 
 float lr;
 float m;
-float diwm;
+float iwm;
 
 ActivationFunction haf;
 ActivationFunction oaf;
@@ -61,7 +61,7 @@ int main(int argc, char * argv[]) {
 
     lr = atof(argv[5]);
     m = atof(argv[6]);
-    diwm = atof(argv[7]);
+    iwm = atof(argv[7]);
 
     haf = stringToAF(argv[8]);
     oaf = stringToAF(argv[9]);
@@ -71,7 +71,7 @@ int main(int argc, char * argv[]) {
     std::ifstream check_config(config_file_path);
     if (!check_config.is_open()) {
         std::cout << "not found, creating new network.\n";
-        Network_L *network = new Network_L(nin, nhn, non, lr, m, diwm, 0);
+        Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm, 0);
 
         network->setHiddenActivationFunction(haf);
         network->setOutputActivationFunction(oaf);
