@@ -424,16 +424,16 @@ TEST_CASE("The core network functionality is all correct") {
         }
     }
 
-    GIVEN("A network using the sigmoid and softmax activation functions with the CrossEntropy error function") {
+    GIVEN("A network using the sigmoidactivation functions with the CrossEntropy error function") {
         Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         network.setHiddenActivationFunction(ActivationFunction::Sigmoid);
-        network.setOutputActivationFunction(ActivationFunction::SoftMax);
+        network.setOutputActivationFunction(ActivationFunction::Sigmoid);
         network.setErrorFunction(ErrorFunction::CrossEntropy);
 
         THEN("The activation and error functions are set properly") {
             REQUIRE(network.getHiddenActivationFunction() == ActivationFunction::Sigmoid);
-            REQUIRE(network.getOutputActivationFunction() == ActivationFunction::SoftMax);
+            REQUIRE(network.getOutputActivationFunction() == ActivationFunction::Sigmoid);
             REQUIRE(network.getErrorFunction() == ErrorFunction::CrossEntropy);
         }
         THEN("It can be trained") {

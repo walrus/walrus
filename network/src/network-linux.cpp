@@ -29,7 +29,7 @@ Network_L::Network_L(int numInputNodes,
     dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
 
     randomFloat = 0.0f;
-    errorRate = 0.0f;
+    errorRate = 0.0;
     accumulatedInput = 0.0f;
 
     hiddenActivationFunction = ActivationFunction::Sigmoid;
