@@ -1,0 +1,210 @@
+#!/usr/bin/python
+
+import os, sys, subprocess
+
+# Flags:
+#
+# -q (or no arguments) means run only quick unit tests (AKA core tests)
+# -s means run only slow unit tests (AKA legacy tests, for now)
+# -a means run all tests
+#
+# This script should be run from network/
+
+q_flag = False          # Whether or not the -q 'quick' flag is set
+s_flag = False          # Whether or not the -s 'slow' flag is set
+a_flag = False          # Whether or not the -a 'all' flag is set
+
+
+def run_quick_tests():
+    # Compile core Linux tests
+    print "Compiling core Linux tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-linux-core-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Compile core Arduino tests
+    print "Compiling core Arduino tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-arduino-core-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Compile IO tests
+    print "Compiling IO tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-saveload-linux-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Link the various bits together into an executable
+    print "Linking..."
+    o = subprocess.Popen(["g++",
+                          "../catch-main.o",
+                          "network-linux-core-tests.o",
+                          "network-arduino-core-tests.o",
+                          "network-saveload-linux-tests.o",
+                          "network-linux.o",
+                          "network-arduino.o",
+                          "network-saveload-linux.o",
+                          "-o",
+                          ".catch.exe",
+                          "-std=c++11"]);
+    o.wait();
+    if o.returncode == 1:
+        sys.exit(1)
+
+    print "Running tests..."
+    # Run the tests
+    c = subprocess.Popen(["./.catch.exe"]);  
+    c.wait();
+    if c.returncode == 1:
+        sys.exit(1)
+
+
+def run_slow_tests():
+    # Compile core tests
+    print "Compiling legacy tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-linux-legacy-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1) 
+
+    # Link the various bits together into an executable
+    print "Linking..."
+    o = subprocess.Popen(["g++",
+                          "../catch-main.o",
+                          "network-linux-legacy-tests.o",
+                          "network-linux.o",
+                          "network-saveload-linux.o",
+                          "-o",
+                          ".catch.exe",
+                          "-std=c++11"]);
+    o.wait();
+    if o.returncode == 1:
+        sys.exit(1)
+
+    print "Running tests (this may take a while)..."
+    # Run the tests
+    c = subprocess.Popen(["./.catch.exe"]);  
+    c.wait();
+    if c.returncode == 1:
+        sys.exit(1)
+
+
+def run_all_tests():
+    # Compile core tests
+    print "Compiling core Linux tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-linux-core-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Compile core Arduino tests
+    print "Compiling core Arduino tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-arduino-core-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Compile IO tests
+    print "Compiling IO tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-saveload-linux-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1)
+
+    # Compile legacy/regression tests
+    print "Compiling legacy tests..."
+    t = subprocess.Popen(["g++", "-c", "-std=c++11", "test/network-linux-legacy-tests.cpp"]);
+    t.wait();
+    if t.returncode == 1:
+        sys.exit(1) 
+
+    # Link the various bits together into an executable
+    print "Linking..."
+    o = subprocess.Popen(["g++",
+                          "../catch-main.o",
+                          "network-linux-core-tests.o",
+                          "network-arduino-core-tests.o",
+                          "network-saveload-linux-tests.o",
+                          "network-linux-legacy-tests.o",
+                          "network-linux.o",
+                          "network-saveload-linux.o",
+                          "network-arduino.o",
+                          "-o",
+                          ".catch.exe",
+                          "-std=c++11"]);
+    o.wait();
+    if o.returncode == 1:
+        sys.exit(1)
+
+    print "Running *all* tests... (this may take a while)"
+    # Run the tests
+    c = subprocess.Popen(["./.catch.exe"]);  
+    c.wait();
+    if c.returncode == 1:
+        sys.exit(1)
+
+
+#
+# Main Program
+#
+
+# Check for being in network/
+_, cwd = os.path.split(os.getcwd())
+if not cwd == "network":
+    print "Please run from the project/network/ folder, not %s/" % cwd
+    sys.exit(1)
+
+# Parse arguments
+if len(sys.argv) == 2:
+    if (sys.argv[1] == "-q"):
+        q_flag = True
+    elif (sys.argv[1] == "-s"):
+        s_flag = True
+    elif (sys.argv[1] == "-a"):
+        a_flag = True
+    else:
+        print "%s is not a valid argument; try again." % sys.argv[1]
+        sys.exit(1)
+if len(sys.argv) > 2:
+    print "Too many arguments given; try again."
+    sys.exit(1)
+
+if not (os.path.isfile("../catch-main.o")):
+    print "Compiling main..."
+    m = subprocess.Popen(["g++", "-c", "-std=c++11", "../catch-main.cpp", "-o", "../catch-main.o"]);
+    m.wait();
+    if m.returncode == 1:
+        sys.exit(1) 
+
+
+# Compile the Linux network code
+print "Compiling network-linux"
+n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-linux.cpp"]);
+n.wait();
+if n.returncode == 1:
+        sys.exit(1)
+i = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-saveload-linux.cpp"]);
+i.wait();
+if i.returncode == 1:
+    sys.exit(1)
+
+# Compile the Arduino network code
+print "Compiling network-arduino"
+n = subprocess.Popen(["g++", "-c", "-std=c++11", "src/network-arduino.cpp"]);
+n.wait();
+if n.returncode == 1:
+    sys.exit(1)
+
+
+# Run appropriate tests
+if q_flag:
+    run_quick_tests()
+elif s_flag:
+    run_slow_tests()
+else:
+    run_all_tests()
+
+sys.exit(0)

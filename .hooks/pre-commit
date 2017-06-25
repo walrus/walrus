@@ -5,9 +5,39 @@ development_branch='development'
 current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 
 
-# For now, do nothing. Later, run tests
+# Test that everything at least compiles...
 
 echo "Running pre-commit checks"
+
+# TODO: Test compilation of Arduino stuff once I figure out the CLI
+
+# Run network tests
+cd network/
+./run-tests -q
+
+if [ $? != 0 ]; then
+  echo "Network tests failed, not committing"
+  exit 1
+else
+  echo "Network tests passed"
+fi
+
+cd ..
+
+# Run training tests
+
+cd linux/
+./run-tests
+
+if [ $? != 0 ]; then
+  echo "Training (io) tests failed, not committing"
+  exit 1
+else
+  echo "Training (io) tests passed"
+fi
+
+cd ..
+
 
 # Query when committing directly to development. 
 if [ $development_branch = $current_branch ] 

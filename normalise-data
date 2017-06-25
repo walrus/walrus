@@ -1,0 +1,166 @@
+#!/usr/bin/python
+
+import os, sys, random, math
+
+# Script to normalise data collected using the 'log-data-unsupervised' and 'log-data-supervised' scripts
+#
+# Args:
+#
+# ./normalise-data [-r|-d] filename|dirname readings target
+#
+# Flags:
+#
+# -d means normalise all files in a given directory
+# -r means recursively walk given directory and normalise all files
+#
+# Flag must precede file or directory name
+#
+# readings is the number of readings to normalise to
+#
+# target is the target pattern, E.G. 001
+#
+# Root directory is assumed to be project/
+
+normalised_length = 20  # Number of readings to normalise to
+num_targets = 1         # Number of targets
+target = []
+acceleration_multiplier = 16384 # Value to convert raw IMU value into mg
+
+d_flag = False          # Whether or not the -d 'directory' flag is set
+r_flag = False          # Whether or not the -r 'recursive' flag is set
+
+filename = None         # Will be True if a filename was given
+directory_name = None   # Will be True if a directory name was given
+
+def normalise_directory(directory_name, r_flag):
+    print "Normalising directory %s. Recursive flag is %r" % (directory_name, r_flag)
+
+    if not r_flag:
+        for item in os.listdir(directory_name):
+            if os.path.isfile(os.path.join(directory_name, item)) \
+                    and "_normalised.txt" not in item \
+                    and ".txt" in item:
+                normalise_file(directory_name + item)
+    else:
+        for path, dirs, files in os.walk(directory_name):
+            for item in files:
+                if "_normalised.txt" not in item and ".txt" in item:
+                    normalise_file(os.path.join(path, item))
+
+
+def normalise_file(filename):
+    print "Normalising file %s..." % filename
+
+    original_file = open(filename,"r")
+
+    normalised_filename = filename[:-4] + "_normalised.txt"
+    normalised_file = open(normalised_filename, "w+")
+
+    original_readings = []
+    writing_targets = 0
+
+    # Break the file into reps and normalise each rep separately
+    for line in original_file:
+        if writing_targets > 0:
+            if "1" in line:
+                for digit in target:
+                    normalised_file.write(digit + "\n")
+            else:
+                for _ in range(len(target)):
+                    normalised_file.write("0\n")
+            writing_targets -= 1
+        else:
+            if ("Motion detected" in line or "Repetition Start" in line):
+                original_readings = []
+            elif ("Motion ended" in line or "Repetition End" in line):
+                normalised_readings = normalise_readings(original_readings)
+                #Write these readings to the normalised file
+                normalised_file.write("Repetition start\n")
+                for reading in normalised_readings:
+                    normalised_file.write(normalise_reading(reading) + "\n")
+                normalised_file.write("Repetition end\n")
+                writing_targets = num_targets
+            else:
+                original_readings.append(line)
+
+    original_file.close()
+    normalised_file.close()
+    print "done."
+
+# Take the three acceleration readings and sum them
+def normalise_reading(reading):
+    readings = [int(value) * int(value) for value in reading.split()]
+    return str(math.sqrt(sum(readings)) / float(acceleration_multiplier))
+
+# Takes a list of readings and returns a normalised set with len = normalised_length
+def normalise_readings(original_readings):
+    diff = len(original_readings) - normalised_length
+
+    if diff == 0:
+        return original_readings
+    elif diff > 0:
+        return cull_readings(original_readings, diff)
+    elif diff < 0:
+        return grow_readings(original_readings, abs(diff))
+
+# Takes a set of readings with len > normalised length and reduces it's length accordingly
+# This is a basic implementation, which simply randomly drops readings
+def cull_readings(original_readings, diff):
+    original_length = diff + normalised_length
+    if diff >= normalised_length:
+        # If we have more than twice the correct number of readings, cull every other reading
+        original_readings = original_readings[0::2]
+        diff -= original_length / 2
+
+    for _ in range(diff):
+        index = random.randrange(len(original_readings))
+        original_readings.pop(index)
+
+    return original_readings
+
+# Takes a set of readings with len < normalised_length and extrapolates so that len = normalised_length
+# This is a basic implementation that randomly selects elements and copies them
+def grow_readings(original_readings, diff):
+    normalised_readings = list(original_readings)
+
+    for _ in range(diff):
+        reading = random.choice(original_readings)
+        normalised_readings.insert(normalised_readings.index(reading) + 1, reading)
+
+    return normalised_readings
+
+#
+# Main Program
+#
+
+# Parse arguments
+if len(sys.argv) < 4:
+    print "Not enough arguments given; try again."
+    sys.exit(1)
+if len(sys.argv) == 4:
+    if (sys.argv[1] == "-d" or sys.argv[1] == "-r"):
+        print "Not enough arguments given; try again."
+        sys.exit(1)
+    filename =  sys.argv[1]
+    normalised_length = int(sys.argv[2])
+    target = list(sys.argv[3])
+if len(sys.argv) == 5:
+    if (sys.argv[1] == "-d"):
+        d_flag = True
+    elif (sys.argv[1] == "-r"):
+        r_flag = True
+    else:
+        print "%s is not a valid flag; try again." % sys.argv[1]
+        sys.exit(1)
+    directory_name = sys.argv[2]
+    normalised_length = int(sys.argv[3])
+    target = list(sys.argv[4])
+
+if d_flag:
+    normalise_directory(directory_name, False)
+elif r_flag:
+    normalise_directory(directory_name, True)
+else:
+    normalise_file(filename)
+
+sys.exit(0)

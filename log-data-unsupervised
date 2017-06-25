@@ -1,0 +1,57 @@
+#!/usr/bin/python
+
+import serial, time, sys, curses
+
+# Setup curses to catch keystrokes
+window = curses.initscr()
+window.nodelay(1)
+
+def main(window):
+
+    # Check argument(s). 
+    #
+    # First arg is filename. 
+    # This should be the path from project/ to the file
+    #
+    # E.G. 'data/daniel/set1'
+    #
+    # This will create the file project/data/daniel/set1.txt
+    # Note that the directory must already exist
+    #
+    # Existing files should be appended to instead of overwritten
+
+
+    if len(sys.argv) < 2:
+        print "No filename given; try again."
+        sys.exit(1)
+    else:
+        filename = sys.argv[1] + ".txt"
+
+    # Create new text file
+    logfile = open(filename,"a+")
+
+    # Open a Serial connection to the Arduino:
+    print "Connecting..."
+    try:
+        arduino = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+    except:
+        print "Failed to connect on /dev/ttyACM0"
+        sys.exit(2)
+
+    print "success"
+
+    # Read input from Serial and write to to the file, as well as to the screen
+    # Will exit when any character is pressed
+    ch = -1
+
+    while ch < 0:
+        line = arduino.readline()
+        print line
+        logfile.write(line)
+        ch = window.getch()
+
+    logfile.close()
+
+curses.wrapper(main)
+
+sys.exit(0)

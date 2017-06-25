@@ -1,0 +1,129 @@
+#!/usr/bin/python
+
+import os, sys
+
+# Script to count data collected using the 'log-data-unsupervised' and 'log-data-supervised' scripts
+#
+# Flags:
+#
+# -d means normalise all files in a given directory
+# -r means recursively walk given directory and normalise all files
+#
+# Flag must precede file or directory name
+#
+# Root directory is assumed to be project/
+
+
+
+positive = 0
+negative = 0
+
+overall_readings = 0
+
+d_flag = False          # Whether or not the -d 'directory' flag is set
+r_flag = False          # Whether or not the -r 'recursive' flag is set
+
+filename = None         # Will be True if a filename was given
+directory_name = None   # Will be True if a directory name was given
+
+def count_directory(directory_name, r_flag):
+    #print "Counting directory %s. Recursive flag is %r" % (directory_name, r_flag)
+
+    if not r_flag:
+        for item in os.listdir(directory_name):
+            if os.path.isfile(os.path.join(directory_name, item)) \
+                    and "_normalised.txt" not in item \
+                    and ".txt" in item:
+                count_file(directory_name + item)
+    else:
+        for path, dirs, files in os.walk(directory_name):
+            for item in files:
+                if "_normalised.txt" not in item and ".txt" in item:
+                    count_file(os.path.join(path, item))
+
+
+def count_file(filename):
+    #print "Counting file %s..." % filename
+
+    global positive
+    global negative
+    global overall_readings
+
+    file_positive = 0
+    file_negative = 0
+    file_readings = 0
+    rep_readings = 0
+    file_to_count = open(filename,"r")
+
+    in_rep = 0 # 2 means reading motion, 1 means reading target, 0 means not in rep
+    # Break the file into reps and normalise each rep separately
+    for line in file_to_count:
+
+        if ("Motion detected" in line or "Repetition Start" in line):
+            in_rep = 2
+            rep_readings = 0
+        elif ("Motion ended" in line or "Repetition End" in line):
+            if (in_rep == 2):
+                in_rep = 1
+                file_readings += rep_readings
+                rep_readings = 0
+            else:
+                in_rep = 0
+                rep_readings = 0
+        else:
+            if in_rep == 2:
+                rep_readings +=1
+            if (in_rep == 1):
+                if (int(line) == 0):
+                    file_negative += 1
+                elif (int(line) == 1):
+                    file_positive += 1
+                else:
+                    print "Wat"
+                in_rep = 0
+
+    file_to_count.close()
+
+    positive += file_positive
+    negative += file_negative
+    overall_readings += file_readings
+
+    #print "done: file contains {} examples: {} positive and {} negative".format(
+    #    file_positive + file_negative, file_positive, file_negative)
+
+#
+# Main Program
+#
+
+# Parse arguments
+if len(sys.argv) < 2:
+    print "No arguments given; try again."
+    sys.exit(1)
+if len(sys.argv) == 2:
+    filename =  sys.argv[1]
+if len(sys.argv) == 3:
+    if (sys.argv[1] == "-d"):
+        d_flag = True
+    elif (sys.argv[1] == "-r"):
+        r_flag = True
+    else:
+        print "%s is not a valid argument; try again." % sys.argv[1]
+        sys.exit(1)
+    directory_name = sys.argv[2]
+
+if d_flag:
+    count_directory(directory_name, False)
+elif r_flag:
+    count_directory(directory_name, True)
+else:
+    count_file(filename)
+
+print " "
+print "Data set contains {} examples: {} positive and {} negative".format(positive + negative, positive, negative)
+
+ratio = positive / negative
+
+print "Ratio of positive to negative examples is {}:1".format(ratio)
+print ""
+print "Average readings per example is {}".format(overall_readings/(positive+negative))
+sys.exit(0)
