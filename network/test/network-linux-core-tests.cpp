@@ -33,8 +33,6 @@ TEST_CASE("The core network functionality is all correct") {
         }
         THEN("The other variables are set properly") {
             REQUIRE(network.getTrainingCycle() == 0);
-            REQUIRE(network.getRandomFloat() <= 1.0f);
-            REQUIRE(network.getRandomFloat() >= -1.0f);
             REQUIRE(network.getErrorRate() == 0.0f);
             REQUIRE(network.getAccumulatedInput() == 0.0f);
         }
@@ -66,12 +64,6 @@ TEST_CASE("The core network functionality is all correct") {
             network.setMomentum(0.5f);
             REQUIRE(network.getMomentum() == 0.5f);
         }
-        THEN("The initial weight maximum can be adjusted") {
-            REQUIRE(network.getInitialWeightMax() == diwm);
-            network.setInitialWeightMax(0.9f);
-            REQUIRE(network.getInitialWeightMax() == 0.9f);
-        }
-
         THEN("It can (badly) attempt to classify without training") {
             std::vector<float>  input;
             input.resize(nin);

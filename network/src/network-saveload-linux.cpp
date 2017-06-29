@@ -12,6 +12,11 @@ Network_L *loadNetwork(std::string filename) {
     std::vector<std::string> lines;
     std::string line;
 
+    // If the config file can't be opened, return null
+    if (!config_file.is_open() || config_file.bad()) {
+        return nullptr;
+    }
+
     while (std::getline(config_file, line))
     {
         lines.push_back(line);
