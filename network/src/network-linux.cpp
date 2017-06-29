@@ -314,11 +314,6 @@ long Network_L::getTrainingCycle() const {
 }
 
 
-float Network_L::getRandomFloat() const {
-    return randomFloat;
-}
-
-
 float Network_L::getErrorRate() const {
     return errorRate;
 }
@@ -391,11 +386,6 @@ void Network_L::setLearningRate(float learningRate) {
 
 void Network_L::setMomentum(float momentum) {
     Network_L::momentum = momentum;
-}
-
-
-void Network_L::setInitialWeightMax(float initialWeightMax) {
-    Network_L::initialWeightMax = initialWeightMax;
 }
 
 

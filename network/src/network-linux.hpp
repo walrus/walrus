@@ -80,7 +80,6 @@ public:
     float getMomentum() const;
     float getInitialWeightMax() const;
     long getTrainingCycle() const;
-    float getRandomFloat() const;
     float getErrorRate() const;
     float getAccumulatedInput() const;
     ActivationFunction getHiddenActivationFunction() const;
@@ -96,7 +95,6 @@ public:
     const std::vector<std::vector<float>> getOutputWeightsChanges() const;
     void setLearningRate(float learningRate);
     void setMomentum(float momentum);
-    void setInitialWeightMax(float initialWeightMax);
     void setHiddenActivationFunction(ActivationFunction activationFunction);
     void setOutputActivationFunction(ActivationFunction activationFunction);
     void setErrorFunction(ErrorFunction errorFunction);
