@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+# noinspection PyUnresolvedReferences
 import os, sys, subprocess
 
 # Compile script for the evaluation program, will recompile all dependencies
@@ -19,6 +20,7 @@ if not cwd == "linux":
 
 
 # Parse arguments
+# noinspection PyUnresolvedReferences
 if len(sys.argv) > 1:
     print "Too many arguments given; try again."
     sys.exit(1)
@@ -26,29 +28,29 @@ if len(sys.argv) > 1:
 
 # Compile the various source files
 print "Compiling..."
-a = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-linux.cpp"]);
-b = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-saveload-linux.cpp"]);
-c = subprocess.Popen(["g++", "-c", "-std=c++11", "src/training-set.cpp"]);
-d = subprocess.Popen(["g++", "-c", "-std=c++11", "src/evaluate.cpp"]);
+a = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-linux.cpp"])
+b = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-saveload-linux.cpp"])
+c = subprocess.Popen(["g++", "-c", "-std=c++11", "src/training-set.cpp"])
+d = subprocess.Popen(["g++", "-c", "-std=c++11", "src/evaluate.cpp"])
 
-a.wait();
+a.wait()
 if a.returncode == 1:
     sys.exit(1)
-b.wait();
+b.wait()
 if b.returncode == 1:
     sys.exit(1)
-c.wait();
+c.wait()
 if c.returncode == 1:
     sys.exit(1)
-d.wait();
+d.wait()
 if d.returncode == 1:
     sys.exit(1)
 
 
 # Link the object files together into an executable
 print "Linking..."
-o = subprocess.Popen(["g++", "evaluate.o", "training-set.o", "../network/network-linux.o", "../network/network-saveload-linux.o", "-o", "evaluate", "-std=c++11"]);
-o.wait();
+o = subprocess.Popen(["g++", "evaluate.o", "training-set.o", "../network/network-linux.o", "../network/network-saveload-linux.o", "-o", "evaluate", "-std=c++11"])
+o.wait()
 if o.returncode == 1:
     sys.exit(1)
 

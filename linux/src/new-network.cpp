@@ -1,7 +1,7 @@
 /*
  * Create a new network with the given arguments:
  *
- * new-network filename nin nhn non lr m diwm haf oaf ef
+ * new-network filename nin nhn non lr m iwm haf oaf ef
  *
  * Where:
  *

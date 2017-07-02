@@ -68,13 +68,13 @@ TEST_CASE("The core network functionality is all correct") {
             std::vector<float>  input;
             input.resize(nin);
 
-            for (int i = 0; i++; i < nin) {
+            for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             std::vector<float> output = network.classify(input);
 
-            for (int i = 0; i++; i < non) {
+            for (int i = 0; i < non; i++) {
                 REQUIRE(output[i] > -1.0f);
                 REQUIRE(output[i] < 1.0f);
             }
@@ -169,13 +169,13 @@ TEST_CASE("The core network functionality is all correct") {
             std::vector<float>  input;
             input.resize(nin);
 
-            for (int i = 0; i++; i < nin) {
+            for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             std::vector<float> output = network.classify(input);
 
-            for (int i = 0; i++; i < non) {
+            for (int i = 0; i < non; i++) {
                 REQUIRE(output[i] > -1.0f);
                 REQUIRE(output[i] < 1.0f);
             }
@@ -243,13 +243,13 @@ TEST_CASE("The core network functionality is all correct") {
             std::vector<float>  input;
             input.resize(nin);
 
-            for (int i = 0; i++; i < nin) {
+            for (int i = 0; i < nin; i++) {
                 input[i] = test_dist(m_mt);
             }
 
             std::vector<float> output = network.classify(input);
 
-            for (int i = 0; i++; i < non) {
+            for (int i = 0; i < non; i++) {
                 REQUIRE(output[i] > -1.0f);
                 REQUIRE(output[i] < 1.0f);
             }
@@ -416,7 +416,7 @@ TEST_CASE("The core network functionality is all correct") {
         }
     }
 
-    GIVEN("A network using the sigmoidactivation functions with the CrossEntropy error function") {
+    GIVEN("A network using the sigmoid activation functions with the CrossEntropy error function") {
         Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
 
         network.setHiddenActivationFunction(ActivationFunction::Sigmoid);
