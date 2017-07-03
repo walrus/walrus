@@ -22,6 +22,11 @@ threshold = 0.5
 classifications = []
 targets = []
 
+confusion = []
+
+correct = 0
+wrong = 0
+
 def compute_classification(line):
     outputs = list(map(int(), line.split()))
     temp_threshold = threshold
@@ -41,6 +46,10 @@ def main(window):
 
     global num_targets
     global threshold
+    global classifications
+    global targets
+    global correct
+    global wrong
 
     if len(sys.argv) < 3:
         print "Too few arguments; try again."
@@ -63,23 +72,27 @@ def main(window):
     #  Will exit when x is pressed
     ch = -1
 
-    global classifications
-    global targets
-
     while ch != ord('x'):
         line = arduino.readline()
         print line
         classification = compute_classification(line)
         print "Classification: {}".format(classification)
-        classifications.push(classification)
+        classifications.append(classification)
         ch = window.getch()
         if ch != -1:
+            target = 0
             if ch == ord('p'):
-                targets.push(num_targets)
-                print "Target: none"
+                target = num_targets
             else:
-                targets.push(ch - 30) # Reliant on ord being in range 30-39
-                print "Target: {}".format(ch - 30)
+                target = ch - 30 # Reliant on ord being in range 30-39
+            print "Target: {}".format(target)
+            targets.append(target)
+
+            if target == classification:
+                correct +=1
+            else:
+                wrong += 1
+
         ch = -1
 
 
@@ -87,5 +100,13 @@ curses.wrapper(main)
 
 # Now compute the various statistics
 
+confusion = [[0 for x in range(num_targets)] for y in range(num_targets)]
+
+for i in range(min(len(classifications), len(targets))):
+    pass # do the thing
+
+print "Correct classifications: {}".format(correct)
+print "Incorrect classifications: {}".format(wrong)
+print "Classification rate: {}".format(correct / correct + wrong)
 
 sys.exit(0)
