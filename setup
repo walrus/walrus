@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-import os, sys, subprocess
-
+import subprocess
+import sys
 
 #
 # Main Program
@@ -61,34 +61,34 @@ if l.returncode == 1:
 print "Compiled all object files"
 
 # Link the new-network object files together into an executable
-o = subprocess.Popen(["g++", "linux/new-network.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "network/new-network", "-std=c++11"]);
-o.wait();
+o = subprocess.Popen(["g++", "linux/new-network.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "network/new-network", "-std=c++11"])
+o.wait()
 if o.returncode == 1:
     sys.exit(1)
 o = subprocess.Popen(["sudo", "chmod", "u+x", "linux/new-network"])
-o.wait();
+o.wait()
 if o.returncode == 1:
     sys.exit(1)
 print "Compiled new-network"
 
 # Link the train object files together into an executable
-p = subprocess.Popen(["g++", "linux/train.o", "linux/training-set.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "linux/train", "-std=c++11"]);
-p.wait();
+p = subprocess.Popen(["g++", "linux/train.o", "linux/training-set.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "linux/train", "-std=c++11"])
+p.wait()
 if p.returncode == 1:
     sys.exit(1)
 p = subprocess.Popen(["sudo", "chmod", "u+x", "linux/train"])
-p.wait();
+p.wait()
 if p.returncode == 1:
     sys.exit(1)
 print "Compiled train"
 
 # Link the evaluate object files together into an executable
-q = subprocess.Popen(["g++", "linux/evaluate.o", "linux/training-set.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "linux/evaluate", "-std=c++11"]);
-q.wait();
+q = subprocess.Popen(["g++", "linux/evaluate.o", "linux/training-set.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "linux/evaluate", "-std=c++11"])
+q.wait()
 if q.returncode == 1:
     sys.exit(1)
 q = subprocess.Popen(["sudo", "chmod", "u+x", "linux/evaluate"])
-q.wait();
+q.wait()
 if q.returncode == 1:
     sys.exit(1)
 print "Compiled evaluate"
@@ -105,16 +105,16 @@ r = subprocess.Popen(["g++",
                       "network/network-arduino.o",
                       "-o",
                       ".catch.exe",
-                      "-std=c++11"]);
-r.wait();
+                      "-std=c++11"])
+r.wait()
 if r.returncode == 1:
     sys.exit(1)
 r = subprocess.Popen(["sudo", "chmod", "u+x", "linux/run-tests"])
-r.wait();
+r.wait()
 if r.returncode == 1:
     sys.exit(1)
 r = subprocess.Popen(["sudo", "chmod", "u+x", "network/run-tests"])
-r.wait();
+r.wait()
 if r.returncode == 1:
     sys.exit(1)
 print "Compiled tests"
@@ -127,7 +127,7 @@ print "Setup git hooks"
 
 print "Running *all* tests... (this may take a while)"
 # Run the tests
-t = subprocess.Popen(["./.catch.exe"]);
-t.wait();
+t = subprocess.Popen(["./.catch.exe"])
+t.wait()
 if t.returncode == 1:
     sys.exit(1)

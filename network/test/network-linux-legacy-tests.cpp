@@ -3,11 +3,6 @@
 /* Legacy unit test file for the network code, to check that it can still do what the original code did */
 
 TEST_CASE("The library can implement the original ArduinoANN code's functionality") {
-    std::random_device rd;
-    std::mt19937 m_mt(rd());
-    std::uniform_int_distribution<int> pattern_dist = std::uniform_int_distribution<int>(0, 9);
-
-
     int nin = 8;
     int nhn = 7;
     int non = 4;
@@ -23,7 +18,7 @@ TEST_CASE("The library can implement the original ArduinoANN code's functionalit
     float Error = 1.0;
     float Success = 0.0004;
 
-    int p, q, r;
+    int p, q;
 
     std::vector<std::vector<float>> Input = {
             { 1, 1, 1, 1, 1, 1, 0 },  // 0
