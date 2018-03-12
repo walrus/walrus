@@ -1,5 +1,5 @@
 # WALRUS
-Exercise classification using an Artificial Neural Network running on an Intel Curie/Genuino 101, for my BEng Individual Project.
+Walrus is a feed forward neural network library for Arduino devices. It allows a network to be trained on a Linux machine and then uploaded to an Arduino for predictions. 
 
 ## Why walrus?
 
@@ -7,30 +7,17 @@ Exercise classification using an Artificial Neural Network running on an Intel C
 
 ## Dependencies
 
-An Intel Curie.
-Bluetooth Low Energy (BLE) capable Android phone
+You will need an Arduino board with enough RAM to fit the network into memory - the more the better.
 
 - [Arduino IDE (v1.6 or later)](https://www.arduino.cc/en/Main/Software)
 - [Curie IMU (library)](https://www.arduino.cc/en/Reference/CurieIMU)
-- [ArduinoANN](http://robotics.hobbizine.com/arduinoann.zip)
-- [Python 2](https://www.python.org/downloads/) (Hoping to switch to Python 3 soon...)
+- [ArduinoANN](http://robotics.hobbizine.com/arduinoann.html)
+- [Python](https://www.python.org/downloads/)
 - [GCC 6](https://gcc.gnu.org/gcc-6/)
 - [Catch](https://github.com/philsquared/Catch)
 
-Plus more to come, undoubtedly.
-
 ## Setting up git hooks
 
-To install version-controlled git hooks, run the following script:
+To install version-controlled git hooks, run the following bash script:
 
     ./.init-hooks
-
-## Training the Classifier
-
-### Logging data from the Curie
-
-To log data from the curie, upload the sketch `logger.ino`, then run `./.log-data` 
-
-### Normalising data for training
-
-The normalisation script has multiple options. Once you've logged enough data, either run `./.normalise-data file` for each file, or run `./.normalise-data -r directory` to normalise all the files in the given directory.
