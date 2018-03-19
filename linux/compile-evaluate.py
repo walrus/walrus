@@ -15,19 +15,19 @@ import os, sys, subprocess
 # Check for being in linux/
 _, cwd = os.path.split(os.getcwd())
 if not cwd == "linux":
-    print "Please run from the project/linux/ folder, not %s/" % cwd
+    print("Please run from the project/linux/ folder, not %s/" % cwd)
     sys.exit(1)
 
 
 # Parse arguments
 # noinspection PyUnresolvedReferences
 if len(sys.argv) > 1:
-    print "Too many arguments given; try again."
+    print("Too many arguments given; try again.")
     sys.exit(1)
 
 
 # Compile the various source files
-print "Compiling..."
+print("Compiling...")
 a = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-linux.cpp"])
 b = subprocess.Popen(["g++", "-c", "-std=c++11", "../network/src/network-saveload-linux.cpp"])
 c = subprocess.Popen(["g++", "-c", "-std=c++11", "src/training-set.cpp"])
@@ -48,7 +48,7 @@ if d.returncode == 1:
 
 
 # Link the object files together into an executable
-print "Linking..."
+print("Linking...")
 o = subprocess.Popen(["g++", "evaluate.o", "training-set.o", "../network/network-linux.o", "../network/network-saveload-linux.o", "-o", "evaluate", "-std=c++11"])
 o.wait()
 if o.returncode == 1:

@@ -8,7 +8,7 @@ import sys
 #
 
 # Compile the various source files
-print "Compiling..."
+print("Compiling...")
 a = subprocess.Popen(["g++", "-c", "-std=c++11", "network/src/network-linux.cpp", "-o", "network/network-linux.o"])
 b = subprocess.Popen(["g++", "-c", "-std=c++11", "network/src/network-saveload-linux.cpp", "-o", "network/network-saveload-linux.o"])
 c = subprocess.Popen(["g++", "-c", "-std=c++11", "linux/src/new-network.cpp", "-o", "linux/new-network.o"])
@@ -58,18 +58,18 @@ if k.returncode == 1:
 l.wait()
 if l.returncode == 1:
     sys.exit(1)
-print "Compiled all object files"
+print("Compiled all object files")
 
 # Link the new-network object files together into an executable
 o = subprocess.Popen(["g++", "linux/new-network.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "network/new-network", "-std=c++11"])
 o.wait()
 if o.returncode == 1:
     sys.exit(1)
-o = subprocess.Popen(["sudo", "chmod", "u+x", "linux/new-network"])
+o = subprocess.Popen(["sudo", "chmod", "u+x", "network/new-network"])
 o.wait()
 if o.returncode == 1:
     sys.exit(1)
-print "Compiled new-network"
+print("Compiled new-network")
 
 # Link the train object files together into an executable
 p = subprocess.Popen(["g++", "linux/train.o", "linux/training-set.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "linux/train", "-std=c++11"])
@@ -80,7 +80,7 @@ p = subprocess.Popen(["sudo", "chmod", "u+x", "linux/train"])
 p.wait()
 if p.returncode == 1:
     sys.exit(1)
-print "Compiled train"
+print("Compiled train")
 
 # Link the evaluate object files together into an executable
 q = subprocess.Popen(["g++", "linux/evaluate.o", "linux/training-set.o", "network/network-linux.o", "network/network-saveload-linux.o", "-o", "linux/evaluate", "-std=c++11"])
@@ -91,7 +91,7 @@ q = subprocess.Popen(["sudo", "chmod", "u+x", "linux/evaluate"])
 q.wait()
 if q.returncode == 1:
     sys.exit(1)
-print "Compiled evaluate"
+print("Compiled evaluate")
 
 # Link the test object files together into an executable
 r = subprocess.Popen(["g++",
@@ -109,23 +109,15 @@ r = subprocess.Popen(["g++",
 r.wait()
 if r.returncode == 1:
     sys.exit(1)
-r = subprocess.Popen(["sudo", "chmod", "u+x", "linux/run-tests"])
-r.wait()
-if r.returncode == 1:
-    sys.exit(1)
-r = subprocess.Popen(["sudo", "chmod", "u+x", "network/run-tests"])
-r.wait()
-if r.returncode == 1:
-    sys.exit(1)
-print "Compiled tests"
+print("Compiled tests")
 
 s = subprocess.Popen(["./init-hooks"])
 s.wait()
 if s.returncode == 1:
     sys.exit(1)
-print "Setup git hooks"
+print("Setup git hooks")
 
-print "Running *all* tests... (this may take a while)"
+print("Running *all* tests... (this may take a while)")
 # Run the tests
 t = subprocess.Popen(["./.catch.exe"])
 t.wait()

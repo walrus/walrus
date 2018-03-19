@@ -5,22 +5,22 @@
 import serial, time, sys
 
 # Open a Serial connection to the Arduino:
-print "Connecting..."
+print("Connecting...")
 try:
     arduino = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
 except:
-    print "Failed to connect on /dev/ttyACM0"
+    print("Failed to connect on /dev/ttyACM0")
     sys.exit(2)
 
-print "success"
+print("success")
 
 msg = ""
 while "Ready" not in msg:
     msg = arduino.readline()
-    print msg
+    print(msg)
 
 arduino.write('#')
 
 while True:
     line = arduino.readline()
-    print line
+    print(line)

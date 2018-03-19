@@ -13,7 +13,7 @@ echo "Running pre-commit checks"
 
 # Run network tests
 cd network/
-./run-tests -q
+python run-tests.py -q
 
 if [ $? != 0 ]; then
   echo "Network tests failed, not committing"
@@ -27,13 +27,13 @@ cd ..
 # Run training tests
 
 cd linux/
-./run-tests
+python run-tests.py
 
 if [ $? != 0 ]; then
-  echo "Training (io) tests failed, not committing"
+  echo "Training (I/O) tests failed, not committing"
   exit 1
 else
-  echo "Training (io) tests passed"
+  echo "Training (I/O) tests passed"
 fi
 
 cd ..
