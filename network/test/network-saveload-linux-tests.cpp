@@ -22,7 +22,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
         ActivationFunction oaf = ActivationFunction::Sigmoid;
         ErrorFunction ef = ErrorFunction::SumSquared;
 
-        Network_L *network = new Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+        Network_L<float> *network = new Network_L<float>(nin, nhn, non, dlr, dm, diwm, tc);
 
         std::string filename = "test_network_config.h";
 
@@ -259,7 +259,7 @@ TEST_CASE("Network configurations can be saved to file and loaded from file") {
 
         GIVEN("A saved network configuration, which is then loaded") {
 
-            Network_L loaded_network = *loadNetwork(filename);
+            Network_L<float> loaded_network = *loadNetwork(filename);
 
             THEN("The network is created with the correct number of input nodes") {
                 REQUIRE(loaded_network.getNumInputNodes() == nin);

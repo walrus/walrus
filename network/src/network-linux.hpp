@@ -14,7 +14,8 @@ enum class ErrorFunction {SumSquared, CrossEntropy};
 ErrorFunction stringToEF(std::string name);
 std::string eFToString(ErrorFunction ef);
 
-class Network_L {
+template <class T> class Network_L {
+T i; // Type template
 private:
     const int numInputNodes;                                // AKA 'InputNodes' in the original code
     const int numHiddenNodes;                               // AKA 'HiddenNodes' in the original code
@@ -32,46 +33,46 @@ private:
     ActivationFunction outputActivationFunction;            // Activation function. Original code used Sigmoid
     ErrorFunction  errorFunction;                           // Error function. Original code used SumSquared
 
-    std::vector<float> hiddenNodes;                         // AKA 'Hidden' in the original code
-    std::vector<float> outputNodes;                         // AKA 'Output' in the original code
-    std::vector<std::vector<float>> hiddenWeights;          // AKA 'HiddenWeights' in the original code
-    std::vector<std::vector<float>> outputWeights;          // AKA 'OutputWeights' in the original code
-    std::vector<float> hiddenNodesDeltas;                   // AKA 'HiddenDelta' in the original code
-    std::vector<float> outputNodesDeltas;                   // AKA 'OutputDelta' in the original code
-    std::vector<std::vector<float>> hiddenWeightsChanges;   // AKA 'ChangeHiddenWeights' in the original code
-    std::vector<std::vector<float>> outputWeightsChanges;   // AKA 'ChangeOutputWeights' in the original code
+    std::vector<T> hiddenNodes;                         // AKA 'Hidden' in the original code
+    std::vector<T> outputNodes;                         // AKA 'Output' in the original code
+    std::vector<std::vector<T>> hiddenWeights;          // AKA 'HiddenWeights' in the original code
+    std::vector<std::vector<T>> outputWeights;          // AKA 'OutputWeights' in the original code
+    std::vector<T> hiddenNodesDeltas;                   // AKA 'HiddenDelta' in the original code
+    std::vector<T> outputNodesDeltas;                   // AKA 'OutputDelta' in the original code
+    std::vector<std::vector<T>> hiddenWeightsChanges;   // AKA 'ChangeHiddenWeights' in the original code
+    std::vector<std::vector<T>> outputWeightsChanges;   // AKA 'ChangeOutputWeights' in the original code
 
     std::mt19937 m_mt;                                      // Mersenne twister for random number generation
-    std::uniform_real_distribution<float> dist;             // Distribution for random number generation
+    std::uniform_real_distribution<T> dist;             // Distribution for random number generation
 
     void initialiseHiddenWeights();
     void initialiseOutputWeights();
-    float computeActivation(float accumulatedInput, ActivationFunction af);
-    void computeHiddenLayerActivations(std::vector<float> inputs);
+    T computeActivation(T accumulatedInput, ActivationFunction af);
+    void computeHiddenLayerActivations(std::vector<T> inputs);
     void computeOutputLayerActivations();
-    float computeDelta(float target, float output);
-    float computeErrorRate(float target, float output);
-    void computeErrors(std::vector<float> targets);
+    T computeDelta(T target, T output);
+    T computeErrorRate(T target, T output);
+    void computeErrors(std::vector<T> targets);
     void backpropagateErrors();
-    void updateHiddenWeights(std::vector<float> inputs);
+    void updateHiddenWeights(std::vector<T> inputs);
     void updateOutputWeights();
-    void setHiddenWeights(std::vector<std::vector<float>> hiddenWeights);
-    void setOutputWeights(std::vector<std::vector<float>> outputWeights);
+    void setHiddenWeights(std::vector<std::vector<T>> hiddenWeights);
+    void setOutputWeights(std::vector<std::vector<T>> outputWeights);
 
 public:
-    Network_L(int numInputNodes,
+    Network_L<T>(int numInputNodes,
               int numHiddenNodes,
               int numOutputNodes,
               float learningRate,
               float momentum,
               float initialWeightMax,
               long trainingCycle);
-    float trainNetwork(std::vector<float> inputs,
-                       std::vector<float> targets);
+    T trainNetwork(std::vector<T> inputs,
+                       std::vector<T> targets);
     std::string writeReport();
-    std::vector<float> classify(std::vector<float> inputs);
-    void loadWeights(std::vector<std::vector<float>> hiddenWeights,
-                     std::vector<std::vector<float>> outputWeights);
+    std::vector<T> classify(std::vector<T> inputs);
+    void loadWeights(std::vector<std::vector<T>> hiddenWeights,
+                     std::vector<std::vector<T>> outputWeights);
 
     int getNumInputNodes() const;
     int getNumHiddenNodes() const;
@@ -80,19 +81,19 @@ public:
     float getMomentum() const;
     float getInitialWeightMax() const;
     long getTrainingCycle() const;
-    float getErrorRate() const;
-    float getAccumulatedInput() const;
+    T getErrorRate() const;
+    T getAccumulatedInput() const;
     ActivationFunction getHiddenActivationFunction() const;
     ActivationFunction getOutputActivationFunction() const;
     ErrorFunction getErrorFunction() const;
-    const std::vector<float> getHiddenNodes() const;
-    const std::vector<float> getOutputNodes() const;
-    const std::vector<float> getHiddenNodesDeltas() const;
-    const std::vector<float> getOutputNodesDeltas() const;
-    const std::vector<std::vector<float>> getHiddenWeights() const;
-    const std::vector<std::vector<float>> getOutputWeights() const;
-    const std::vector<std::vector<float>> getHiddenWeightsChanges() const;
-    const std::vector<std::vector<float>> getOutputWeightsChanges() const;
+    const std::vector<T> getHiddenNodes() const;
+    const std::vector<T> getOutputNodes() const;
+    const std::vector<T> getHiddenNodesDeltas() const;
+    const std::vector<T> getOutputNodesDeltas() const;
+    const std::vector<std::vector<T>> getHiddenWeights() const;
+    const std::vector<std::vector<T>> getOutputWeights() const;
+    const std::vector<std::vector<T>> getHiddenWeightsChanges() const;
+    const std::vector<std::vector<T>> getOutputWeightsChanges() const;
     void setLearningRate(float learningRate);
     void setMomentum(float momentum);
     void setHiddenActivationFunction(ActivationFunction activationFunction);

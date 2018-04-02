@@ -10,7 +10,10 @@
 
 #include "network-linux.hpp"
 
-Network_L::Network_L(int numInputNodes,
+template class Network_L<float>;
+
+template <class T>
+Network_L<T>::Network_L(int numInputNodes,
                      int numHiddenNodes,
                      int numOutputNodes,
                      float learningRate,
@@ -26,7 +29,7 @@ Network_L::Network_L(int numInputNodes,
                      trainingCycle(trainingCycle),
                      m_mt(std::random_device()()) {
 
-    dist = std::uniform_real_distribution<float>(-1.0f, 1.0f);
+    dist = std::uniform_real_distribution<T>(-1.0f, 1.0f);
 
     randomFloat = 0.0f;
     errorRate = 0.0;
@@ -39,14 +42,14 @@ Network_L::Network_L(int numInputNodes,
     hiddenNodes.resize(numHiddenNodes);
     outputNodes.resize(numOutputNodes);
 
-    hiddenWeights.resize(numInputNodes+1, std::vector<float>(numHiddenNodes));
-    outputWeights.resize(numHiddenNodes+1, std::vector<float>(numOutputNodes));
+    hiddenWeights.resize(numInputNodes+1, std::vector<T>(numHiddenNodes));
+    outputWeights.resize(numHiddenNodes+1, std::vector<T>(numOutputNodes));
 
     hiddenNodesDeltas.resize(numHiddenNodes);
     outputNodesDeltas.resize(numOutputNodes);
 
-    hiddenWeightsChanges.resize(numInputNodes+1, std::vector<float>(numHiddenNodes));
-    outputWeightsChanges.resize(numHiddenNodes+1, std::vector<float>(numOutputNodes));
+    hiddenWeightsChanges.resize(numInputNodes+1, std::vector<T>(numHiddenNodes));
+    outputWeightsChanges.resize(numHiddenNodes+1, std::vector<T>(numOutputNodes));
 
     initialiseHiddenWeights();
     initialiseOutputWeights();
@@ -58,7 +61,8 @@ Network_L::Network_L(int numInputNodes,
  * Initialise hiddenWeightsChanges to zero
  * Use when setting up a new, untrained network
  */
-void Network_L::initialiseHiddenWeights() {
+template <class T>
+void Network_L<T>::initialiseHiddenWeights() {
     for (int i = 0; i < numHiddenNodes; i++) {
         for (int j = 0; j <= numInputNodes; j++) {
             hiddenWeightsChanges[j][i] = 0.0;
@@ -74,7 +78,8 @@ void Network_L::initialiseHiddenWeights() {
  * Initialise outputWeightsChanges to zero
  * Use when setting up a new, untrained network
  */
-void Network_L::initialiseOutputWeights() {
+template <class T>
+void Network_L<T>::initialiseOutputWeights() {
     for(int i = 0 ; i < numOutputNodes ; i ++ ) {
         for(int j = 0 ; j <= numHiddenNodes ; j++ ) {
             outputWeightsChanges[j][i] = 0.0 ;
@@ -88,7 +93,8 @@ void Network_L::initialiseOutputWeights() {
 /*
  * Train the network on a single pattern and return the error rate post training
  */
-float Network_L::trainNetwork(std::vector<float> inputs, std::vector<float> targets) {
+template <class T>
+T Network_L<T>::trainNetwork(std::vector<T> inputs, std::vector<T> targets) {
     errorRate = 0.0f;
     accumulatedInput = 0.0f;
 
@@ -110,8 +116,8 @@ float Network_L::trainNetwork(std::vector<float> inputs, std::vector<float> targ
 /*
  * Compute the activation for a single node using the selected activation function
  */
-
-float Network_L::computeActivation(float accumulatedInput, ActivationFunction af) {
+template <class T>
+T Network_L<T>::computeActivation(T accumulatedInput, ActivationFunction af) {
     if (af == ActivationFunction::Sigmoid) {
         return float(1.0/(1.0 + exp(-accumulatedInput))) ;
     } else if (af == ActivationFunction::ReLu) {
@@ -127,7 +133,8 @@ float Network_L::computeActivation(float accumulatedInput, ActivationFunction af
 /*
  * Compute the activations of the hidden layer nodes from the given inputs
  */
-void Network_L::computeHiddenLayerActivations(std::vector<float> inputs) {
+template <class T>
+void Network_L<T>::computeHiddenLayerActivations(std::vector<T> inputs) {
     float sumHidden = 0;
     for(int i = 0 ; i < numHiddenNodes; i++ ) {
         accumulatedInput = hiddenWeights[numInputNodes][i] ;
@@ -150,7 +157,8 @@ void Network_L::computeHiddenLayerActivations(std::vector<float> inputs) {
  * Compute the activations of the output layer nodes from the current state of the hidden nodes,
  * then compute the output errors and overall error rate
  */
-void Network_L::computeOutputLayerActivations() {
+template <class T>
+void Network_L<T>::computeOutputLayerActivations() {
     float sumOutputs = 0;
     for(int i = 0; i < numOutputNodes; i++ ) {
         accumulatedInput = outputWeights[numHiddenNodes][i] ;
@@ -172,7 +180,8 @@ void Network_L::computeOutputLayerActivations() {
 /*
  *  Compute the delta for a single output node
  */
-float Network_L::computeDelta(float target, float output) {
+template <class T>
+T Network_L<T>::computeDelta(T target, T output) {
     if (outputActivationFunction == ActivationFunction::Sigmoid
             && errorFunction == ErrorFunction::SumSquared) {
         return (target - output) * output * (1.0f - output);
@@ -186,7 +195,8 @@ float Network_L::computeDelta(float target, float output) {
 /*
  *  Compute the error rate using the selected error function
  */
-float Network_L::computeErrorRate(float target, float output) {
+template <class T>
+T Network_L<T>::computeErrorRate(T target, T output) {
     if (errorFunction == ErrorFunction::SumSquared) {
         return 0.5 * (target - output) * (target - output);
     } else if (errorFunction == ErrorFunction::CrossEntropy) {
@@ -198,7 +208,8 @@ float Network_L::computeErrorRate(float target, float output) {
 /*
  *  Compute the errors for the output layer
  */
-void Network_L::computeErrors(std::vector<float> targets) {
+template <class T>
+void Network_L<T>::computeErrors(std::vector<T> targets) {
     for(int i = 0 ; i < numOutputNodes ; i++ ) {
         outputNodesDeltas[i] = computeDelta(targets[i], outputNodes[i]);
         errorRate += computeErrorRate(targets[i], outputNodes[i]);
@@ -209,7 +220,8 @@ void Network_L::computeErrors(std::vector<float> targets) {
 /*
  *  Backpropagate the output layer errors to the hidden layer
  */
-void Network_L::backpropagateErrors() {
+template <class T>
+void Network_L<T>::backpropagateErrors() {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         accumulatedInput = 0.0 ;
         for(int j = 0 ; j < numOutputNodes ; j++ ) {
@@ -223,7 +235,8 @@ void Network_L::backpropagateErrors() {
 /*
  *  Using the backpropagated errors, update the weights of the hidden nodes
  */
-void Network_L::updateHiddenWeights(std::vector<float> inputs) {
+template <class T>
+void Network_L<T>::updateHiddenWeights(std::vector<T> inputs) {
     for(int i = 0 ; i < numHiddenNodes ; i++ ) {
         hiddenWeightsChanges[numInputNodes][i] = learningRate * hiddenNodesDeltas[i] + momentum * hiddenWeightsChanges[numInputNodes][i] ;
         hiddenWeights[numInputNodes][i] += hiddenWeightsChanges[numInputNodes][i] ;
@@ -238,7 +251,8 @@ void Network_L::updateHiddenWeights(std::vector<float> inputs) {
 /*
  *  Using the backpropagated errors, update the weights of the hidden nodes
  */
-void Network_L::updateOutputWeights() {
+template <class T>
+void Network_L<T>::updateOutputWeights() {
     for(int i = 0 ; i < numOutputNodes ; i ++ ) {
         outputWeightsChanges[numHiddenNodes][i] = learningRate * outputNodesDeltas[i] + momentum * outputWeightsChanges[numHiddenNodes][i] ;
         outputWeights[numHiddenNodes][i] += outputWeightsChanges[numHiddenNodes][i] ;
@@ -253,7 +267,8 @@ void Network_L::updateOutputWeights() {
 /*
  * outputs the current training cycle and error rate as a string for display or logging
  */
-std::string Network_L::writeReport() {
+template <class T>
+std::string Network_L<T>::writeReport() {
     return "Training cycle: " + std::to_string(trainingCycle) + ". Error rate: " + std::to_string(errorRate);
 }
 
@@ -263,10 +278,11 @@ std::string Network_L::writeReport() {
  * and return a pointer to an array containing the predicted output.
  * The desired output for the function must be passed in.
  */
-std::vector<float> Network_L::classify(std::vector<float> inputs) {
+template <class T>
+std::vector<T> Network_L<T>::classify(std::vector<T> inputs) {
     computeHiddenLayerActivations(inputs);
     computeOutputLayerActivations();
-    std::vector<float> classification= outputNodes;
+    std::vector<T> classification= outputNodes;
     return classification;
 }
 
@@ -274,143 +290,172 @@ std::vector<float> Network_L::classify(std::vector<float> inputs) {
 /*
  *  Set both sets of weights using pre calculated vectors.
  */
-void Network_L::loadWeights(std::vector<std::vector<float>> hiddenWeights, std::vector<std::vector<float>> outputWeights) {
+template <class T>
+void Network_L<T>::loadWeights(std::vector<std::vector<T>> hiddenWeights, std::vector<std::vector<T>> outputWeights) {
     setHiddenWeights(hiddenWeights);
     setOutputWeights(outputWeights);
 }
 
-int Network_L::getNumInputNodes() const {
+
+template <class T>
+int Network_L<T>::getNumInputNodes() const {
     return numInputNodes;
 }
 
 
-int Network_L::getNumHiddenNodes() const {
+template <class T>
+int Network_L<T>::getNumHiddenNodes() const {
     return numHiddenNodes;
 }
 
 
-int Network_L::getNumOutputNodes() const {
+template <class T>
+int Network_L<T>::getNumOutputNodes() const {
     return numOutputNodes;
 }
 
 
-float Network_L::getLearningRate() const {
+template <class T>
+float Network_L<T>::getLearningRate() const {
     return learningRate;
 }
 
 
-float Network_L::getMomentum() const {
+template <class T>
+float Network_L<T>::getMomentum() const {
     return momentum;
 }
 
 
-float Network_L::getInitialWeightMax() const {
+template <class T>
+float Network_L<T>::getInitialWeightMax() const {
     return initialWeightMax;
 }
 
 
-long Network_L::getTrainingCycle() const {
+template <class T>
+long Network_L<T>::getTrainingCycle() const {
     return trainingCycle;
 }
 
 
-float Network_L::getErrorRate() const {
+template <class T>
+T Network_L<T>::getErrorRate() const {
     return errorRate;
 }
 
 
-float Network_L::getAccumulatedInput() const {
+template <class T>
+T Network_L<T>::getAccumulatedInput() const {
     return accumulatedInput;
 }
 
 
-ActivationFunction Network_L::getHiddenActivationFunction() const {
+template <class T>
+ActivationFunction Network_L<T>::getHiddenActivationFunction() const {
     return hiddenActivationFunction;
 }
 
 
-ActivationFunction Network_L::getOutputActivationFunction() const {
+template <class T>
+ActivationFunction Network_L<T>::getOutputActivationFunction() const {
     return outputActivationFunction;
 }
 
 
-ErrorFunction Network_L::getErrorFunction() const {
+template <class T>
+ErrorFunction Network_L<T>::getErrorFunction() const {
     return errorFunction;
 }
 
 
-const std::vector<float> Network_L::getHiddenNodes() const {
+template <class T>
+const std::vector<T> Network_L<T>::getHiddenNodes() const {
     return hiddenNodes;
 }
 
 
-const std::vector<float> Network_L::getOutputNodes() const {
+template <class T>
+const std::vector<T> Network_L<T>::getOutputNodes() const {
     return outputNodes;
 }
 
 
-const std::vector<float> Network_L::getHiddenNodesDeltas() const {
+template <class T>
+const std::vector<T> Network_L<T>::getHiddenNodesDeltas() const {
     return hiddenNodesDeltas;
 }
 
 
-const std::vector<float> Network_L::getOutputNodesDeltas() const {
+template <class T>
+const std::vector<T> Network_L<T>::getOutputNodesDeltas() const {
     return outputNodesDeltas;
 }
 
 
-const std::vector<std::vector<float>> Network_L::getHiddenWeights() const {
+template <class T>
+const std::vector<std::vector<T>> Network_L<T>::getHiddenWeights() const {
     return hiddenWeights;
 }
 
 
-const std::vector<std::vector<float>> Network_L::getOutputWeights() const {
+template <class T>
+const std::vector<std::vector<T>> Network_L<T>::getOutputWeights() const {
     return outputWeights;
 }
 
 
-const std::vector<std::vector<float>> Network_L::getHiddenWeightsChanges() const {
+template <class T>
+const std::vector<std::vector<T>> Network_L<T>::getHiddenWeightsChanges() const {
     return hiddenWeightsChanges;
 }
 
 
-const std::vector<std::vector<float>> Network_L::getOutputWeightsChanges() const {
+template <class T>
+const std::vector<std::vector<T>> Network_L<T>::getOutputWeightsChanges() const {
     return outputWeightsChanges;
 }
 
 
-void Network_L::setLearningRate(float learningRate) {
-    Network_L::learningRate = learningRate;
+template <class T>
+void Network_L<T>::setLearningRate(float learningRate) {
+    Network_L<T>::learningRate = learningRate;
 }
 
 
-void Network_L::setMomentum(float momentum) {
-    Network_L::momentum = momentum;
+template <class T>
+void Network_L<T>::setMomentum(float momentum) {
+    Network_L<T>::momentum = momentum;
 }
 
 
-void Network_L::setHiddenActivationFunction(ActivationFunction activationFunction) {
-    Network_L::hiddenActivationFunction = activationFunction;
+template <class T>
+void Network_L<T>::setHiddenActivationFunction(ActivationFunction activationFunction) {
+    Network_L<T>::hiddenActivationFunction = activationFunction;
 }
 
 
-void Network_L::setOutputActivationFunction(ActivationFunction activationFunction) {
-    Network_L::outputActivationFunction = activationFunction;
+template <class T>
+void Network_L<T>::setOutputActivationFunction(ActivationFunction activationFunction) {
+    Network_L<T>::outputActivationFunction = activationFunction;
 }
 
 
-void Network_L::setErrorFunction(ErrorFunction errorFunction) {
-    Network_L::errorFunction = errorFunction;
+template <class T>
+void Network_L<T>::setErrorFunction(ErrorFunction errorFunction) {
+    Network_L<T>::errorFunction = errorFunction;
 }
 
 
-void Network_L::setHiddenWeights(std::vector<std::vector<float>> hiddenWeights) {
-    Network_L::hiddenWeights = hiddenWeights;
+template <class T>
+void Network_L<T>::setHiddenWeights(std::vector<std::vector<T>> hiddenWeights) {
+    Network_L<T>::hiddenWeights = hiddenWeights;
 }
 
 
-void Network_L::setOutputWeights(std::vector<std::vector<float>> outputWeights) {
-    Network_L::outputWeights = outputWeights;
+template <class T>
+void Network_L<T>::setOutputWeights(std::vector<std::vector<T>> outputWeights) {
+    Network_L<T>::outputWeights = outputWeights;
 }
 
 

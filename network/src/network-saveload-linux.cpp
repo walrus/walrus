@@ -6,7 +6,7 @@
  * Functions for saving and loading network configurations to and from files.
  */
 
-Network_L *loadNetwork(std::string filename) {
+Network_L<float> *loadNetwork(std::string filename) {
     // Open the file and read it into a vector of lines
     std::ifstream config_file(filename.c_str());
     std::vector<std::string> lines;
@@ -38,7 +38,7 @@ Network_L *loadNetwork(std::string filename) {
 
     ErrorFunction ef = stringToEF(lines[15].substr(42, lines[15].length()-42));
 
-    Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm, tc);
+    Network_L<float> *network = new Network_L<float>(nin, nhn, non, lr, m, iwm, tc);
 
     network->setHiddenActivationFunction(haf);
     network->setOutputActivationFunction(oaf);
@@ -95,7 +95,7 @@ Network_L *loadNetwork(std::string filename) {
     return network;
 }
 
-int saveNetwork(std::string filename, Network_L *network) {
+int saveNetwork(std::string filename, Network_L<float> *network) {
     std::ofstream config_file (filename);
     if (!config_file.is_open() || config_file.bad()) {
         return 1; // Error code

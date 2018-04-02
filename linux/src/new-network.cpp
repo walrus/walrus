@@ -71,7 +71,7 @@ int main(int argc, char * argv[]) {
     std::ifstream check_config(config_file_path);
     if (!check_config.is_open()) {
         std::cout << "not found, creating new network.\n";
-        Network_L *network = new Network_L(nin, nhn, non, lr, m, iwm, 0);
+        Network_L *network = new Network_L<float>(nin, nhn, non, lr, m, iwm, 0);
 
         network->setHiddenActivationFunction(haf);
         network->setOutputActivationFunction(oaf);

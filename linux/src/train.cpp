@@ -29,7 +29,7 @@ std::string suffix = "";
 long examplesTrainedOn = 0;
 float latestErrorRate = 0;
 
-void loadTrainingSets(std::string filename, Network_L *network) {
+void loadTrainingSets(std::string filename, Network_L<float> *network) {
     // Check the training file exists, and if it doesn't, exit
     std::ifstream check_logfile(filename);
     if (!check_logfile.good() || filename.find(suffix) == std::string::npos) {
@@ -46,7 +46,7 @@ void loadTrainingSets(std::string filename, Network_L *network) {
     }
 }
 
-void loadDir(std::string dirname, Network_L *network) {
+void loadDir(std::string dirname, Network_L<float> *network) {
     DIR *dir;
     struct dirent *ent;
     if ((dir = opendir (dirname.c_str())) != NULL) {
@@ -79,7 +79,7 @@ int main(int argc, char * argv[]) {
         suffix = argv[3];
     }
 
-    Network_L *network;
+    Network_L<float> *network;
 
     // Check the network config file exists, and if it doesn't, create it.
     std::cout << "Checking network config file...";

@@ -20,7 +20,7 @@ TEST_CASE("The core network functionality is all correct") {
     long tc = 0;
 
     GIVEN("The network is instantiated using the constructor") {
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+        Network_L<float> network = Network_L<float>(nin, nhn, non, dlr, dm, diwm, tc);
 
         THEN("The default parameters are set properly") {
             REQUIRE(network.getNumInputNodes() == nin);
@@ -128,7 +128,7 @@ TEST_CASE("The core network functionality is all correct") {
     }
 
     GIVEN("Pre computed hidden and output weights") {
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+        Network_L<float> network = Network_L<float>(nin, nhn, non, dlr, dm, diwm, tc);
 
         // Generate hidden and output node weights to load
         std::vector<std::vector<float>> hiddenWeights;
@@ -237,7 +237,7 @@ TEST_CASE("The core network functionality is all correct") {
         dlr = 0.1;
         dm = 0.0;
 
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+        Network_L<float> network = Network_L<float>(nin, nhn, non, dlr, dm, diwm, tc);
 
         THEN("It can attempt to classify without training") {
             std::vector<float>  input;
@@ -304,7 +304,7 @@ TEST_CASE("The core network functionality is all correct") {
     }
 
     GIVEN("A network using the ReLu activation function for both layers") {
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+        Network_L<float> network = Network_L<float>(nin, nhn, non, dlr, dm, diwm, tc);
 
         network.setHiddenActivationFunction(ActivationFunction::ReLu);
         network.setOutputActivationFunction(ActivationFunction::ReLu);
@@ -362,7 +362,7 @@ TEST_CASE("The core network functionality is all correct") {
     }
 
     GIVEN("A network using the CrossEntropy error function") {
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+        Network_L<float> network = Network_L<float>(nin, nhn, non, dlr, dm, diwm, tc);
 
         network.setErrorFunction(ErrorFunction::CrossEntropy);
 
@@ -417,7 +417,7 @@ TEST_CASE("The core network functionality is all correct") {
     }
 
     GIVEN("A network using the sigmoid activation functions with the CrossEntropy error function") {
-        Network_L network = Network_L(nin, nhn, non, dlr, dm, diwm, tc);
+        Network_L<float> network = Network_L<float>(nin, nhn, non, dlr, dm, diwm, tc);
 
         network.setHiddenActivationFunction(ActivationFunction::Sigmoid);
         network.setOutputActivationFunction(ActivationFunction::Sigmoid);
